@@ -1,17 +1,25 @@
 package data_loader;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class SqlConnection {
 
-	private String password;
-	private String url;
-	private String user;
+	private static Connection connection = null;
+	private static String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP";
+	private static DbLoginData loginData = new DbLoginData();
 
-	public SqlConnection(){
-
+	protected SqlConnection(){
 	}
 
-	public Connection getConnection(){
-		return null;
+	public static Connection getConnection(){
+		if (connection == null){
+			try {
+				connection = DriverManager.getConnection(url, loginData.getUsername(), loginData.getPassword());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return connection;
 	}
 }
