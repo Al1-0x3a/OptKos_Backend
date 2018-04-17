@@ -21,7 +21,11 @@ public class EmployeeDao {
 
     }
 
-    public List<Employee> getAllEmployees(){
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public List<Employee> getAllEmployeesFromDb(){
 
         try {
             stmt = con.createStatement();
@@ -50,14 +54,31 @@ public class EmployeeDao {
     }
 
     public void deleteEmployee(Employee employee) {
-        employees.remove(employee.getEmployeeId());
         try {
             stmt = con.createStatement();
             stmt.execute("DELETE FROM Employee WHERE employeeId = '" + employee.getEmployeeId() + "';");
+            employees.remove(employee.getEmployeeId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
+    // TODO: employee has to get personid from another query of just created person
+    public void createNewEmployee(Employee employee){
+        try {
+            stmt = con.createStatement();
+            String query = "INSERT INTO PERSON( SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
+                    "VALUES ('" + employee.getSurname() + "', '" + employee.getFirstname() + "', '" +
+                    employee.getSalutation() + "', '" + employee.getGender() + "');" +
+
+                    "INSERT into EMPLOYEE(PERSONID, ISDELETED, POSITIONID)" +
+                    "VALUES (1, '" + employee.getIsDeleted() + "', " + employee.getPositionId() + ");";
+
+            employees.add(employee);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
