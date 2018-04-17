@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class SqlConnection {
 
 	private static Connection connection = null;
-	private static String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP";
+	private static String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
 	private static DbLoginData loginData = new DbLoginData();
 
 	protected SqlConnection(){

@@ -25,7 +25,9 @@ public class EmployeeDao {
 
         try {
             stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Employee");
+            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID";
+            ResultSet rs = stmt.executeQuery(query);
+
             while (rs.next()){
                 // Person
                 Employee emil = new Employee();
