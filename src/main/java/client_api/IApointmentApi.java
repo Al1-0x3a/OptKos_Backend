@@ -11,8 +11,8 @@ public interface IApointmentApi {
 
 	public Apointment getApointment(UUID apointmentId);
 
-	public List<Apointment> getApointment();
+	// public List<Apointment> getApointment();
 
-	public void getApointment();
+	// public void getApointment();
 
 }

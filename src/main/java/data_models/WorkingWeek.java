@@ -11,7 +11,7 @@ public class WorkingWeek {
 		private LocalTime endWorkingTime;
 		private LocalTime startBreakTime;
 		private LocalTime startWorkingTime;
-		private WeekDayEnum WeekDay;
+		// private WeekDayEnum WeekDay;
 
 		public WorkingDay(){
 

@@ -12,7 +12,7 @@ public class Service {
 	private String name;
 	private BigDecimal price;
 	private UUID serviceId;
-	public ServiceList m_ServiceList;				// has to be generated
+	// public ServiceList m_ServiceList;				// has to be generated
 
 	public Service(){
 
