@@ -41,4 +41,14 @@ public class Employee extends Person {
 	public void setPositionId(UUID positionId) {
 		this.positionId = positionId;
 	}
+
+	@Override
+	public String toString() {
+		return "Employee{" +
+                super.toString() +
+				"employeeId=" + employeeId +
+				", isDeleted=" + isDeleted +
+				", positionId=" + positionId +
+				'}';
+	}
 }

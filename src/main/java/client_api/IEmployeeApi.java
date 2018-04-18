@@ -2,15 +2,16 @@ package client_api;
 
 import data_models.Employee;
 
+import javax.jws.WebMethod;
+import javax.jws.WebService;
 import java.util.List;
-import java.util.UUID;
 
+@WebService
 public interface IEmployeeApi {
-
-    public Employee getEmployee(UUID employeeId);
-
-    public List<Employee> getEmployees();
-
-    public Boolean setEmployee();
-
+    @WebMethod
+    List<Employee> getEmployees();
+    @WebMethod
+    boolean createEmployee(Employee employee);
+    @WebMethod
+    boolean updateEmployee(Employee employee);
 }
