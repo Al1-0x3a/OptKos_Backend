@@ -4,25 +4,25 @@ import java.util.UUID;
 
 public class Employee extends Person {
 
-	private int employeeId;
+	private UUID employeeId;
 	private char isDeleted;
-	private int positionId;
+	private UUID positionId;
 
 	public Employee(){
 
 	}
 
-	public Employee(int employeeId, char isDeleted, int positionId) {
+	public Employee(UUID employeeId, char isDeleted, UUID positionId) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
 	}
 
-	public int getEmployeeId() {
+	public UUID getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(int employeeId) {
+	public void setEmployeeId(UUID employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -34,11 +34,11 @@ public class Employee extends Person {
 		this.isDeleted = isDeleted;
 	}
 
-	public int getPositionId() {
+	public UUID getPositionId() {
 		return positionId;
 	}
 
-	public void setPositionId(int positionId) {
+	public void setPositionId(UUID positionId) {
 		this.positionId = positionId;
 	}
 }

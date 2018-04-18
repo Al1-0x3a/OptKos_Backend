@@ -1,17 +1,50 @@
 package data_models;
 
 
+import java.util.List;
+import java.util.UUID;
+
 public abstract class Person {
 
 	private String firstname;
 	private char gender;
-	private String surname;
-	private int personId;
+	private String lastname;
+	private UUID personId;
 	private String salutation;
 	private String title;
+	private Address address;
+	private List<Phone> phoneList;
+	private List<Email> emailList;
 
 	public Person(){
 
+	}
+
+	public List<Phone> getPhoneList() {
+		return phoneList;
+	}
+	public void addPhoneNumber(Phone phone){
+		this.phoneList.add(phone);
+	}
+
+	public void setPhoneList(List<Phone> phoneList) {
+		this.phoneList = phoneList;
+	}
+
+	public List<Email> getEmailList() {
+		return emailList;
+	}
+
+	public void setEmailList(List<Email> emailList) {
+		this.emailList = emailList;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public String getFirstname() {
@@ -30,19 +63,19 @@ public abstract class Person {
 		this.gender = gender;
 	}
 
-	public String getSurname() {
-		return surname;
+	public String getLastname() {
+		return lastname;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
 	}
 
-	public int getPersonId() {
+	public UUID getPersonId() {
 		return personId;
 	}
 
-	public void setPersonId(int personId) {
+	public void setPersonId(UUID personId) {
 		this.personId = personId;
 	}
 
