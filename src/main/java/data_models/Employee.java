@@ -1,5 +1,7 @@
 package data_models;
 
+import java.util.UUID;
+
 public class Employee extends Person {
 
 	private UUID employeeId;

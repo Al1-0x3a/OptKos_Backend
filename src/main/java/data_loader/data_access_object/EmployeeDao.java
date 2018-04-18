@@ -52,7 +52,6 @@ public class EmployeeDao {
                 emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
                 emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
 
-                emil.setPositionId(rs.getInt("POSITIONID"));
                 for (Employee employee : employees) {
                     if (employee.getEmployeeId() == emil.getEmployeeId())
                         continue outer;
@@ -76,7 +75,7 @@ public class EmployeeDao {
 
     }
 
-    public void createNewEmployee(Employee employee){
+    public boolean createNewEmployee(Employee employee){
         try {
             stmt = con.createStatement();
             String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
@@ -95,8 +94,10 @@ public class EmployeeDao {
             EmailDao.createEmail(employee.getEmailList().get(0));
             employees.add(employee);
 
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

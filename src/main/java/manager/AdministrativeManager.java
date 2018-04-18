@@ -15,4 +15,8 @@ public class AdministrativeManager {
     public List<Employee> getAllEmployees() {
         return employeeDao.getAllEmployeesFromDb();
     }
+
+    public boolean setEmployee(Employee employee) {
+        return employeeDao.createNewEmployee(employee);
+    }
 }

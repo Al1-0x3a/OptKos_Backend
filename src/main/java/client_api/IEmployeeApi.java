@@ -10,10 +10,10 @@ import java.util.UUID;
 @WebService
 public interface IEmployeeApi {
     @WebMethod
-    Employee getEmployee(int employeeId);
+    Employee getEmployee(UUID employeeId);
     @WebMethod
     List<Employee> getEmployees();
     @WebMethod
-    boolean setEmployee();
+    boolean setEmployee(Employee employee);
 
 }

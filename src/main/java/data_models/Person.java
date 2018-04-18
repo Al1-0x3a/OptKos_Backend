@@ -100,7 +100,7 @@ public abstract class Person {
 		return "Person{" +
 				"firstname='" + firstname + '\'' +
 				", gender=" + gender +
-				", surname='" + surname + '\'' +
+				", lastname='" + lastname + '\'' +
 				", personId=" + personId +
 				", salutation='" + salutation + '\'' +
 				", title='" + title + '\'' +
