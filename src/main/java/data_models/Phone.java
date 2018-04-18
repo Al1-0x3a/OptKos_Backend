@@ -4,13 +4,63 @@ import java.util.UUID;
 
 public class Phone {
 
-	private String annotation;
-	// private PhoneDesignnationEnum designation;		// has to be generated
-	private String number;
 	private UUID phoneId;
+	private String annotation;
+	private String number;
+	private String description;
+	private UUID personId;
+
 
 	public Phone(){
 
 	}
 
+	public Phone(UUID phoneId, String number, String annotation, String description, UUID personId) {
+		this.annotation = annotation;
+		this.number = number;
+		this.phoneId = phoneId;
+		this.description = description;
+		this.personId = personId;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public UUID getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(UUID personId) {
+		this.personId = personId;
+	}
+
+
+	public String getAnnotation() {
+		return annotation;
+	}
+
+	public void setAnnotation(String annotation) {
+		this.annotation = annotation;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public UUID getPhoneId() {
+		return phoneId;
+	}
+
+	public void setPhoneId(UUID phoneId) {
+		this.phoneId = phoneId;
+	}
 }

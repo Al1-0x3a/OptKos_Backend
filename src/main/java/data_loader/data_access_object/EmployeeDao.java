@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class EmployeeDao {
     private Connection con = SqlConnection.getConnection();
@@ -35,16 +36,21 @@ public class EmployeeDao {
             while (rs.next()){
                 // Person
                 Employee emil = new Employee();
-                emil.setPersonId(rs.getInt("PERSONID"));
+                emil.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 emil.setFirstname(rs.getString("FIRSTNAME"));
-                emil.setSurname(rs.getString("SURNAME"));
+                emil.setLastname(rs.getString("LASTNAME"));
                 emil.setTitle(rs.getString("TITEL"));
                 emil.setSalutation(rs.getString("SALUTATION"));
                 emil.setGender(rs.getString("GENDER").charAt(0));
                 // Employee
-                emil.setEmployeeId(rs.getInt("EMPLOYEEID"));
+                emil.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
                 emil.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                emil.setPositionId(rs.getInt("POSITIONID"));
+                emil.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
+                // other objects
+                emil.setPhoneList(PhoneDao.getListByPersonId(emil.getPersonId()));
+                emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
+                emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
+
                 employees.add(emil);
             }
         } catch (SQLException e) {
@@ -64,16 +70,17 @@ public class EmployeeDao {
 
     }
 
-    // TODO: employee has to get personid from another query of just created person
     public void createNewEmployee(Employee employee){
         try {
             stmt = con.createStatement();
-            String query = "INSERT INTO PERSON( SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
-                    "VALUES ('" + employee.getSurname() + "', '" + employee.getFirstname() + "', '" +
-                    employee.getSalutation() + "', '" + employee.getGender() + "');" +
+            String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
+                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getLastname() + "', '" +
+                    employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
+                    employee.getGender() + "');" +
 
-                    "INSERT into EMPLOYEE(PERSONID, ISDELETED, POSITIONID)" +
-                    "VALUES (1, '" + employee.getIsDeleted() + "', " + employee.getPositionId() + ");";
+                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID, ISDELETED, POSITIONID)" +
+                    "VALUES ('" + employee.getEmployeeId().toString() + "', '" + employee.getPersonId().toString() +
+                    "', '" + employee.getIsDeleted() + "', " + employee.getPositionId().toString() + ");";
 
             employees.add(employee);
 
