@@ -16,7 +16,7 @@ public class AdministrativeManager {
         return employeeDao.getAllEmployeesFromDb();
     }
 
-    public boolean setEmployee(Employee employee) {
+    public boolean createEmployee(Employee employee) {
         return employeeDao.createNewEmployee(employee);
     }
 }

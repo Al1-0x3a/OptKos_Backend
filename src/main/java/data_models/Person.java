@@ -1,6 +1,7 @@
 package data_models;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,8 @@ public abstract class Person {
 	private List<Email> emailList;
 
 	public Person(){
-
+        phoneList = new ArrayList<>();
+        emailList = new ArrayList<>();
 	}
 
 	public List<Phone> getPhoneList() {

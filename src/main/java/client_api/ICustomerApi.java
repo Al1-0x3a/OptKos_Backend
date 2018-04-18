@@ -7,10 +7,12 @@ import java.util.UUID;
 
 public interface ICustomerApi {
 
-	public Customer getCustomer(UUID customerId);
+	Customer getCustomer(UUID customerId);
 
-	public List<Customer> getCustomers();
+	List<Customer> getCustomers();
 
-	public Boolean setCustomer();
+	boolean createCustomer(Customer customer);
+
+	boolean updateCustomer(Customer customer);
 
 }

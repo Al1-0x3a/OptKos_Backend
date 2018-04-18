@@ -33,7 +33,7 @@ public class EmployeeDao {
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID";
             ResultSet rs = stmt.executeQuery(query);
 
-           employees = new ArrayList<>();
+            employees = new ArrayList<>();
             while (rs.next()){
                 // Person
                 Employee emil = new Employee();

@@ -5,7 +5,6 @@ import manager.AdministrativeManager;
 
 import javax.jws.WebService;
 import java.util.List;
-import java.util.UUID;
 
 @WebService(endpointInterface = "client_api.IEmployeeApi")
 public class EmployeeApi implements IEmployeeApi {
@@ -17,17 +16,17 @@ public class EmployeeApi implements IEmployeeApi {
     }
 
     @Override
-    public Employee getEmployee(UUID employeeId) {
-        return null;
-    }
-
-    @Override
     public List<Employee> getEmployees() {
         return administrativeManager.getAllEmployees();
     }
 
     @Override
-    public boolean setEmployee(Employee employee) {
-        return administrativeManager.setEmployee(employee);
+    public boolean createEmployee(Employee employee) {
+        return administrativeManager.createEmployee(employee);
+    }
+
+    @Override
+    public boolean updateEmployee(Employee employee) {
+        return false;
     }
 }
