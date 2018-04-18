@@ -33,6 +33,7 @@ public class EmployeeDao {
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID";
             ResultSet rs = stmt.executeQuery(query);
 
+            outer:
             while (rs.next()){
                 // Person
                 Employee emil = new Employee();
@@ -51,6 +52,11 @@ public class EmployeeDao {
                 emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
                 emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
 
+                emil.setPositionId(rs.getInt("POSITIONID"));
+                for (Employee employee : employees) {
+                    if (employee.getEmployeeId() == emil.getEmployeeId())
+                        continue outer;
+                }
                 employees.add(emil);
             }
         } catch (SQLException e) {

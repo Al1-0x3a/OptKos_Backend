@@ -4,8 +4,7 @@ import data_models.Employee;
 import manager.AdministrativeManager;
 
 import javax.jws.WebService;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 @WebService(endpointInterface = "client_api.IEmployeeApi")
 public class EmployeeApi implements IEmployeeApi {
@@ -17,13 +16,13 @@ public class EmployeeApi implements IEmployeeApi {
     }
 
     @Override
-    public Employee getEmployee(UUID employeeId) {
+    public Employee getEmployee(int employeeId) {
         return null;
     }
 
     @Override
-    public ArrayList<Employee> getEmployees() {
-        return administrativeManager.getAllEmployies();
+    public List<Employee> getEmployees() {
+        return administrativeManager.getAllEmployees();
     }
 
     @Override

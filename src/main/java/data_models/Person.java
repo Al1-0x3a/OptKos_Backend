@@ -94,4 +94,16 @@ public abstract class Person {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	@Override
+	public String toString() {
+		return "Person{" +
+				"firstname='" + firstname + '\'' +
+				", gender=" + gender +
+				", surname='" + surname + '\'' +
+				", personId=" + personId +
+				", salutation='" + salutation + '\'' +
+				", title='" + title + '\'' +
+				'}';
+	}
 }

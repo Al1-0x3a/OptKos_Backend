@@ -1,23 +1,18 @@
 package manager;
 
+import data_loader.data_access_object.EmployeeDao;
 import data_models.Employee;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.List;
 
 public class AdministrativeManager {
-    private ArrayList<Employee> tmpList;
+    private EmployeeDao employeeDao;
 
     public AdministrativeManager() {
-        tmpList = new ArrayList<>();
-        Employee employee = new Employee();
-        employee.employeeId = UUID.randomUUID();
-        employee.setFirstname("Adolf");
-        employee.setLastname("Witler");
-        tmpList.add(employee);
+        employeeDao = new EmployeeDao();
     }
 
-    public ArrayList<Employee> getAllEmployies() {
-        return tmpList;
+    public List<Employee> getAllEmployees() {
+        return employeeDao.getAllEmployeesFromDb();
     }
 }
