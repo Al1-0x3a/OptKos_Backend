@@ -90,3 +90,6 @@ local.properties
 \.project
 
 \.classpath
+
+# Java Classes
+DbLoginData.java
