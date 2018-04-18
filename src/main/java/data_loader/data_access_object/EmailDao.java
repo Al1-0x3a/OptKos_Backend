@@ -47,4 +47,14 @@ public class EmailDao {
         }
         return tmpList;
     }
+    public static void createEmail(Email email){
+        try {
+            stmt = con.createStatement();
+            String query = "INSERT INTO EMAIL (EMAILID, EMAIL, PERSONID) VALUES ('" + email.getEmailId() + "', '" +
+                    email.getEmail() + "', '" + email.getPersonId() + "');";
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

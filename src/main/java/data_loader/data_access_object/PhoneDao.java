@@ -48,4 +48,15 @@ public class PhoneDao {
         return tmpList;
     }
 
+    public static void createPhone(Phone phone){
+        try {
+            stmt = con.createStatement();
+            String query = "INSERT INTO PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES ('" +
+                    phone.getPhoneId() + "', '" + phone.getNumber() + "', '" + phone.getDescription() + "', '" +
+                    phone.getAnnotation() + "', '" + phone.getPersonId() + "');";
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

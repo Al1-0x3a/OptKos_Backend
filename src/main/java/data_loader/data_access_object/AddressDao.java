@@ -47,4 +47,19 @@ public class AddressDao {
         }
         return null;
     }
+
+    public static void createNewAddress(Address address){
+        try {
+            stmt = con.createStatement();
+            String query = "INSERT INTO ADRESS (ADRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID)" +
+            "VALUES ('" + address.getAddressId() + "', '" + address.getPostcode() + "', '" + address.getCity()
+            + "', '" + address.getStreet() + "', '" + address.getHousenr() + "', '" + address.getPersonId() + "');";
+            stmt.execute(query);
+
+            addressList.add(address);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -82,6 +82,11 @@ public class EmployeeDao {
                     "VALUES ('" + employee.getEmployeeId().toString() + "', '" + employee.getPersonId().toString() +
                     "', '" + employee.getIsDeleted() + "', " + employee.getPositionId().toString() + ");";
 
+            stmt.execute(query);
+
+            AddressDao.createNewAddress(employee.getAddress());
+            PhoneDao.createPhone(employee.getPhoneList().get(0));
+            EmailDao.createEmail(employee.getEmailList().get(0));
             employees.add(employee);
 
         } catch (SQLException e) {
