@@ -3,9 +3,9 @@ package data_models;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Apointment {
+public class Appointment {
 
-	private UUID apointmentId;
+	private UUID appointmentId;
 	private LocalDateTime endTime;
 	private LocalDateTime endTimeActual;
 	private LocalDateTime startTime;
@@ -14,7 +14,7 @@ public class Apointment {
 	public Employee m_Employee;
 	public Customer m_Customer;
 
-	public Apointment(){
+	public Appointment(){
 
 	}
 
