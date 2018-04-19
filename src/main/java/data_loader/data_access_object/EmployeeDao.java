@@ -84,6 +84,19 @@ public class EmployeeDao {
 
     public boolean createNewEmployee(Employee employee){
         try {
+<<<<<<< HEAD
+=======
+            stmt = con.createStatement();
+            String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
+                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getLastname() + "', '" +
+                    employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
+                    employee.getGender() + "');" +
+
+                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID)" +
+                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getPersonId().toString() + "');";
+
+            stmt.execute(query);
+>>>>>>> 0178d52... Removed Null Pointer from sql statement
 
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME) VALUES(?,?,?)");
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID) VALUES(?,?)");
