@@ -80,9 +80,8 @@ public class EmployeeDao {
                     employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
                     employee.getGender() + "');" +
 
-                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID, ISDELETED, POSITIONID)" +
-                    "VALUES ('" + employee.getEmployeeId().toString() + "', '" + employee.getPersonId().toString() +
-                    "', '" + employee.getIsDeleted() + "', " + employee.getPositionId().toString() + ");";
+                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID)" +
+                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getPersonId().toString() + "');";
 
             stmt.execute(query);
 
