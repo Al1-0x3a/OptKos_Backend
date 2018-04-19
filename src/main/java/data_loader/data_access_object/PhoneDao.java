@@ -3,16 +3,14 @@ package data_loader.data_access_object;
 import data_loader.SqlConnection;
 import data_models.Phone;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
 public class PhoneDao {
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
+    private static PreparedStatement preparedStmt;
     private static List<Phone>phoneList;
 
     public static List<Phone> getAllPhonesFromDb(){
@@ -50,11 +48,13 @@ public class PhoneDao {
 
     public static void createPhone(Phone phone){
         try {
-            stmt = con.createStatement();
-            String query = "INSERT INTO PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES ('" +
-                    phone.getPhoneId() + "', '" + phone.getNumber() + "', '" + phone.getDescription() + "', '" +
-                    phone.getAnnotation() + "', '" + phone.getPersonId() + "');";
-            stmt.execute(query);
+           preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
+           preparedStmt.setString(1, phone.getPhoneId().toString());
+           preparedStmt.setString(2, phone.getNumber());
+           preparedStmt.setString(3, phone.getDescription());
+           preparedStmt.setString(4, phone.getAnnotation());
+           preparedStmt.setString(5, phone.getPersonId().toString());
+           preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }

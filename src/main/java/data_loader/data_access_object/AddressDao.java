@@ -13,6 +13,7 @@ public class AddressDao {
 
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
+    private static PreparedStatement preparedStmt;
     private static List<Address> addressList;
 
     public static List<Address> getAllAddressFromDb(){
@@ -50,11 +51,14 @@ public class AddressDao {
 
     public static void createNewAddress(Address address){
         try {
-            stmt = con.createStatement();
-            String query = "INSERT INTO ADRESS (ADRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID)" +
-            "VALUES ('" + address.getAddressId() + "', '" + address.getPostcode() + "', '" + address.getCity()
-            + "', '" + address.getStreet() + "', '" + address.getHousenr() + "', '" + address.getPersonId() + "');";
-            stmt.execute(query);
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADRESS (ADRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID) VALUES(?,?,?,?,?,?)");
+            preparedStmt.setString(1, address.getAddressId().toString());
+            preparedStmt.setString(2, address.getPostcode());
+            preparedStmt.setString(3, address.getCity());
+            preparedStmt.setString(4, address.getStreet());
+            preparedStmt.setString(5, address.getHousenr());
+            preparedStmt.setString(6, address.getPersonId().toString());
+            preparedStmt.execute();
 
             addressList.add(address);
 

@@ -3,10 +3,7 @@ package data_loader.data_access_object;
 import data_loader.SqlConnection;
 import data_models.Employee;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +11,8 @@ import java.util.UUID;
 public class EmployeeDao {
     private Connection con = SqlConnection.getConnection();
     private Statement stmt;
+    private PreparedStatement preparedStmt;
+    private PreparedStatement preparedStmt2;
     public List<Employee> employees;
 
 
@@ -63,8 +62,9 @@ public class EmployeeDao {
 
     public void deleteEmployee(Employee employee) {
         try {
-            stmt = con.createStatement();
-            stmt.execute("DELETE FROM Employee WHERE employeeId = '" + employee.getEmployeeId() + "';");
+            preparedStmt = con.prepareStatement("DELETE FROM Employee WHERE employeeId =?");
+            preparedStmt.setString(1, employee.getEmployeeId().toString());
+            preparedStmt.execute();
             employees.remove(employee.getEmployeeId());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,17 +74,16 @@ public class EmployeeDao {
 
     public boolean createNewEmployee(Employee employee){
         try {
-            stmt = con.createStatement();
-            String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
-                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getLastname() + "', '" +
-                    employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
-                    employee.getGender() + "');" +
 
-                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID)" +
-                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getPersonId().toString() + "');";
-
-            stmt.execute(query);
-
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME) VALUES(?,?,?)");
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID) VALUES(?,?)");
+            preparedStmt.setString(1 , employee.getPersonId().toString());
+            preparedStmt.setString(2, employee.getLastname());
+            preparedStmt.setString(3,  employee.getFirstname() );
+            preparedStmt2.setString(1, employee.getPersonId().toString());
+            preparedStmt2.setString(2, employee.getPersonId().toString());
+            preparedStmt.execute();
+            preparedStmt2.execute();
             AddressDao.createNewAddress(employee.getAddress());
             PhoneDao.createPhone(employee.getPhoneList().get(0));
             EmailDao.createEmail(employee.getEmailList().get(0));
