@@ -2,11 +2,8 @@ package data_loader.data_access_object;
 import data_loader.SqlConnection;
         import data_models.Address;
 
-        import java.sql.Connection;
-        import java.sql.ResultSet;
-        import java.sql.SQLException;
-        import java.sql.Statement;
-        import java.util.List;
+import java.sql.*;
+import java.util.List;
         import java.util.UUID;
 
 public class AddressDao {
