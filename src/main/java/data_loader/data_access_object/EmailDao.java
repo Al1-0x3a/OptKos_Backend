@@ -57,4 +57,24 @@ public class EmailDao {
             e.printStackTrace();
         }
     }
+
+
+    public static void deleteEmailByPersonId(UUID personId){
+
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
+            preparedStmt.setString(1, personId.toString());
+
+            if (preparedStmt.execute()){
+                for (int i = 0; i< emailList.size(); i++){
+                    if(emailList.get(i).getPersonId() == personId) {
+                        emailList.remove(i);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

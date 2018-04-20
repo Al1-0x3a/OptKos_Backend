@@ -48,15 +48,35 @@ public class PhoneDao {
 
     public static void createPhone(Phone phone){
         try {
-           preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
-           preparedStmt.setString(1, phone.getPhoneId().toString());
-           preparedStmt.setString(2, phone.getNumber());
-           preparedStmt.setString(3, phone.getDescription());
-           preparedStmt.setString(4, phone.getAnnotation());
-           preparedStmt.setString(5, phone.getPersonId().toString());
-           preparedStmt.execute();
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
+            preparedStmt.setString(1, phone.getPhoneId().toString());
+            preparedStmt.setString(2, phone.getNumber());
+            preparedStmt.setString(3, phone.getDescription());
+            preparedStmt.setString(4, phone.getAnnotation());
+            preparedStmt.setString(5, phone.getPersonId().toString());
+            preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void deletePhoneByPersonId(UUID personId){
+
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
+            preparedStmt.setString(1, personId.toString());
+
+            if (preparedStmt.execute()){
+                for (int i = 0; i< phoneList.size(); i++){
+                    if(phoneList.get(i).getPersonId() == personId) {
+                        phoneList.remove(i);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

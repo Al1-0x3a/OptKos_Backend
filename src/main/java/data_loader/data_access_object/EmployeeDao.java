@@ -52,7 +52,7 @@ public class EmployeeDao {
                 emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
                 emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
 
-                
+
                 employees.add(emil);
             }
         } catch (SQLException e) {
@@ -71,6 +71,10 @@ public class EmployeeDao {
 
             preparedStmt.execute();
             preparedStmt2.execute();
+
+            AddressDao.deleteAddressByPersonId(employee.getPersonId());
+            EmailDao.deleteEmailByPersonId(employee.getPersonId());
+
             employees.remove(employee.getEmployeeId());
         } catch (SQLException e) {
             e.printStackTrace();

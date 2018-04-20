@@ -63,4 +63,23 @@ public class AddressDao {
             e.printStackTrace();
         }
     }
+
+    public static void deleteAddressByPersonId(UUID personId){
+
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.ADDRESS WHERE PERSONID =?");
+            preparedStmt.setString(1, personId.toString());
+
+            if (preparedStmt.execute()){
+                for (int i = 0; i< addressList.size(); i++){
+                    if(addressList.get(i).getPersonId() == personId) {
+                        addressList.remove(i);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
