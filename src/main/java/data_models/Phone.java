@@ -35,11 +35,6 @@ public class Phone {
 		return personId;
 	}
 
-	public void setPersonId(UUID personId) {
-		this.personId = personId;
-	}
-
-
 	public String getAnnotation() {
 		return annotation;
 	}

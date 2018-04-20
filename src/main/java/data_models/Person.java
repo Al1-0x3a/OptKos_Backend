@@ -18,8 +18,14 @@ public abstract class Person {
 	private List<Email> emailList;
 
 	public Person(){
-        phoneList = new ArrayList<>();
-        emailList = new ArrayList<>();
+        phoneList = new ArrayList<Phone>();
+        emailList = new ArrayList<Email>();
+        personId = UUID.randomUUID();
+	}
+
+	public void setPersonId(UUID personId) {
+	    if(this.personId == null )
+		this.personId = personId;
 	}
 
 	public List<Phone> getPhoneList() {
@@ -75,10 +81,6 @@ public abstract class Person {
 
 	public UUID getPersonId() {
 		return personId;
-	}
-
-	public void setPersonId(UUID personId) {
-		this.personId = personId;
 	}
 
 	public String getSalutation() {

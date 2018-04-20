@@ -3,10 +3,7 @@ package data_loader.data_access_object;
 import data_loader.SqlConnection;
 import data_models.Email;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +11,7 @@ public class EmailDao {
 
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
+    private static PreparedStatement preparedStmt;
     private static List<Email> emailList;
 
     public static List<Email> getAllEmailsFromDb(){
@@ -49,12 +47,34 @@ public class EmailDao {
     }
     public static void createEmail(Email email){
         try {
-            stmt = con.createStatement();
-            String query = "INSERT INTO EMAIL (EMAILID, EMAIL, PERSONID) VALUES ('" + email.getEmailId() + "', '" +
-                    email.getEmail() + "', '" + email.getPersonId() + "');";
-            stmt.execute(query);
+            preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.EMAIL (EMAILID, EMAIL, PERSONID) VALUES(?,?,?)");
+            preparedStmt.setString(1, email.getEmailId().toString());
+            preparedStmt.setString(2,email.getEmail());
+            preparedStmt.setString(3, email.getPersonId().toString());
+
+            preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void deleteEmailByPersonId(UUID personId){
+
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
+            preparedStmt.setString(1, personId.toString());
+
+            if (preparedStmt.execute()){
+                for (int i = 0; i< emailList.size(); i++){
+                    if(emailList.get(i).getPersonId() == personId) {
+                        emailList.remove(i);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
