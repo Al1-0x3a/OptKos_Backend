@@ -63,9 +63,14 @@ public class EmployeeDao {
 
     public void deleteEmployee(Employee employee) {
         try {
-            preparedStmt = con.prepareStatement("DELETE FROM Employee WHERE employeeId =?");
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMPLOYEE WHERE employeeId =?");
             preparedStmt.setString(1, employee.getEmployeeId().toString());
+
+            preparedStmt2 = con.prepareStatement("DELETE FROM OPTKOS.PERSON WHERE PERSONID =?");
+            preparedStmt2.setString(1, employee.getPersonId().toString());
+
             preparedStmt.execute();
+            preparedStmt2.execute();
             employees.remove(employee.getEmployeeId());
         } catch (SQLException e) {
             e.printStackTrace();
