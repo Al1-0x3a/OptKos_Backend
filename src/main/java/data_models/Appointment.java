@@ -10,9 +10,9 @@ public class Appointment {
 	private LocalDateTime endTimeActual;
 	private LocalDateTime startTime;
 	private LocalDateTime startTimeActual;
-	public AppointmentType m_AppointmentType;
-	public Employee m_Employee;
-	public Customer m_Customer;
+	public AppointmentType appointmentType;
+	public Employee employee;
+	public Customer customer;
 
 	public Appointment(){
 	    this.appointmentId = UUID.randomUUID();
@@ -69,27 +69,27 @@ public class Appointment {
 		this.startTimeActual = startTimeActual;
 	}
 
-	public AppointmentType getM_AppointmentType() {
-		return m_AppointmentType;
+	public AppointmentType getAppointmentType() {
+		return appointmentType;
 	}
 
-	public void setM_AppointmentType(AppointmentType m_AppointmentType) {
-		this.m_AppointmentType = m_AppointmentType;
+	public void setAppointmentType(AppointmentType appointmentType) {
+		this.appointmentType = appointmentType;
 	}
 
-	public Employee getM_Employee() {
-		return m_Employee;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setM_Employee(Employee m_Employee) {
-		this.m_Employee = m_Employee;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
-	public Customer getM_Customer() {
-		return m_Customer;
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setM_Customer(Customer m_Customer) {
-		this.m_Customer = m_Customer;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 }

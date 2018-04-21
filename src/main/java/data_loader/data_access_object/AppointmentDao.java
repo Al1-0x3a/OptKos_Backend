@@ -26,12 +26,14 @@ public class AppointmentDao {
                         rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                         rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-                appointment.setM_Employee(EmployeeDao.getEmployeeById(UUID.fromString(
+                appointment.setEmployee(EmployeeDao.getEmployeeById(UUID.fromString(
                         rs.getString("EMPLOYEEID"))));
-                // TODO: getCutomerById
-                // appointment.setM_Customer();
-                // TODO: getAppointmenttypeById
-                // appointment.setM_AppointmentType();
+
+                appointment.setCustomer(CustomerDao.getCustomerById(UUID.fromString(
+                        rs.getString("CUSTOMERID"))));
+
+                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
+                        UUID.fromString(rs.getString("APPOINTMENTTYPEID"))));
             }
 
         } catch (SQLException e) {
@@ -70,13 +72,13 @@ public class AppointmentDao {
                     rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                     rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-            appointment.setM_Employee(EmployeeDao.getEmployeeById(UUID.fromString(
+            appointment.setEmployee(EmployeeDao.getEmployeeById(UUID.fromString(
                     rs.getString("EMPLOYEEID"))));
 
             // TODO: getCustomerById
-            // appointment.setM_Customer();
+            appointment.setCustomer(CustomerDao.getCustomerById(UUID.fromString(rs.getString("CUSTOMERID"))));
 
-            appointment.setM_AppointmentType(AppointmentTypeDao.getAppointmentTypeById(
+            appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                     UUID.fromString(rs.getString("APPOINTMENTTYPEID"))));
 
         } catch (SQLException e) {
