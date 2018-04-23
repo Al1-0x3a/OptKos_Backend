@@ -14,11 +14,11 @@ public class EmployeeDao {
     private Statement stmt;
     private PreparedStatement preparedStmt;
     private PreparedStatement preparedStmt2;
-    public List<Employee> employees;
+    private List<Employee> employees;
 
 
     public EmployeeDao(){
-        employees = new ArrayList<Employee>();
+        employees = new ArrayList<>();
 
     }
 
@@ -75,7 +75,7 @@ public class EmployeeDao {
             AddressDao.deleteAddressByPersonId(employee.getPersonId());
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
 
-            employees.remove(employee.getEmployeeId());
+            employees.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
