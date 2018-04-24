@@ -75,7 +75,6 @@ public class AppointmentDao {
             appointment.setEmployee(EmployeeDao.getEmployeeById(UUID.fromString(
                     rs.getString("EMPLOYEEID"))));
 
-            // TODO: getCustomerById
             appointment.setCustomer(CustomerDao.getCustomerById(UUID.fromString(rs.getString("CUSTOMERID"))));
 
             appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(

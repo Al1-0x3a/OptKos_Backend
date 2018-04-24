@@ -7,6 +7,7 @@ public class Employee extends Person {
 	private UUID employeeId;
 	private char isDeleted;
 	private UUID positionId;
+	private WorkingWeek workingWeek;
 
 	public Employee(){
 
@@ -16,6 +17,14 @@ public class Employee extends Person {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
+	}
+
+	public WorkingWeek getWorkingWeek() {
+		return workingWeek;
+	}
+
+	public void setWorkingWeek(WorkingWeek workingWeek) {
+		this.workingWeek = workingWeek;
 	}
 
 	public UUID getEmployeeId() {

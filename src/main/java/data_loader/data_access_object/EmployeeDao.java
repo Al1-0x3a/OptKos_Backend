@@ -3,7 +3,6 @@ package data_loader.data_access_object;
 import data_loader.SqlConnection;
 import data_models.Employee;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,9 @@ public class EmployeeDao {
     }
 
     public static List<Employee> getEmployeeList() {
+        if( employeeList == null){
+            employeeList = getAllEmployeesFromDb();
+        }
         return employeeList;
     }
 
@@ -36,24 +38,25 @@ public class EmployeeDao {
             employeeList = new ArrayList<>();
             while (rs.next()){
                 // Person
-                Employee emil = new Employee();
-                emil.setPersonId(UUID.fromString(rs.getString("PERSONID")));
-                emil.setFirstname(rs.getString("FIRSTNAME"));
-                emil.setLastname(rs.getString("LASTNAME"));
-                emil.setTitle(rs.getString("TITEL"));
-                emil.setSalutation(rs.getString("SALUTATION"));
-                emil.setGender(rs.getString("GENDER").charAt(0));
+                Employee employee = new Employee();
+                employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
+                employee.setFirstname(rs.getString("FIRSTNAME"));
+                employee.setLastname(rs.getString("LASTNAME"));
+                employee.setTitle(rs.getString("TITEL"));
+                employee.setSalutation(rs.getString("SALUTATION"));
+                employee.setGender(rs.getString("GENDER").charAt(0));
                 // Employee
-                emil.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
-                emil.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                emil.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
+                employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
+                employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+                employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
                 // other objects
-                emil.setPhoneList(PhoneDao.getListByPersonId(emil.getPersonId()));
-                emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
-                emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
+                employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
+                employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
+                employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
+                employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
 
 
-                employeeList.add(emil);
+                employeeList.add(employee);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,6 +77,8 @@ public class EmployeeDao {
 
             AddressDao.deleteAddressByPersonId(employee.getPersonId());
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
+            PhoneDao.deletePhoneByPersonId(employee.getPersonId());
+            WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
 
             employeeList.remove(employee.getEmployeeId());
         } catch (SQLException e) {
@@ -84,29 +89,43 @@ public class EmployeeDao {
 
     public static boolean createNewEmployee(Employee employee){
         try {
-            stmt = con.createStatement();
+/*            stmt = con.createStatement();
             String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
                     "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getLastname() + "', '" +
                     employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
                     employee.getGender() + "');" +
 
                     "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID)" +
-                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getPersonId().toString() + "');";
+                    "VALUES ('" + employee.getPersonId().toString() + "', '" +
+                    employee.getPersonId().toString() + "');";
 
-            stmt.execute(query);
+            stmt.execute(query);*/
 
-            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME) VALUES(?,?,?)");
-            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID) VALUES(?,?)");
+            preparedStmt = con.prepareStatement(
+                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITEL, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
+
+
             preparedStmt.setString(1 , employee.getPersonId().toString());
             preparedStmt.setString(2, employee.getLastname());
-            preparedStmt.setString(3,  employee.getFirstname() );
-            preparedStmt2.setString(1, employee.getPersonId().toString());
+            preparedStmt.setString(3,  employee.getFirstname());
+            preparedStmt.setString(4,  employee.getTitle());
+            preparedStmt.setString(5,  employee.getSalutation());
+            preparedStmt.setString(6,  String.valueOf(employee.getGender()));
+
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
+
+            preparedStmt2.setString(1, employee.getEmployeeId().toString());
             preparedStmt2.setString(2, employee.getPersonId().toString());
+            preparedStmt2.setString(3, employee.getPositionId().toString());
+
             preparedStmt.execute();
             preparedStmt2.execute();
+
             AddressDao.createNewAddress(employee.getAddress());
             PhoneDao.createPhone(employee.getPhoneList().get(0));
             EmailDao.createEmail(employee.getEmailList().get(0));
+            WorkingWeekDao.setWorkingWeek(employee.getWorkingWeek(), employee.getEmployeeId());
+
             employeeList.add(employee);
 
             return true;
@@ -116,20 +135,20 @@ public class EmployeeDao {
         }
     }
     public static Employee getEmployeeById(UUID empolyeeId){
-        Employee emil = null;
+        Employee employee = null;
         for(int i = 0; i< employeeList.size(); i++){
             if(employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
-                emil = employeeList.get(i);
+                employee = employeeList.get(i);
                 break;
             }
         }
 
-        if( emil == null){
-            emil = getEmployeeByIdFromDb(empolyeeId);
-            if(emil !=null)
-                employeeList.add(emil);
+        if( employee == null){
+            employee = getEmployeeByIdFromDb(empolyeeId);
+            if(employee !=null)
+                employeeList.add(employee);
         }
-        return emil;
+        return employee;
     }
 
 
@@ -137,32 +156,37 @@ public class EmployeeDao {
 
     public static Employee getEmployeeByIdFromDb(UUID employeeId){
 
-        Employee emil = new Employee();
+        Employee employee = new Employee();
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND e.EMPLOYEEID=" + employeeId.toString() + ";";
+            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
+                    "e.EMPLOYEEID=" + employeeId.toString() + ";";
             ResultSet rs = stmt.executeQuery(query);
 
             // Person
-            emil.setPersonId(UUID.fromString(rs.getString("PERSONID")));
-            emil.setFirstname(rs.getString("FIRSTNAME"));
-            emil.setLastname(rs.getString("LASTNAME"));
-            emil.setTitle(rs.getString("TITEL"));
-            emil.setSalutation(rs.getString("SALUTATION"));
-            emil.setGender(rs.getString("GENDER").charAt(0));
+            employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
+            employee.setFirstname(rs.getString("FIRSTNAME"));
+            employee.setLastname(rs.getString("LASTNAME"));
+            employee.setTitle(rs.getString("TITEL"));
+            employee.setSalutation(rs.getString("SALUTATION"));
+            employee.setGender(rs.getString("GENDER").charAt(0));
             // Employee
-            emil.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
-            emil.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-            emil.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
+            employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
+            employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+            employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
             // other objects
-            emil.setPhoneList(PhoneDao.getListByPersonId(emil.getPersonId()));
-            emil.setEmailList(EmailDao.getEmailListByPersonId(emil.getPersonId()));
-            emil.setAddress(AddressDao.getAddressByPersonId(emil.getPersonId()));
+            employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
+            employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
+            employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
+            employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return emil;
+        return employee;
     }
 }
+
+
+// TODO:java class properties an methode übergeben um spezielle sachen zu suchen/ändern

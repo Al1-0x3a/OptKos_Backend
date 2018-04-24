@@ -10,9 +10,9 @@ public class Appointment {
 	private LocalDateTime endTimeActual;
 	private LocalDateTime startTime;
 	private LocalDateTime startTimeActual;
-	public AppointmentType appointmentType;
-	public Employee employee;
-	public Customer customer;
+	private AppointmentType appointmentType;
+	private Employee employee;
+	private Customer customer;
 
 	public Appointment(){
 	    this.appointmentId = UUID.randomUUID();
@@ -70,7 +70,7 @@ public class Appointment {
 	}
 
 	public AppointmentType getAppointmentType() {
-		return appointmentType;
+		return this.appointmentType;
 	}
 
 	public void setAppointmentType(AppointmentType appointmentType) {
