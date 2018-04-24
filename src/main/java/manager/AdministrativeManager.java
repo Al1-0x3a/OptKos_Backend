@@ -4,12 +4,28 @@ import data_loader.data_access_object.EmployeeDao;
 import data_models.Employee;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class AdministrativeManager {
     private EmployeeDao employeeDao;
 
     public AdministrativeManager() {
         employeeDao = new EmployeeDao();
+    }
+
+    public Employee getEmployeeById(UUID uuid) {
+        List<Employee> tmpList = employeeDao.getAllEmployeesFromDb().stream().
+                filter(employee -> employee.getEmployeeId() == uuid).collect(Collectors.toList());
+        if (tmpList.size() == 0) {
+            System.err.println("No employee with UUID " + uuid);
+            return null;
+        }
+        if (tmpList.size() > 1) {
+            System.err.println("Two employees with same UUID. You probably fucked something up.");
+            return null;
+        }
+        return tmpList.get(0);
     }
 
     public List<Employee> getAllEmployees() {
