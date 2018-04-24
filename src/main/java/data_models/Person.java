@@ -8,24 +8,59 @@ import java.util.UUID;
 public abstract class Person {
 
 	private String firstname;
-	private char gender;
+	private GENDER gender;
 	private String lastname;
 	private UUID personId;
-	private String salutation;
-	private String title;
+	private SALUTATION salutation;
+	private TITLE title;
 	private Address address;
 	private List<Phone> phoneList;
 	private List<Email> emailList;
 
+	public enum SALUTATION{
+		HERR("Herr"), FRAU("Frau");
+		private String salutation;
+		SALUTATION(String salutation){
+			this.salutation = salutation;
+		}
+		public String salutation(){
+			return this.salutation;
+		}
+	}
+
+	public enum TITLE{
+		PROFESSOR("Prof."), DOKTOR("Dr."), DIPLOMING("Diplom Ing."), SENIOR("Sen."), JUNIOR("Jun.");
+		private String title;
+
+		TITLE(String title){
+			this.title = title;
+		}
+		public String title(){
+			return this.title;
+		}
+	}
+	public enum GENDER{
+		WEIBLICH('w'), MAENNLICH('m'), AUTOMIT4ZYLINDERREIHENMOTOR('a');
+
+		private char gender;
+		GENDER(char gender){
+			this.gender = gender;
+		}
+		public char gender(){
+			return gender;
+		}
+	}
+
+
 	public Person(){
-        phoneList = new ArrayList<Phone>();
-        emailList = new ArrayList<Email>();
-        personId = UUID.randomUUID();
+		phoneList = new ArrayList<Phone>();
+		emailList = new ArrayList<Email>();
+		personId = UUID.randomUUID();
 	}
 
 	public void setPersonId(UUID personId) {
-	    if(this.personId == null )
-		this.personId = personId;
+		if(this.personId == null )
+			this.personId = personId;
 	}
 
 	public List<Phone> getPhoneList() {
@@ -63,11 +98,14 @@ public abstract class Person {
 		this.firstname = firstname;
 	}
 
-	public char getGender() {
+	public GENDER getGender() {
 		return gender;
 	}
 
 	public void setGender(char gender) {
+		this.gender = GENDER.valueOf(String.valueOf(gender));
+	}
+	public void setGender(GENDER gender){
 		this.gender = gender;
 	}
 
@@ -84,18 +122,27 @@ public abstract class Person {
 	}
 
 	public String getSalutation() {
-		return salutation;
+		return salutation.salutation();
 	}
 
 	public void setSalutation(String salutation) {
+		this.salutation = SALUTATION.valueOf(salutation);
+	}
+
+
+	public void setSalutation(SALUTATION salutation) {
 		this.salutation = salutation;
 	}
 
-	public String getTitle() {
+	public TITLE getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
+		this.title = TITLE.valueOf(title);
+	}
+
+	public void setTitle(TITLE title) {
 		this.title = title;
 	}
 
