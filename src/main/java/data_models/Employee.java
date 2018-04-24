@@ -1,5 +1,8 @@
 package data_models;
 
+import data_loader.data_access_object.PositionDao;
+import javafx.geometry.Pos;
+
 import java.util.UUID;
 
 public class Employee extends Person {
@@ -7,6 +10,7 @@ public class Employee extends Person {
 	private UUID employeeId;
 	private char isDeleted;
 	private UUID positionId;
+	private WorkingWeek workingWeek;
 
 	public Employee(){
 
@@ -16,6 +20,14 @@ public class Employee extends Person {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
+	}
+
+	public WorkingWeek getWorkingWeek() {
+		return workingWeek;
+	}
+
+	public void setWorkingWeek(WorkingWeek workingWeek) {
+		this.workingWeek = workingWeek;
 	}
 
 	public UUID getEmployeeId() {
@@ -40,6 +52,10 @@ public class Employee extends Person {
 
 	public void setPositionId(UUID positionId) {
 		this.positionId = positionId;
+	}
+
+	public Position getPosition(){
+		return PositionDao.getPositionByPositionId(this.positionId);
 	}
 
 	@Override
