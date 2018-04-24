@@ -54,6 +54,7 @@ public class EmployeeDao {
                 employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
                 employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
                 employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
+                employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
 
 
                 employeeList.add(employee);
@@ -89,20 +90,8 @@ public class EmployeeDao {
 
     public static boolean createNewEmployee(Employee employee){
         try {
-/*            stmt = con.createStatement();
-            String query = "INSERT INTO PERSON( PERSONID, SURNAME, FIRSTNAME, SALUTATION, GENDER)" +
-                    "VALUES ('" + employee.getPersonId().toString() + "', '" + employee.getLastname() + "', '" +
-                    employee.getFirstname() + "', '" + employee.getSalutation() + "', '" +
-                    employee.getGender() + "');" +
-
-                    "INSERT into EMPLOYEE(EMPLOYEEID, PERSONID)" +
-                    "VALUES ('" + employee.getPersonId().toString() + "', '" +
-                    employee.getPersonId().toString() + "');";
-
-            stmt.execute(query);*/
-
             preparedStmt = con.prepareStatement(
-                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITEL, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
+                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
 
 
             preparedStmt.setString(1 , employee.getPersonId().toString());
