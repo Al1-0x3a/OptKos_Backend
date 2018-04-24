@@ -42,7 +42,7 @@ public class EmployeeDao {
                 employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 employee.setFirstname(rs.getString("FIRSTNAME"));
                 employee.setLastname(rs.getString("LASTNAME"));
-                employee.setTitle(rs.getString("TITEL"));
+                employee.setTitle(rs.getString("TITLE"));
                 employee.setSalutation(rs.getString("SALUTATION"));
                 employee.setGender(rs.getString("GENDER").charAt(0));
                 // Employee
