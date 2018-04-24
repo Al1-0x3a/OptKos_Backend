@@ -16,7 +16,7 @@ public class EmployeeDao {
     private static List<Employee> employeeList;
 
     public EmployeeDao(){
-        employees = new ArrayList<>();
+        employeeList = new ArrayList<>();
 
 
     }
@@ -81,7 +81,7 @@ public class EmployeeDao {
             PhoneDao.deletePhoneByPersonId(employee.getPersonId());
             WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
 
-            employees.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
+            employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
 
         } catch (SQLException e) {
             e.printStackTrace();
