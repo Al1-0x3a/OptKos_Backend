@@ -19,6 +19,7 @@ public class Employee extends Person {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
+		this.workingWeek = new WorkingWeek();
 	}
 
 	public WorkingWeek getWorkingWeek() {
