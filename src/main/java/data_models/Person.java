@@ -30,7 +30,7 @@ public abstract class Person {
 	}
 
 	public enum TITLE{
-		PROFESSOR("Prof."), DOKTOR("Dr."), DIPLOMING("Diplom Ing."), SENIOR("Sen."), JUNIOR("Jun.");
+		PROFESSOR("Prof."), DOKTOR("Dr."), DIPLOMING("Diplom Ing."), SENIOR("Sen."), JUNIOR("Jun."), NOTITLE("");
 		private String title;
 
 		TITLE(String title){
