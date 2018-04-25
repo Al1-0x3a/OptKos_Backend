@@ -20,6 +20,7 @@ public abstract class Person {
 	public enum SALUTATION{
 		HERR("Herr"), FRAU("Frau");
 		private String salutation;
+
 		SALUTATION(String salutation){
 			this.salutation = salutation;
 		}
@@ -39,6 +40,7 @@ public abstract class Person {
 			return this.title;
 		}
 	}
+
 	public enum GENDER{
 		WEIBLICH('w'), MAENNLICH('m'), AUTOMIT4ZYLINDERREIHENMOTOR('a');
 
@@ -98,7 +100,11 @@ public abstract class Person {
 		this.firstname = firstname;
 	}
 
-	public GENDER getGender() {
+	public String getGender() {
+		return String.valueOf(gender.gender());
+	}
+
+	public GENDER getGenderAsEnum(){
 		return gender;
 	}
 
@@ -125,6 +131,10 @@ public abstract class Person {
 		return salutation.salutation();
 	}
 
+	public SALUTATION getSalutationAsEnum() {
+		return salutation;
+	}
+
 	public void setSalutation(String salutation) {
 		this.salutation = SALUTATION.valueOf(salutation);
 	}
@@ -134,10 +144,13 @@ public abstract class Person {
 		this.salutation = salutation;
 	}
 
-	public TITLE getTitle() {
-		return title;
+	public String getTitle() {
+		return title.title();
 	}
 
+	public TITLE getTitleAsEnum() {
+		return title;
+	}
 	public void setTitle(String title) {
 		this.title = TITLE.valueOf(title);
 	}

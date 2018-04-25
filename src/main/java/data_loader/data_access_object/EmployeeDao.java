@@ -98,7 +98,7 @@ public class EmployeeDao {
             preparedStmt.setString(1 , employee.getPersonId().toString());
             preparedStmt.setString(2, employee.getLastname());
             preparedStmt.setString(3,  employee.getFirstname());
-            preparedStmt.setString(4,  employee.getTitle().toString());
+            preparedStmt.setString(4,  employee.getTitle());
             preparedStmt.setString(5,  employee.getSalutation());
             preparedStmt.setString(6,  String.valueOf(employee.getGender()));
 
