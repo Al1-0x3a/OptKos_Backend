@@ -100,17 +100,18 @@ public abstract class Person {
 		this.firstname = firstname;
 	}
 
-	public String getGender() {
+/*	public String getGender() {
 		return String.valueOf(gender.gender());
-	}
+	}*/
 
-	public GENDER getGenderAsEnum(){
+	public GENDER getGender(){
 		return gender;
 	}
 
-	public void setGender(char gender) {
+/*	public void setGender(char gender) {
 		this.gender = GENDER.valueOf(String.valueOf(gender));
-	}
+	}*/
+
 	public void setGender(GENDER gender){
 		this.gender = gender;
 	}
@@ -127,33 +128,33 @@ public abstract class Person {
 		return personId;
 	}
 
-	public String getSalutation() {
+/*	public String getSalutation() {
 		return salutation.salutation();
-	}
+	}*/
 
-	public SALUTATION getSalutationAsEnum() {
+	public SALUTATION getSalutation() {
 		return salutation;
 	}
 
-	public void setSalutation(String salutation) {
+/*	public void setSalutation(String salutation) {
 		this.salutation = SALUTATION.valueOf(salutation);
-	}
+	}*/
 
 
 	public void setSalutation(SALUTATION salutation) {
 		this.salutation = salutation;
 	}
 
-	public String getTitle() {
+/*	public String getTitle() {
 		return title.title();
-	}
+	}*/
 
-	public TITLE getTitleAsEnum() {
+	public TITLE getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
+/*	public void setTitle(String title) {
 		this.title = TITLE.valueOf(title);
-	}
+	}*/
 
 	public void setTitle(TITLE title) {
 		this.title = title;
