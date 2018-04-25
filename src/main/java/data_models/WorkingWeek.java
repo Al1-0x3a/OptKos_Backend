@@ -1,11 +1,17 @@
 package data_models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorkingWeek {
 
 	private WorkingDay[] workingDays;
 
 	public WorkingWeek(){
-
+		workingDays = new WorkingDay[6];
+		for(int i = 0; i<6; i++){
+			workingDays[i] = new WorkingDay();
+		}
 	}
 
 	public WorkingDay[] getWorkingDays() {
