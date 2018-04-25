@@ -9,7 +9,7 @@ public class Customer extends Person {
 	private UUID personId;
 	private boolean problemCustomer;
 	private double timefactor;
-	public CustomerCategory CustomerCategory;
+	private CustomerCategory customerCategory;
 
 	public Customer() {
 
@@ -59,10 +59,10 @@ public class Customer extends Person {
 	}
 
 	public CustomerCategory getCustomerCategory() {
-		return CustomerCategory;
+		return customerCategory;
 	}
 
 	public void setCustomerCategory(CustomerCategory m_CustomerCategory) {
-		this.CustomerCategory = m_CustomerCategory;
+		this.customerCategory = m_CustomerCategory;
 	}
 }

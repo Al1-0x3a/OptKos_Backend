@@ -1,14 +1,8 @@
 package data_models;
 
-import java.time.LocalTime;
-
 public class WorkingWeek {
 
-
-
-
 	private WorkingDay[] workingDays;
-	public Employee Employee;
 
 	public WorkingWeek(){
 
@@ -26,11 +20,4 @@ public class WorkingWeek {
 		this.workingDays = workingDays;
 	}
 
-	public data_models.Employee getEmployee() {
-		return Employee;
-	}
-
-	public void setEmployee(data_models.Employee employee) {
-		Employee = employee;
-	}
 }
