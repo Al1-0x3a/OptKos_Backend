@@ -23,12 +23,19 @@ public class WorkingWeekDao {
 
             int i = 0;
             while(rs.next()){
-                WorkingDay wd = new WorkingDay(UUID.fromString(rs.getString("WORKINGDAYID")),rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime(),
+/*                WorkingDay wd = new WorkingDay(UUID.fromString(rs.getString("WORKINGDAYID")),rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime(),
                         rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime(),
                         rs.getTimestamp("STARTBREAK").toLocalDateTime().toLocalTime(),
                         rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime(),
                         rs.getString("DAY"));
-                workingDays[i] = wd;
+                workingDays[i] = wd;*/
+
+                workingDays[i].setWorkingDayId(UUID.fromString(rs.getString("WORKINGDAYID")));
+                workingDays[i].setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
+                workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                workingDays[i].setStartBreakTime(rs.getTimestamp("STARTBREAK").toLocalDateTime().toLocalTime());
+                workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                workingDays[i].setDay(rs.getString("DAY"));
                 i++;
             } }catch (SQLException e) {
             e.printStackTrace();
@@ -36,7 +43,7 @@ public class WorkingWeekDao {
         workingWeek.setWorkingDays(workingDays);
         return workingWeek;
 
-}
+    }
 
     // TODO: check if the db will save the times as LocalTime
     public static void setWorkingWeek(WorkingWeek workingWeek, UUID employeeId){

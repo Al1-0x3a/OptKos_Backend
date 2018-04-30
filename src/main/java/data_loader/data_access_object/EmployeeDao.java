@@ -2,6 +2,7 @@ package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
 import data_models.Employee;
+import data_models.Person;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,20 +16,18 @@ public class EmployeeDao {
     private static PreparedStatement preparedStmt2;
     private static List<Employee> employeeList;
 
-    public EmployeeDao(){
+    public EmployeeDao() {
         employeeList = new ArrayList<>();
-
-
     }
 
     public static List<Employee> getEmployeeList() {
-        if( employeeList == null){
+        if (employeeList == null) {
             employeeList = getAllEmployeesFromDb();
         }
         return employeeList;
     }
 
-    public static List<Employee> getAllEmployeesFromDb(){
+    public static List<Employee> getAllEmployeesFromDb() {
 
         try {
             stmt = con.createStatement();
@@ -36,15 +35,15 @@ public class EmployeeDao {
             ResultSet rs = stmt.executeQuery(query);
 
             employeeList = new ArrayList<>();
-            while (rs.next()){
+            while (rs.next()) {
                 // Person
                 Employee employee = new Employee();
                 employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 employee.setFirstname(rs.getString("FIRSTNAME"));
                 employee.setLastname(rs.getString("LASTNAME"));
-                employee.setTitle(rs.getString("TITLE"));
-                employee.setSalutation(rs.getString("SALUTATION"));
-                employee.setGender(rs.getString("GENDER").charAt(0));
+                employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
+                employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+                employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
                 // Employee
                 employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
                 employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
@@ -89,18 +88,18 @@ public class EmployeeDao {
 
     }
 
-    public static boolean createNewEmployee(Employee employee){
+    public static boolean createNewEmployee(Employee employee) {
         try {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
 
 
-            preparedStmt.setString(1 , employee.getPersonId().toString());
+            preparedStmt.setString(1, employee.getPersonId().toString());
             preparedStmt.setString(2, employee.getLastname());
-            preparedStmt.setString(3,  employee.getFirstname());
-            preparedStmt.setString(4,  employee.getTitle().toString());
-            preparedStmt.setString(5,  employee.getSalutation());
-            preparedStmt.setString(6,  String.valueOf(employee.getGender()));
+            preparedStmt.setString(3, employee.getFirstname());
+            preparedStmt.setString(4, employee.getTitle().title());
+            preparedStmt.setString(5, employee.getSalutation().salutation());
+            preparedStmt.setString(6, String.valueOf(employee.getGender()));
 
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
 
@@ -124,27 +123,26 @@ public class EmployeeDao {
             return false;
         }
     }
-    public static Employee getEmployeeById(UUID empolyeeId){
+
+    public static Employee getEmployeeById(UUID empolyeeId) {
         Employee employee = null;
-        for(int i = 0; i< employeeList.size(); i++){
-            if(employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
+        for (int i = 0; i < employeeList.size(); i++) {
+            if (employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
                 employee = employeeList.get(i);
                 break;
             }
         }
 
-        if( employee == null){
+        if (employee == null) {
             employee = getEmployeeByIdFromDb(empolyeeId);
-            if(employee !=null)
+            if (employee != null)
                 employeeList.add(employee);
         }
         return employee;
     }
 
 
-
-
-    public static Employee getEmployeeByIdFromDb(UUID employeeId){
+    public static Employee getEmployeeByIdFromDb(UUID employeeId) {
 
         Employee employee = new Employee();
         try {
@@ -157,9 +155,9 @@ public class EmployeeDao {
             employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
             employee.setFirstname(rs.getString("FIRSTNAME"));
             employee.setLastname(rs.getString("LASTNAME"));
-            employee.setTitle(rs.getString("TITEL"));
-            employee.setSalutation(rs.getString("SALUTATION"));
-            employee.setGender(rs.getString("GENDER").charAt(0));
+            employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
+            employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+            employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
             // Employee
             employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
             employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));

@@ -5,14 +5,12 @@ import java.time.Duration;
 import java.util.UUID;
 
 public class Service {
-
-	private String description;
-	private Duration durationCalculated;
-	private Duration durationStatic;
-	private String name;
-	private BigDecimal price;
 	private UUID serviceId;
-	// public ServiceList m_ServiceList;				// has to be generated
+	private String name;
+	private String description;
+	private BigDecimal price;
+	private Duration durationPlanned;
+	private Duration durationAverage;
 
 	public Service(){
 

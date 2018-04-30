@@ -26,6 +26,7 @@ public class WorkingDay {
     }
 
 
+
     public LocalTime getStartWorkingTime() {
         return startWorkingTime;
     }
@@ -58,10 +59,6 @@ public class WorkingDay {
         return day;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
-
     public void setEndBreakTime(LocalTime endBreakTime) {
         this.endBreakTime = endBreakTime;
     }
@@ -72,5 +69,9 @@ public class WorkingDay {
 
     public void setWorkingDayId(UUID workingDayId) {
         this.workingDayId = workingDayId;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 }
