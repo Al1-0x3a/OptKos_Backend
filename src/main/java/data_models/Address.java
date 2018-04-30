@@ -11,12 +11,13 @@ public class Address {
 	private String housenr;
 	private UUID personId;
 
-	public Address(){
-		addressId = UUID.randomUUID();
+	public Address(UUID personId){
+		this.addressId = UUID.randomUUID();
+		this.personId = personId;
 	}
 
 	public Address(UUID addressId, String postcode, String city, String street, String housenr, UUID personId) {
-		addressId = UUID.randomUUID();
+		this.addressId = UUID.randomUUID();
 		this.postcode = postcode;
 		this.city = city;
 		this.street = street;

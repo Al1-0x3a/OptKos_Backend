@@ -11,7 +11,6 @@ public class Position {
 
 	public Position(){
 	    this.positionId = UUID.randomUUID();
-
 	}
 
 	public Position(UUID positionId, String name, String description, String note) {

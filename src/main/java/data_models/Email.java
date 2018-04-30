@@ -9,7 +9,7 @@ public class Email {
 	private UUID personId;
 
 	public Email(){
-
+this.emailId = UUID.randomUUID();
 	}
 
 	public Email(UUID emailId, String email, UUID personId) {
