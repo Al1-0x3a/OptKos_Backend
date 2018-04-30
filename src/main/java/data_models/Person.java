@@ -58,6 +58,7 @@ public abstract class Person {
 		phoneList = new ArrayList<Phone>();
 		emailList = new ArrayList<Email>();
 		personId = UUID.randomUUID();
+		this.address = new Address();
 	}
 
 	public void setPersonId(UUID personId) {
