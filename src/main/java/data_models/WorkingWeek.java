@@ -6,7 +6,7 @@ public class WorkingWeek {
 	private WorkingDay[] workingDays;
 
 	public WorkingWeek(){
-		workingDays = new WorkingDay[6];
+		workingDays = new WorkingDay[7];
 		workingDays[0] = new WorkingDay("Montag");
 		workingDays[1] = new WorkingDay("Dienstag");
 		workingDays[2] = new WorkingDay("Mittwoch");
