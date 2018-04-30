@@ -22,7 +22,9 @@ public class WorkingDay {
         this.day = day;
     }
 
-    public WorkingDay() {
+    public WorkingDay(String dayName) {
+        this.workingDayId = UUID.randomUUID();
+       this.day = dayName;
     }
 
 
