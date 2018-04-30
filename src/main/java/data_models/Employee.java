@@ -12,7 +12,9 @@ public class Employee extends Person {
 	private WorkingWeek workingWeek;
 
 	public Employee(){
-
+	    super();
+		this.employeeId = UUID.randomUUID();
+		this.workingWeek = new WorkingWeek();
 	}
 
 	public Employee(UUID employeeId, char isDeleted, UUID positionId) {

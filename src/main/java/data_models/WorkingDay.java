@@ -75,3 +75,5 @@ public class WorkingDay {
         this.day = day;
     }
 }
+// TODO: mit einem anderen Datentyp testen
+// TODO: von LocalTime ableiten und super() Konstruktor benutzen
