@@ -7,9 +7,13 @@ public class WorkingWeek {
 
 	public WorkingWeek(){
 		workingDays = new WorkingDay[6];
-		for(int i = 0; i<6; i++){
-			workingDays[i] = new WorkingDay();
-		}
+		workingDays[0] = new WorkingDay("Montag");
+		workingDays[1] = new WorkingDay("Dienstag");
+		workingDays[2] = new WorkingDay("Mittwoch");
+		workingDays[3] = new WorkingDay("Donnerstag");
+		workingDays[4] = new WorkingDay("Freitag");
+		workingDays[5] = new WorkingDay("Samstag");
+		workingDays[6] = new WorkingDay("Sonntag");
 	}
 
 	public WorkingDay[] getWorkingDays() {
