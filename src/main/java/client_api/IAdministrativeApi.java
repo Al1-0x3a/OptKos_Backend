@@ -18,6 +18,8 @@ public interface IAdministrativeApi {
     boolean createEmployee(Employee employee);
     @WebMethod
     boolean updateEmployee(Employee employee);
+    @WebMethod
+    Employee getNewEmployee();
 
     @WebMethod
     Customer getCustomer(UUID customerId);
