@@ -37,6 +37,11 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
+    public Employee getNewEmployee() {
+        return new Employee();
+    }
+
+    @Override
     public Customer getCustomer(UUID customerId) {
         return null;
     }
