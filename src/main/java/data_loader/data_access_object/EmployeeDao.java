@@ -77,7 +77,8 @@ public class EmployeeDao {
 
             AddressDao.deleteAddressByPersonId(employee.getPersonId());
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
-            PhoneDao.deletePhoneByPersonId(employee.getPersonId());
+            PhoneDao.deleteAllPhoneByPersonId(employee.getPersonId());
+
             WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
 
             employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());

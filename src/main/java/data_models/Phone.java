@@ -23,6 +23,11 @@ public class Phone {
 		this.personId = personId;
 	}
 
+	public Phone(UUID personId){
+		this.personId = personId;
+		this.phoneId = UUID.randomUUID();
+	}
+
 	public String getDescription() {
 		return description;
 	}
