@@ -2,6 +2,7 @@ package client_api;
 
 import data_models.Customer;
 import data_models.Employee;
+import data_models.Phone;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -29,4 +30,12 @@ public interface IAdministrativeApi {
     boolean createCustomer(Customer customer);
     @WebMethod
     boolean updateCustomer(Customer customer);
+    @WebMethod
+    Phone getNewPhone(UUID personId);
+    @WebMethod
+    boolean createPhone(Phone phone);
+    @WebMethod
+    boolean updatePhone(Phone phone);
+    @WebMethod
+    boolean deletePhone(Phone phone);
 }
