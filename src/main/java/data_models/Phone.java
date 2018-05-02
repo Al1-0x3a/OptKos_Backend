@@ -25,6 +25,7 @@ public class Phone {
 
 	public Phone(UUID personId){
 		this.personId = personId;
+		this.phoneId = UUID.randomUUID();
 	}
 
 	public String getDescription() {

@@ -1,6 +1,7 @@
 package client_api;
 
 import data_models.Customer;
+import data_models.Email;
 import data_models.Employee;
 import data_models.Phone;
 
@@ -38,4 +39,14 @@ public interface IAdministrativeApi {
     boolean updatePhone(Phone phone);
     @WebMethod
     boolean deletePhone(Phone phone);
+
+
+    @WebMethod
+    Email getNewEmail(UUID personId);
+    @WebMethod
+    boolean createEmail(Email email);
+    @WebMethod
+    boolean updateEmail(Email email);
+    @WebMethod
+    boolean deleteEmail(Email email);
 }

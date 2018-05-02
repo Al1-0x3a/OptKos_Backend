@@ -1,7 +1,9 @@
 package client_api;
 
+import data_loader.data_access_object.EmailDao;
 import data_loader.data_access_object.PhoneDao;
 import data_models.Customer;
+import data_models.Email;
 import data_models.Employee;
 import data_models.Phone;
 import manager.AdministrativeManager;
@@ -82,5 +84,25 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public boolean deletePhone(Phone phone){
         return PhoneDao.deletePhoneByPhoneId(phone.getPhoneId());
+    }
+
+    @Override
+    public Email getNewEmail(UUID personId) {
+        return new Email(personId);
+    }
+
+    @Override
+    public boolean createEmail(Email email) {
+        return EmailDao.createEmail(email);
+    }
+
+    @Override
+    public boolean updateEmail(Email email) {
+        return EmailDao.updateEmail(email);
+    }
+
+    @Override
+    public boolean deleteEmail(Email email) {
+        return EmailDao.deleteEmailByEmailId(email.getEmailId());
     }
 }
