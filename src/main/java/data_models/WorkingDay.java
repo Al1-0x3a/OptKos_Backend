@@ -13,18 +13,21 @@ public class WorkingDay {
     private String day;
 
     public WorkingDay(UUID workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
-    LocalTime startBreakTime, LocalTime endBreakTime, String day) {
+    LocalTime startBreakTime, LocalTime endBreakTime) {
         this.workingDayId = workingDayId;
         this.startWorkingTime = startWorkingTime;
         this.endWorkingTime = endWorkingTime;
         this.startBreakTime = startBreakTime;
         this.endBreakTime = endBreakTime;
-        this.day = day;
+    }
+
+    public WorkingDay(){
+        this.workingDayId = UUID.randomUUID();
     }
 
     public WorkingDay(String dayName) {
         this.workingDayId = UUID.randomUUID();
-       this.day = dayName;
+        this.day = dayName;
     }
 
 

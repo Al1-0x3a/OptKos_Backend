@@ -5,6 +5,7 @@ import data_models.Email;
 import data_models.Phone;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ public class EmailDao {
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Email> emailList;
+    private static List<Email> emailList = new ArrayList<>();
 
     public static List<Email> getAllEmailsFromDb(){
 
@@ -37,7 +38,7 @@ public class EmailDao {
         if(emailList == null ){
             emailList = getAllEmailsFromDb();
         }
-        List<Email> tmpList = null;
+        List<Email> tmpList = new ArrayList<>();
         for (Email e : emailList)
         {
             if(e.getPersonId() == personId){

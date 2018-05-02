@@ -19,38 +19,41 @@ public abstract class Person {
 
 	public enum SALUTATION{
 		HERR("Herr"), FRAU("Frau");
-		private String salutation;
+		private String readableName;
 
-		SALUTATION(String salutation){
-			this.salutation = salutation;
-		}
-		public String salutation(){
-			return this.salutation;
-		}
+		SALUTATION(String readableName) {
+		    this.readableName = readableName;
+        }
+
+        public String toString() {
+		    return this.readableName;
+        }
 	}
 
 	public enum TITLE{
-		PROFESSOR("Prof."), DOKTOR("Dr."), DIPLOMING("Diplom Ing."), SENIOR("Sen."), JUNIOR("Jun."), NOTITLE("");
-		private String title;
+		PROFESSOR("Prof."), DOKTOR("Dr."), DIPLOM("Dipl."), SENIOR("Sen."), JUNIOR("Jun."), KEINTITEL("Kein Titel");
+        private String readableName;
 
-		TITLE(String title){
-			this.title = title;
-		}
-		public String title(){
-			return this.title;
-		}
+		TITLE(String readableName) {
+		    this.readableName = readableName;
+        }
+
+        public String toString() {
+		    return this.readableName;
+        }
 	}
 
 	public enum GENDER{
-		WEIBLICH('w'), MAENNLICH('m'), AUTOMIT4ZYLINDERREIHENMOTOR('a');
+		W("weiblich"), M("maennlich");
+        private String readableName;
 
-		private char gender;
-		GENDER(char gender){
-			this.gender = gender;
-		}
-		public char gender(){
-			return gender;
-		}
+        GENDER(String readableName) {
+            this.readableName = readableName;
+        }
+
+        public String toString() {
+            return this.readableName;
+        }
 	}
 
 

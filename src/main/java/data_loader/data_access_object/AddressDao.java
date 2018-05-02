@@ -3,6 +3,7 @@ import data_loader.SqlConnection;
         import data_models.Address;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
         import java.util.UUID;
 
@@ -11,13 +12,13 @@ public class AddressDao {
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Address> addressList;
+    private static List<Address> addressList = new ArrayList<>();
 
     public static List<Address> getAllAddressFromDb(){
 
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.ADRESS";
+            String query = "SELECT * FROM OPTKOS.ADDRESS";
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
@@ -46,17 +47,20 @@ public class AddressDao {
         return null;
     }
 
-    public static void createNewAddress(Address address){
+    public static void createNewAddress(Address address, UUID personId){
         try {
-            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADRESS (ADRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID) VALUES(?,?,?,?,?,?)");
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADDRESS (ADDRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID) VALUES(?,?,?,?,?,?)");
             preparedStmt.setString(1, address.getAddressId().toString());
             preparedStmt.setString(2, address.getPostcode());
             preparedStmt.setString(3, address.getCity());
             preparedStmt.setString(4, address.getStreet());
             preparedStmt.setString(5, address.getHousenr());
-            preparedStmt.setString(6, address.getPersonId().toString());
+            preparedStmt.setString(6, personId.toString());
             preparedStmt.execute();
 
+            if(addressList == null){
+                addressList = new ArrayList<>();
+            }
             addressList.add(address);
 
         } catch (SQLException e) {

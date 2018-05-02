@@ -4,6 +4,7 @@ import data_loader.SqlConnection;
 import data_models.Phone;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public class PhoneDao {
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Phone>phoneList;
+    private static List<Phone>phoneList = new ArrayList<>();
 
     public static List<Phone> getAllPhonesFromDb(){
 
@@ -36,7 +37,7 @@ public class PhoneDao {
         if(phoneList == null ){
             phoneList = getAllPhonesFromDb();
         }
-        List<Phone> tmpList = null;
+        List<Phone> tmpList = new ArrayList<Phone>();
         for (Phone p : phoneList)
         {
             if(p.getPersonId() == personId){
