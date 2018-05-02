@@ -40,7 +40,6 @@ public class AddressDao {
         }
         for (Address a : addressList)
         {
-            System.out.println(a.getPersonId().toString());
             if(a.getPersonId().equals(personId)){
                 return a;
             }

@@ -131,7 +131,7 @@ public class EmployeeDao {
                     }
                 }
 
-                WorkingWeekDao.setWorkingWeek(employee.getWorkingWeek(), employee.getEmployeeId());
+                WorkingWeekDao.getWorkingWeek(employee.getEmployeeId());
 
                 employeeList.add(employee);
 

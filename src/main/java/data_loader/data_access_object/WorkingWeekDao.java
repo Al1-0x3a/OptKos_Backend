@@ -29,14 +29,12 @@ public class WorkingWeekDao {
                 workingWeek.getWorkingDayByIndex(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
                 workingWeek.getWorkingDayByIndex(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
                 workingWeek.getWorkingDayByIndex(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
-                workingWeek.getWorkingDayByIndex(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                workingWeek.getWorkingDayByIndex(i).setDay(rs.getString("DAY"));
+                workingWeek.getWorkingDayByIndex(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
                 i++;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        workingWeek.setWorkingDays(workingDays);
         return workingWeek;
 
     }
