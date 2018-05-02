@@ -39,8 +39,6 @@ public interface IAdministrativeApi {
     boolean updatePhone(Phone phone);
     @WebMethod
     boolean deletePhone(Phone phone);
-
-
     @WebMethod
     Email getNewEmail(UUID personId);
     @WebMethod
@@ -49,4 +47,13 @@ public interface IAdministrativeApi {
     boolean updateEmail(Email email);
     @WebMethod
     boolean deleteEmail(Email email);
+    @WebMethod
+    Email getNewEmail(UUID personId);
+    @WebMethod
+    boolean createEmail(Email email);
+    @WebMethod
+    boolean updateEmail(Email email);
+    @WebMethod
+    boolean deleteEmail(Email email);
+
 }

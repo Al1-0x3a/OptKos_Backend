@@ -2,6 +2,7 @@ package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
 import data_models.Email;
+import data_models.Phone;
 
 import java.sql.*;
 import java.util.List;
@@ -89,7 +90,7 @@ public class EmailDao {
             b= preparedStmt.execute();
             if (b){
                 for (int i = 0; i< emailList.size(); i++){
-                    if(emailList.get(i).getPersonId() == personId) {
+                    if(emailList.get(i).getPersonId() == emailId) {
                         emailList.remove(i);
                     }
                 }
@@ -106,9 +107,10 @@ public class EmailDao {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.EMAIL SET EMAIL=?WHERE EMAILID=?");
             preparedStmt.setString(1, email.getEmail());
             preparedStmt.setString(2, email.getEmailId().toString());
+            b = preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return b;
     }
 }
