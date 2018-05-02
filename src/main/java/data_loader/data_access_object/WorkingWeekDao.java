@@ -20,18 +20,19 @@ public class WorkingWeekDao {
             stmt = con.createStatement();
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
             preparedStmt.setString(1, employeeId.toString());
-            ResultSet rs = preparedStmt.executeQuery();
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
-            workingWeek = new WorkingWeek();
-            int i = 0;
-            while (rs.next()) {
-                workingDays[i].setWorkingDayId(UUID.fromString(rs.getString("WORKINGDAYID")));
-                workingDays[i].setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
-                workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                workingDays[i].setStartBreakTime(rs.getTimestamp("STARTBREAK").toLocalDateTime().toLocalTime());
-                workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                workingDays[i].setDay(rs.getString("DAY"));
-                i++;
+                workingWeek = new WorkingWeek();
+                int i = 0;
+                while (rs.next()) {
+                    workingDays[i].setWorkingDayId(UUID.fromString(rs.getString("WORKINGDAYID")));
+                    workingDays[i].setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
+                    workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                    workingDays[i].setStartBreakTime(rs.getTimestamp("STARTBREAK").toLocalDateTime().toLocalTime());
+                    workingDays[i].setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                    workingDays[i].setDay(rs.getString("DAY"));
+                    i++;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,5 +71,9 @@ public class WorkingWeekDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private WorkingWeekDao() {
+        throw new IllegalStateException("Utility class");
     }
 }
