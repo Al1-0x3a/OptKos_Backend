@@ -4,6 +4,7 @@ import data_loader.SqlConnection;
 import data_models.Phone;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class PhoneDao {
             String query = "SELECT * FROM OPTKOS.PHONE";
             ResultSet rs = stmt.executeQuery(query);
 
+            phoneList = new ArrayList<>();
             while(rs.next()){
                 phoneList.add(new Phone(UUID.fromString(rs.getString("PHONEID")),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),

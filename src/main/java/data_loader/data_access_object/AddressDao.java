@@ -3,6 +3,7 @@ import data_loader.SqlConnection;
         import data_models.Address;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
         import java.util.UUID;
 
@@ -17,9 +18,10 @@ public class AddressDao {
 
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.ADRESS";
+            String query = "SELECT * FROM OPTKOS.ADDRESS";
             ResultSet rs = stmt.executeQuery(query);
 
+            addressList = new ArrayList<>();
             while(rs.next()){
                 addressList.add(new Address(UUID.fromString(rs.getString("ADDRESSID")),
                         rs.getString("POSTCODE"), rs.getString("CITY"),
