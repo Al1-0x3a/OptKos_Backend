@@ -34,13 +34,13 @@ public class PhoneDao {
     }
 
     public static List<Phone> getListByPersonId(UUID personId){
-        if(phoneList == null ){
+        if(phoneList.size() == 0 ){
             phoneList = getAllPhonesFromDb();
         }
         List<Phone> tmpList = new ArrayList<Phone>();
         for (Phone p : phoneList)
         {
-            if(p.getPersonId() == personId){
+            if(p.getPersonId().equals(personId)){
                 tmpList.add(p);
             }
         }

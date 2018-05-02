@@ -36,6 +36,13 @@ public abstract class Person {
         this.address = new Address(this.personId);
     }
 
+    public Person(UUID personId) {
+        phoneList = new ArrayList<>();
+        emailList = new ArrayList<>();
+        this.personId = personId;
+        this.address = new Address(this.personId);
+    }
+
     public void setPersonId(UUID personId) {
         if (this.personId == null)
             this.personId = personId;

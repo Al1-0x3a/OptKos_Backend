@@ -16,6 +16,10 @@ public class Employee extends Person {
 		this.employeeId = UUID.randomUUID();
 		this.workingWeek = new WorkingWeek();
 	}
+	public Employee(UUID personId){
+	    super(personId);
+	}
+
 
 	public Employee(UUID employeeId, char isDeleted, UUID positionId) {
 		this.employeeId = employeeId;

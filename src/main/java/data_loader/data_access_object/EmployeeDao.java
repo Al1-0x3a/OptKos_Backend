@@ -36,8 +36,8 @@ public class EmployeeDao {
             employeeList = new ArrayList<>();
             while (rs.next()) {
                 // Person
-                Employee employee = new Employee();
-                employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
+                Employee employee = new Employee(UUID.fromString(rs.getString("PERSONID")));
+                // employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 employee.setFirstname(rs.getString("FIRSTNAME"));
                 employee.setLastname(rs.getString("LASTNAME"));
                 employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
@@ -173,6 +173,7 @@ public class EmployeeDao {
                 employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 employee.setFirstname(rs.getString("FIRSTNAME"));
                 employee.setLastname(rs.getString("LASTNAME"));
+                System.out.println(employee.getFirstname() + " " + employee.getLastname());
                 employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
                 employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
                 employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
@@ -193,11 +194,11 @@ public class EmployeeDao {
             return employee;
         }
 
-        public static boolean updateEmployee(){
-            boolean b = false;
-            return b;
-        }
+    public static boolean updateEmployee(){
+        boolean b = false;
+        return b;
     }
+}
 
 
 // TODO:java class properties an methode übergeben um spezielle sachen zu suchen/ändern

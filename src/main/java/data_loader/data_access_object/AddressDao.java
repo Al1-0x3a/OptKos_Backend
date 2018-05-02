@@ -35,12 +35,13 @@ public class AddressDao {
     }
 
     public static Address getAddressByPersonId(UUID personId){
-        if(addressList == null ){
+        if(addressList.size() == 0 ){
             addressList = getAllAddressFromDb();
         }
         for (Address a : addressList)
         {
-            if(a.getPersonId() == personId){
+            System.out.println(a.getPersonId().toString());
+            if(a.getPersonId().equals(personId)){
                 return a;
             }
         }
@@ -58,9 +59,6 @@ public class AddressDao {
             preparedStmt.setString(6, personId.toString());
             preparedStmt.execute();
 
-            if(addressList == null){
-                addressList = new ArrayList<>();
-            }
             addressList.add(address);
 
         } catch (SQLException e) {
