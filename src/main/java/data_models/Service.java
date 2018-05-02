@@ -13,19 +13,21 @@ public class Service {
 	private BigDecimal price;
 	private Time durationPlanned;
 	private Time durationAverage;
+	private String isDeleted;
 
 	public Service(){
 this.serviceId = UUID.randomUUID();
 	}
 
 	public Service(UUID serviceId, String name, String description, BigDecimal price,
-	Time durationPlanned, Time durationAverage) {
+	Time durationPlanned, Time durationAverage, String isDeleted) {
 		this.serviceId = serviceId;
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
+		this.isDeleted = isDeleted;
 	}
 
 
@@ -76,4 +78,8 @@ this.serviceId = UUID.randomUUID();
 	public void setDurationAverage(Time durationAverage) {
 		this.durationAverage = durationAverage;
 	}
+
+	public String getIsDeleted(){ return isDeleted; }
+
+	public void setIsDeleted(String isDeleted) { this.isDeleted = isDeleted; }
 }

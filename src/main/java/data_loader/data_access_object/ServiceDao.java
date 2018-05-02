@@ -18,11 +18,12 @@ public class ServiceDao {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.SERVICE";
             ResultSet rs = stmt.executeQuery(query);
+
             while(rs.next()){
                 serviceList.add(new Service(UUID.fromString(rs.getString("SERVICEID")),
                         rs.getString("NAME"), rs.getString("DESCRIPTION"),
                         rs.getBigDecimal("PRICE"), rs.getTime("DURATIONPLANNED"),
-                        rs.getTime("DURATIONAVERAGE")));
+                        rs.getTime("DURATIONAVERAGE"), rs.getString("ISDELETED")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,4 +64,15 @@ public class ServiceDao {
         }
         return tmp;
     }
+
+    public static void deleteServiceByServiceId(UUID ServiceId){
+
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");
+            preparedStmt.setString(1, ServiceId.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
