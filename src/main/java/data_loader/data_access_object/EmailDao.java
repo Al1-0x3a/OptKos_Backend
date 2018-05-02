@@ -5,6 +5,7 @@ import data_models.Email;
 import data_models.Phone;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class EmailDao {
             String query = "SELECT * FROM OPTKOS.EMAIL";
             ResultSet rs = stmt.executeQuery(query);
 
+            emailList = new ArrayList<>();
             while(rs.next()){
                 emailList.add(new Email(UUID.fromString(rs.getString("EMAILID")),
                         rs.getString("EMAIL"), UUID.fromString(rs.getString("PERSONID"))));

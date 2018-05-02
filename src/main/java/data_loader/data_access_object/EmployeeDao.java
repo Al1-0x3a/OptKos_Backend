@@ -98,9 +98,9 @@ public class EmployeeDao {
             preparedStmt.setString(1, employee.getPersonId().toString());
             preparedStmt.setString(2, employee.getLastname());
             preparedStmt.setString(3, employee.getFirstname());
-            preparedStmt.setString(4, employee.getTitle().title());
-            preparedStmt.setString(5, employee.getSalutation().salutation());
-            preparedStmt.setString(6, String.valueOf(employee.getGender()));
+            preparedStmt.setString(4, employee.getTitle().name());
+            preparedStmt.setString(5, employee.getSalutation().name());
+            preparedStmt.setString(6, employee.getGender().name());
 
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
 
