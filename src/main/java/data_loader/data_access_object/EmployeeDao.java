@@ -51,7 +51,7 @@ public class EmployeeDao {
                 employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
                 employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
                 employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
-                employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
+                employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
                 employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
 
 
@@ -121,78 +121,78 @@ public class EmployeeDao {
 
                     PhoneDao.createPhone(employee.getPhoneList().get(i));
                 }
+            }
+            if(employee.getEmailList().size() != 0) {
+                for(int i = 0; i<employee.getEmailList().size(); i++) {
+                    // CAUTION!! Dirty Hack
+                    employee.getEmailList().get(i).setPersonId(employee.getPersonId());
+
+                    EmailDao.createEmail(employee.getEmailList().get(i));
                 }
-                if(employee.getEmailList().size() != 0) {
-                    for(int i = 0; i<employee.getEmailList().size(); i++) {
-                        // CAUTION!! Dirty Hack
-                        employee.getEmailList().get(i).setPersonId(employee.getPersonId());
+            }
 
-                        EmailDao.createEmail(employee.getEmailList().get(i));
-                    }
-                }
+            WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays());
 
-                WorkingWeekDao.getWorkingWeek(employee.getEmployeeId());
+            employeeList.add(employee);
 
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static Employee getEmployeeById(UUID empolyeeId) {
+        Employee employee = null;
+        for (int i = 0; i < employeeList.size(); i++) {
+            if (employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
+                employee = employeeList.get(i);
+                break;
+            }
+        }
+
+        if (employee == null) {
+            employee = getEmployeeByIdFromDb(empolyeeId);
+            if (employee != null)
                 employeeList.add(employee);
-
-                return true;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
         }
+        return employee;
+    }
 
-        public static Employee getEmployeeById(UUID empolyeeId) {
-            Employee employee = null;
-            for (int i = 0; i < employeeList.size(); i++) {
-                if (employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
-                    employee = employeeList.get(i);
-                    break;
-                }
-            }
 
-            if (employee == null) {
-                employee = getEmployeeByIdFromDb(empolyeeId);
-                if (employee != null)
-                    employeeList.add(employee);
-            }
-            return employee;
+    public static Employee getEmployeeByIdFromDb(UUID employeeId) {
+
+        Employee employee = new Employee();
+        try {
+            stmt = con.createStatement();
+            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
+                    "e.EMPLOYEEID=" + employeeId.toString() + ";";
+            ResultSet rs = stmt.executeQuery(query);
+
+            // Person
+            employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
+            employee.setFirstname(rs.getString("FIRSTNAME"));
+            employee.setLastname(rs.getString("LASTNAME"));
+            System.out.println(employee.getFirstname() + " " + employee.getLastname());
+            employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
+            employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+            employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+            // Employee
+            employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
+            employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+            employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
+            // other objects
+            employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
+            employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
+            employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
+            employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-
-        public static Employee getEmployeeByIdFromDb(UUID employeeId) {
-
-            Employee employee = new Employee();
-            try {
-                stmt = con.createStatement();
-                String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
-                        "e.EMPLOYEEID=" + employeeId.toString() + ";";
-                ResultSet rs = stmt.executeQuery(query);
-
-                // Person
-                employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
-                employee.setFirstname(rs.getString("FIRSTNAME"));
-                employee.setLastname(rs.getString("LASTNAME"));
-                System.out.println(employee.getFirstname() + " " + employee.getLastname());
-                employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
-                employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
-                // Employee
-                employee.setEmployeeId(UUID.fromString(rs.getString("EMPLOYEEID")));
-                employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
-                // other objects
-                employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
-                employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
-                employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
-                employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
-
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return employee;
-        }
+        return employee;
+    }
 
     public static boolean updateEmployee(){
         boolean b = false;
