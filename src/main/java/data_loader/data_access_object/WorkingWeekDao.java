@@ -5,6 +5,8 @@ import data_models.WorkingDay;
 import data_models.WorkingWeek;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class WorkingWeekDao {
@@ -13,7 +15,7 @@ public class WorkingWeekDao {
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static WorkingWeek workingWeek;
-    private static WorkingDay[] workingDays = new WorkingDay[6];
+    private static List<WorkingDay> workingDays = new ArrayList<>();
 
     public static WorkingWeek getWorkingWeek(UUID employeeId) {
         try {
