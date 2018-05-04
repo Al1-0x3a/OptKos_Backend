@@ -37,6 +37,9 @@ public class WorkingDay {
     }
 
     public void setStartWorkingTime(LocalTime startWorkingTime) {
+        if( startWorkingTime == null){
+            this.startWorkingTime = LocalTime.of(00,00);
+        }else
         this.startWorkingTime = startWorkingTime;
     }
 
@@ -45,6 +48,9 @@ public class WorkingDay {
     }
 
     public void setEndWorkingTime(LocalTime endWorkingTime) {
+        if( endWorkingTime == null){
+            this.endWorkingTime = LocalTime.of(00,00);
+        }else
         this.endWorkingTime = endWorkingTime;
     }
 
@@ -53,6 +59,9 @@ public class WorkingDay {
     }
 
     public void setStartBreakTime(LocalTime startBreakTime) {
+        if( startBreakTime == null){
+            this.startBreakTime = LocalTime.of(00,00);
+        }else
         this.startBreakTime = startBreakTime;
     }
 
@@ -65,6 +74,9 @@ public class WorkingDay {
     }
 
     public void setEndBreakTime(LocalTime endBreakTime) {
+        if( endBreakTime == null){
+            this.endBreakTime = LocalTime.of(00,00);
+        }else
         this.endBreakTime = endBreakTime;
     }
 
@@ -80,5 +92,3 @@ public class WorkingDay {
         this.day = day;
     }
 }
-// TODO: mit einem anderen Datentyp testen
-// TODO: von LocalTime ableiten und super() Konstruktor benutzen
