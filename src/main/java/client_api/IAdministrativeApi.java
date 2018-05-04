@@ -1,7 +1,9 @@
 package client_api;
 
 import data_models.Customer;
+import data_models.Email;
 import data_models.Employee;
+import data_models.Phone;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -18,6 +20,8 @@ public interface IAdministrativeApi {
     boolean createEmployee(Employee employee);
     @WebMethod
     boolean updateEmployee(Employee employee);
+    @WebMethod
+    Employee getNewEmployee();
 
     @WebMethod
     Customer getCustomer(UUID customerId);
@@ -27,4 +31,20 @@ public interface IAdministrativeApi {
     boolean createCustomer(Customer customer);
     @WebMethod
     boolean updateCustomer(Customer customer);
+    @WebMethod
+    Phone getNewPhone(UUID personId);
+    @WebMethod
+    boolean createPhone(Phone phone);
+    @WebMethod
+    boolean updatePhone(Phone phone);
+    @WebMethod
+    boolean deletePhone(Phone phone);
+    @WebMethod
+    Email getNewEmail(UUID personId);
+    @WebMethod
+    boolean createEmail(Email email);
+    @WebMethod
+    boolean updateEmail(Email email);
+    @WebMethod
+    boolean deleteEmail(Email email);
 }

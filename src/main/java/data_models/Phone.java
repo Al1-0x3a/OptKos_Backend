@@ -12,7 +12,7 @@ public class Phone {
 
 
 	public Phone(){
-
+		this.phoneId = UUID.randomUUID();
 	}
 
 	public Phone(UUID phoneId, String number, String annotation, String description, UUID personId) {
@@ -21,6 +21,11 @@ public class Phone {
 		this.phoneId = phoneId;
 		this.description = description;
 		this.personId = personId;
+	}
+
+	public Phone(UUID personId){
+		this.personId = personId;
+		this.phoneId = UUID.randomUUID();
 	}
 
 	public String getDescription() {

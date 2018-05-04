@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.util.UUID;
 
 public class Service {
-
 	private UUID serviceId;
 	private String name;
 	private String description;

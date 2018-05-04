@@ -12,7 +12,7 @@ public class CustomerCategory {
 	private double timefactor;
 
 	public CustomerCategory(){
-
+this.customerCategoryId = UUID.randomUUID();
 	}
 
 	public CustomerCategory(UUID customerCategoryId, String description, String name) {

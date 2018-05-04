@@ -22,8 +22,11 @@ public class WorkingDay {
         this.day = day;
     }
 
-    public WorkingDay() {
+    public WorkingDay(String dayName) {
+        this.workingDayId = UUID.randomUUID();
+       this.day = dayName;
     }
+
 
 
     public LocalTime getStartWorkingTime() {
@@ -58,10 +61,6 @@ public class WorkingDay {
         return day;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
-
     public void setEndBreakTime(LocalTime endBreakTime) {
         this.endBreakTime = endBreakTime;
     }
@@ -73,4 +72,10 @@ public class WorkingDay {
     public void setWorkingDayId(UUID workingDayId) {
         this.workingDayId = workingDayId;
     }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 }
+// TODO: mit einem anderen Datentyp testen
+// TODO: von LocalTime ableiten und super() Konstruktor benutzen

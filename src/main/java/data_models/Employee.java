@@ -1,7 +1,6 @@
 package data_models;
 
 import data_loader.data_access_object.PositionDao;
-import javafx.geometry.Pos;
 
 import java.util.UUID;
 
@@ -13,13 +12,16 @@ public class Employee extends Person {
 	private WorkingWeek workingWeek;
 
 	public Employee(){
-
+	    super();
+		this.employeeId = UUID.randomUUID();
+		this.workingWeek = new WorkingWeek();
 	}
 
 	public Employee(UUID employeeId, char isDeleted, UUID positionId) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
+		this.workingWeek = new WorkingWeek();
 	}
 
 	public WorkingWeek getWorkingWeek() {
