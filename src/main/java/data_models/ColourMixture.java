@@ -4,19 +4,23 @@ import java.util.UUID;
 
 public class ColourMixture {
 
+	private UUID colourMixtureId;
 	private UUID colourId;
 	private UUID customerId;
 	private int mixingRatio;
 
 	public ColourMixture(){
-
+		this.colourMixtureId= UUID.randomUUID();
 	}
 
-	public ColourMixture(UUID colourId, UUID customerId, int mixingRatio) {
+	public ColourMixture(UUID colourMixtureId ,UUID colourId, UUID customerId, int mixingRatio) {
+		this.colourMixtureId = colourMixtureId;
 		this.colourId = colourId;
 		this.customerId = customerId;
 		this.mixingRatio = mixingRatio;
 	}
+
+	public UUID getColourMixtureId() { return colourMixtureId; }
 
 	public UUID getColourId() {
 		return colourId;

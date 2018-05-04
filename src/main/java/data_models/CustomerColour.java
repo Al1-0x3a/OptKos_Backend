@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public class CustomerColour {
 
+	private UUID customerColourId;
 	private int contentWhite;
 	private UUID customerId;
 	private int exposureTime;
@@ -15,8 +16,9 @@ public class CustomerColour {
 
 	}
 
-	public CustomerColour(int contentWhite, UUID customerId, int exposureTime,
+	public CustomerColour(UUID customerColourId, int contentWhite, UUID customerId, int exposureTime,
 	String natural, String oxidation, String result) {
+		this.customerColourId = customerColourId;
 		this.contentWhite = contentWhite;
 		this.customerId = customerId;
 		this.exposureTime = exposureTime;
@@ -24,6 +26,13 @@ public class CustomerColour {
 		this.oxidation = oxidation;
 		this.result = result;
 	}
+
+	public UUID getCustomerColourId() {
+		return customerColourId;
+	}
+
+	public void setCustomerColourId(UUID CustomerColourId) {
+		this.customerColourId = customerColourId; }
 
 	public int getContentWhite() {
 		return contentWhite;
