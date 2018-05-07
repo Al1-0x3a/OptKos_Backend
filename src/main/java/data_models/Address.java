@@ -15,6 +15,7 @@ public class Address {
 		this.addressId = UUID.randomUUID();
 		this.personId = personId;
 	}
+	public Address(){}
 
 	public Address(UUID addressId, String postcode, String city, String street, String housenr, UUID personId) {
 		this.addressId = UUID.randomUUID();
