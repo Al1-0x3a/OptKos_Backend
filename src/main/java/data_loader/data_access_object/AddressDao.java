@@ -21,6 +21,7 @@ public class AddressDao {
             String query = "SELECT * FROM OPTKOS.ADDRESS";
             ResultSet rs = stmt.executeQuery(query);
 
+            addressList = new ArrayList<>();
             while(rs.next()){
                 addressList.add(new Address(UUID.fromString(rs.getString("ADDRESSID")),
                         rs.getString("POSTCODE"), rs.getString("CITY"),

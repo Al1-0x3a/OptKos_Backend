@@ -21,6 +21,7 @@ public class PhoneDao {
             String query = "SELECT * FROM OPTKOS.PHONE";
             ResultSet rs = stmt.executeQuery(query);
 
+            phoneList = new ArrayList<>();
             while(rs.next()){
                 phoneList.add(new Phone(UUID.fromString(rs.getString("PHONEID")),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),

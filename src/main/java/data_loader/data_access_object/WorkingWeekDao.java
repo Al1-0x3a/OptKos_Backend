@@ -17,10 +17,12 @@ public class WorkingWeekDao {
 
     public static List<WorkingDay> getWorkingDays(UUID employeeId, List<WorkingDay> employeeWorkingDays) {
         List<WorkingDay> tmp = employeeWorkingDays;
+
         try {
             stmt = con.createStatement();
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
             preparedStmt.setString(1, employeeId.toString());
+
             ResultSet rs = preparedStmt.executeQuery();
 
             int i = 0;
@@ -41,6 +43,7 @@ public class WorkingWeekDao {
 
     // TODO: check if the db will save the times as LocalTime
     public static void setWorkingWeek(List<WorkingDay> workingDays, UUID employeeId) {
+
         try {
 /*            stmt = con.createStatement();
             StringBuilder query = new StringBuilder("INSERT INTO OPTKOS.WORKINGDAY" +
@@ -79,5 +82,9 @@ public class WorkingWeekDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private WorkingWeekDao() {
+        throw new IllegalStateException("Utility class");
     }
 }

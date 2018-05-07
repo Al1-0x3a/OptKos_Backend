@@ -26,12 +26,14 @@ public abstract class Person {
 
     public enum GENDER {
         W, M;
+
     }
 
 
     public Person() {
         phoneList = new ArrayList<>();
         emailList = new ArrayList<>();
+
         personId = UUID.randomUUID();
         this.address = new Address(this.personId);
     }
