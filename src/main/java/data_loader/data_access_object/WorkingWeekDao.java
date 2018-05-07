@@ -1,7 +1,6 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
-import data_models.Employee;
 import data_models.WorkingDay;
 
 import java.sql.*;
@@ -10,10 +9,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class WorkingWeekDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static List<WorkingDay> workingDays = new ArrayList<>();
+
+    private WorkingWeekDao() {
+    }
 
     public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
         List<WorkingDay> tmp = employeeWorkingDays;
@@ -23,16 +25,17 @@ public class WorkingWeekDao {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
             preparedStmt.setString(1, employeeId.toString());
 
-            ResultSet rs = preparedStmt.executeQuery();
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
-            int i = 0;
-            while (rs.next()) {
-                tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
-                tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
-                i++;
+                int i = 0;
+                while (rs.next()) {
+                    tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
+                    tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
+                    i++;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

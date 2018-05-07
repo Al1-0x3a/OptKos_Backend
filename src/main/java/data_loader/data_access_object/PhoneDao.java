@@ -9,23 +9,27 @@ import java.util.List;
 import java.util.UUID;
 
 public class PhoneDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Phone>phoneList = new ArrayList<>();
+    private static List<Phone> phoneList = new ArrayList<>();
 
-    public static List<Phone> getAllPhonesFromDb(){
+    private PhoneDao() {
+    }
+
+    public static List<Phone> getAllPhonesFromDb() {
 
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PHONE";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             phoneList = new ArrayList<>();
-            while(rs.next()){
+            while(rs.next()) {
                 phoneList.add(new Phone(rs.getString("PHONEID"),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
                         rs.getString("ANNOTATION"), rs.getString("PERSONID")));
+            }
             }
 
         } catch (SQLException e) {
@@ -48,8 +52,8 @@ public class PhoneDao {
         return tmpList;
     }
 
-    public static boolean createPhone(Phone phone){
-        boolean b = false;
+    public static boolean createPhone(Phone phone) {
+        boolean result = false;
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
             preparedStmt.setString(1, phone.getPhoneId());
@@ -63,7 +67,7 @@ public class PhoneDao {
             System.err.println("An Error occured while writing an Phone into the DB");
             e.printStackTrace();
         }
-        return b;
+        return result;
     }
 
 
@@ -88,7 +92,6 @@ public class PhoneDao {
     }
 
     public static boolean deleteAllPhoneByPersonId(String personId){
-        System.out.println(personId);
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
             preparedStmt.setString(1, personId);

@@ -8,8 +8,8 @@ import static java.lang.System.exit;
 public class SqlConnection {
 
 	private static Connection connection = null;
-	private static String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
-	private static DbLoginData loginData = new DbLoginData();
+	private static final String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
+	private static final DbLoginData loginData = new DbLoginData();
 
 	protected SqlConnection(){
 	}

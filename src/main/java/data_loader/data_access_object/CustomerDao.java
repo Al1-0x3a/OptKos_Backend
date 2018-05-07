@@ -4,21 +4,25 @@ import data_loader.SqlConnection;
 import data_models.Customer;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class CustomerDao {
 
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Customer> customerList;
+    private static List<Customer> customerList = new ArrayList<>();
 
-    public static List<Customer> getAllCustomFromDb(){
+    private CustomerDao() {
+    }
+
+    public static List<Customer> getAllCustomFromDb() {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.CUSTOMER";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             while(rs.next()){
                 Customer customer = new Customer(rs.getString("CUSTOMERID"),
@@ -43,16 +47,16 @@ public class CustomerDao {
     public static Customer getCustomerById(String cId){
 
         Customer customer = null;
-        for(int i = 0; i< customerList.size(); i++){
-            if(customerList != null && customerList.get(i).getCostumerId() == cId) {
-                customer = customerList.get(i);
+        for (Customer customers : customerList) {
+            if (customers.getCostumerId() == uuid) {
+                customer = customers;
                 break;
             }
         }
 
-        if( customer == null){
-            customer = getCustomerByIdFromDb(cId);
-            if(customer !=null)
+        if (customer == null) {
+            customer = getCustomerByIdFromDb(uuid);
+            if (customer != null)
                 customerList.add(customer);
         }
         return customer;
@@ -63,8 +67,8 @@ public class CustomerDao {
         Customer customer = null;
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMER c WHERE c.CUSTOMERID=" + cId + ";";
-            ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT * FROM OPTKOS.CUSTOMER c WHERE c.CUSTOMERID=" + uuid + ";";
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             customer = new Customer(rs.getString("CUSTOMERID"),
                     rs.getDouble("MULTIPLIKATOR"),

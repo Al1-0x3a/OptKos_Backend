@@ -3,17 +3,11 @@ package manager;
 import data_loader.data_access_object.EmployeeDao;
 import data_models.Employee;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AdministrativeManager {
-    private EmployeeDao employeeDao;
-
-    public AdministrativeManager() {
-        employeeDao = new EmployeeDao();
-    }
 
     public Employee getEmployeeById(String uuid) {
         List<Employee> tmpList = employeeDao.getAllEmployeesFromDb().stream().
@@ -30,11 +24,11 @@ public class AdministrativeManager {
     }
 
     public List<Employee> getAllEmployees() {
-        return employeeDao.getAllEmployeesFromDb();
+        return EmployeeDao.getAllEmployeesFromDb();
     }
 
     public boolean createEmployee(Employee employee) {
-        return employeeDao.createNewEmployee(employee);
+        return EmployeeDao.createNewEmployee(employee);
     }
 
     public boolean updateEmployee(Employee employee){

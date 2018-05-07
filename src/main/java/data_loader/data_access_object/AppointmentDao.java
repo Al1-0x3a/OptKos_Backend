@@ -4,20 +4,24 @@ import data_loader.SqlConnection;
 import data_models.Appointment;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class AppointmentDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Appointment> appointmentList;
+    private static List<Appointment> appointmentList = new ArrayList<>();
 
-    public static List<Appointment> getAllAppointmentsFromDb(){
+    private AppointmentDao() {
+    }
+
+    public static List<Appointment> getAllAppointmentsFromDb() {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.APOINTMENT";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             while(rs.next()){
                 Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
@@ -51,12 +55,12 @@ public class AppointmentDao {
             }
         }
 
-        if( app == null){
-            app = getAppointmentByIdFromDb(appointmentId);
-            if(app != null)
-                appointmentList.add(app);
+        if (appointment == null) {
+            appointment = getAppointmentByIdFromDb(appointmentId);
+            if (appointment != null)
+                appointmentList.add(appointment);
         }
-        return app;
+        return appointment;
     }
 
     public static Appointment getAppointmentByIdFromDb(String appointmentId){
@@ -64,7 +68,7 @@ public class AppointmentDao {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId.toString() + ";";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             appointment = new Appointment(rs.getString("APPOINTMENTID"),
                     rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),

@@ -2,7 +2,6 @@ package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
 import data_models.Email;
-import data_models.Phone;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,17 +10,19 @@ import java.util.UUID;
 
 public class EmailDao {
 
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static List<Email> emailList = new ArrayList<>();
+
+    private EmailDao() {}
 
     public static List<Email> getAllEmailsFromDb(){
 
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.EMAIL";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             emailList = new ArrayList<>();
             while(rs.next()){

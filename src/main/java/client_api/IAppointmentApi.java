@@ -10,12 +10,7 @@ import java.util.UUID;
 @WebService
 public interface IAppointmentApi {
     @WebMethod
-	List<Appointment> getAppointment();
+	List<Appointment> getAppointments();
     @WebMethod
-	Appointment getApointment(String apointmentId);
-
-	// public List<Apointment> getApointment();
-
-	// public void getApointment();
-
+	Appointment getApointmentById(String apointmentId);
 }

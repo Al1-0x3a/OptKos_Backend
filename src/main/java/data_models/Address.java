@@ -36,37 +36,37 @@ public class Address {
 		this.addressId = addressId;
 	}
 
-	public String getPostcode() {
-		return postcode;
-	}
+    public String getPostcode() {
+        return postcode;
+    }
 
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
-	}
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getStreet() {
-		return street;
-	}
+    public String getStreet() {
+        return street;
+    }
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-	public String getHousenr() {
-		return housenr;
-	}
+    public String getHousenr() {
+        return housenr;
+    }
 
-	public void setHousenr(String housenr) {
-		this.housenr = housenr;
-	}
+    public void setHousenr(String housenr) {
+        this.housenr = housenr;
+    }
 
 	public String getPersonId() {
 		return personId;

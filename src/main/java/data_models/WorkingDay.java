@@ -31,16 +31,15 @@ public class WorkingDay {
     }
 
 
-
     public LocalTime getStartWorkingTime() {
         return startWorkingTime;
     }
 
     public void setStartWorkingTime(LocalTime startWorkingTime) {
-        if( startWorkingTime == null){
-            this.startWorkingTime = LocalTime.of(00,00);
-        }else
-        this.startWorkingTime = startWorkingTime;
+        if (startWorkingTime == null) {
+            this.startWorkingTime = LocalTime.of(0, 0);
+        } else
+            this.startWorkingTime = startWorkingTime;
     }
 
     public LocalTime getEndWorkingTime() {
@@ -48,10 +47,10 @@ public class WorkingDay {
     }
 
     public void setEndWorkingTime(LocalTime endWorkingTime) {
-        if( endWorkingTime == null){
-            this.endWorkingTime = LocalTime.of(00,00);
-        }else
-        this.endWorkingTime = endWorkingTime;
+        if (endWorkingTime == null) {
+            this.endWorkingTime = LocalTime.of(0, 0);
+        } else
+            this.endWorkingTime = endWorkingTime;
     }
 
     public LocalTime getStartBreakTime() {
@@ -59,10 +58,10 @@ public class WorkingDay {
     }
 
     public void setStartBreakTime(LocalTime startBreakTime) {
-        if( startBreakTime == null){
-            this.startBreakTime = LocalTime.of(00,00);
-        }else
-        this.startBreakTime = startBreakTime;
+        if (startBreakTime == null) {
+            this.startBreakTime = LocalTime.of(0, 0);
+        } else
+            this.startBreakTime = startBreakTime;
     }
 
     public LocalTime getEndBreakTime() {
@@ -74,10 +73,10 @@ public class WorkingDay {
     }
 
     public void setEndBreakTime(LocalTime endBreakTime) {
-        if( endBreakTime == null){
-            this.endBreakTime = LocalTime.of(00,00);
-        }else
-        this.endBreakTime = endBreakTime;
+        if (endBreakTime == null) {
+            this.endBreakTime = LocalTime.of(0, 0);
+        } else
+            this.endBreakTime = endBreakTime;
     }
 
     public String getWorkingDayId() {
