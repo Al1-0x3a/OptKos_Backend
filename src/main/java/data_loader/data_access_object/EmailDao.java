@@ -14,7 +14,7 @@ public class EmailDao {
     private static Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Email> emailList;
+    private static List<Email> emailList = new ArrayList<>();
 
     public static List<Email> getAllEmailsFromDb(){
 
@@ -36,13 +36,13 @@ public class EmailDao {
     }
 
     public static List<Email> getEmailListByPersonId(UUID personId){
-        if(emailList == null ){
+        if(emailList.size() == 0 ){
             emailList = getAllEmailsFromDb();
         }
-        List<Email> tmpList = null;
+        List<Email> tmpList = new ArrayList<>();
         for (Email e : emailList)
         {
-            if(e.getPersonId() == personId){
+            if(e.getPersonId().equals(personId)){
                 tmpList.add(e);
             }
         }
@@ -72,7 +72,7 @@ public class EmailDao {
 
             if (preparedStmt.execute()){
                 for (int i = 0; i< emailList.size(); i++){
-                    if(emailList.get(i).getPersonId() == personId) {
+                    if(emailList.get(i).getPersonId().equals(personId)) {
                         emailList.remove(i);
                     }
                 }

@@ -2,6 +2,8 @@ package data_models;
 
 import data_loader.data_access_object.PositionDao;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Employee extends Person {
@@ -9,27 +11,32 @@ public class Employee extends Person {
 	private UUID employeeId;
 	private char isDeleted;
 	private UUID positionId;
-	private WorkingWeek workingWeek;
+    private List<WorkingDay> workingDays;
 
 	public Employee(){
 	    super();
 		this.employeeId = UUID.randomUUID();
-		this.workingWeek = new WorkingWeek();
+		this.initWorkingDays();
 	}
+	public Employee(UUID personId){
+	    super(personId);
+		this.initWorkingDays();
+	}
+
 
 	public Employee(UUID employeeId, char isDeleted, UUID positionId) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
-		this.workingWeek = new WorkingWeek();
+		this.initWorkingDays();
 	}
 
-	public WorkingWeek getWorkingWeek() {
-		return workingWeek;
+	public List<WorkingDay> getWorkingDays() {
+		return this.workingDays;
 	}
 
-	public void setWorkingWeek(WorkingWeek workingWeek) {
-		this.workingWeek = workingWeek;
+	public void setWorkingDays(List<WorkingDay> workingDays) {
+		this.workingDays = workingDays;
 	}
 
 	public UUID getEmployeeId() {
@@ -68,5 +75,16 @@ public class Employee extends Person {
 				", isDeleted=" + isDeleted +
 				", positionId=" + positionId +
 				'}';
+	}
+
+	private void initWorkingDays(){
+		workingDays = new ArrayList<>();
+		workingDays.add(new WorkingDay("Montag"));
+		workingDays.add(new WorkingDay("Dienstag"));
+		workingDays.add(new WorkingDay("Mittwoch"));
+		workingDays.add(new WorkingDay("Donnerstag"));
+		workingDays.add(new WorkingDay("Freitag"));
+		workingDays.add(new WorkingDay("Samstag"));
+		workingDays.add(new WorkingDay("Sonntag"));
 	}
 }

@@ -16,8 +16,8 @@ public class AdministrativeManager {
 
     public Employee getEmployeeById(UUID uuid) {
         List<Employee> tmpList = employeeDao.getAllEmployeesFromDb().stream().
-                filter(employee -> employee.getEmployeeId() == uuid).collect(Collectors.toList());
-        if (tmpList.size() == 0) {
+                filter(employee -> employee.getEmployeeId().equals(uuid)).collect(Collectors.toList());
+        if (tmpList.isEmpty()) {
             System.err.println("No employee with UUID " + uuid);
             return null;
         }

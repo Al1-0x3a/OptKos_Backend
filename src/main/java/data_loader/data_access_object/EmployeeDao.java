@@ -28,7 +28,6 @@ public class EmployeeDao {
     }
 
     public static List<Employee> getAllEmployeesFromDb() {
-
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID";
@@ -37,8 +36,8 @@ public class EmployeeDao {
             employeeList = new ArrayList<>();
             while (rs.next()) {
                 // Person
-                Employee employee = new Employee();
-                employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
+                Employee employee = new Employee(UUID.fromString(rs.getString("PERSONID")));
+                // employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
                 employee.setFirstname(rs.getString("FIRSTNAME"));
                 employee.setLastname(rs.getString("LASTNAME"));
                 employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
@@ -52,7 +51,7 @@ public class EmployeeDao {
                 employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
                 employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
                 employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
-                employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
+                employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
                 employee.setPositionId(UUID.fromString(rs.getString("POSITIONID")));
 
 
@@ -102,19 +101,37 @@ public class EmployeeDao {
             preparedStmt.setString(5, employee.getSalutation().name());
             preparedStmt.setString(6, employee.getGender().name());
 
-            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED, POSITIONID) VALUES(?,?,?,?)");
+            // preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
 
             preparedStmt2.setString(1, employee.getEmployeeId().toString());
             preparedStmt2.setString(2, employee.getPersonId().toString());
-            preparedStmt2.setString(3, employee.getPositionId().toString());
+            preparedStmt2.setString(3, "0");
+            preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
+            //preparedStmt2.setString(3, employee.getPositionId().toString());
 
             preparedStmt.execute();
             preparedStmt2.execute();
 
-            AddressDao.createNewAddress(employee.getAddress());
-            PhoneDao.createPhone(employee.getPhoneList().get(0));
-            EmailDao.createEmail(employee.getEmailList().get(0));
-            WorkingWeekDao.setWorkingWeek(employee.getWorkingWeek(), employee.getEmployeeId());
+            AddressDao.createNewAddress(employee.getAddress(), employee.getPersonId());
+            if(employee.getPhoneList().size()!=0) {
+                for(int i = 0; i<employee.getPhoneList().size(); i++) {
+                    // CAUTION!! Dirty Hack
+                    employee.getPhoneList().get(i).setPersonId(employee.getPersonId());
+
+                    PhoneDao.createPhone(employee.getPhoneList().get(i));
+                }
+            }
+            if(employee.getEmailList().size() != 0) {
+                for(int i = 0; i<employee.getEmailList().size(); i++) {
+                    // CAUTION!! Dirty Hack
+                    employee.getEmailList().get(i).setPersonId(employee.getPersonId());
+
+                    EmailDao.createEmail(employee.getEmailList().get(i));
+                }
+            }
+
+            WorkingWeekDao.setWorkingWeek(employee.getWorkingDays(), employee.getEmployeeId());
 
             employeeList.add(employee);
 
@@ -156,6 +173,7 @@ public class EmployeeDao {
             employee.setPersonId(UUID.fromString(rs.getString("PERSONID")));
             employee.setFirstname(rs.getString("FIRSTNAME"));
             employee.setLastname(rs.getString("LASTNAME"));
+            System.out.println(employee.getFirstname() + " " + employee.getLastname());
             employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
             employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
             employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
@@ -167,13 +185,18 @@ public class EmployeeDao {
             employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
             employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
             employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
-            employee.setWorkingWeek(WorkingWeekDao.getWorkingWeek(employee.getEmployeeId()));
+            employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return employee;
+    }
+
+    public static boolean updateEmployee(){
+        boolean b = false;
+        return b;
     }
 }
 

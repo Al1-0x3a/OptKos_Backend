@@ -23,6 +23,10 @@ public class Phone {
 		this.personId = personId;
 	}
 
+	public void setPersonId(UUID personId) {
+		this.personId = personId;
+	}
+
 	public Phone(UUID personId){
 		this.personId = personId;
 		this.phoneId = UUID.randomUUID();
