@@ -63,7 +63,8 @@ public class EmployeeDao {
         return employeeList;
     }
 
-    public static void deleteEmployee(Employee employee) {
+    public static boolean deleteEmployee(Employee employee) {
+        boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMPLOYEE WHERE employeeId =?");
             preparedStmt.setString(1, employee.getEmployeeId().toString());
@@ -81,11 +82,11 @@ public class EmployeeDao {
             WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
 
             employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
-
+            b = true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return b;
     }
 
     public static boolean createNewEmployee(Employee employee) {
@@ -198,6 +199,7 @@ public class EmployeeDao {
         boolean b = false;
         return b;
     }
+
 }
 
 
