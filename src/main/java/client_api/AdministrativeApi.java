@@ -1,6 +1,7 @@
 package client_api;
 
 import data_loader.data_access_object.EmailDao;
+import data_loader.data_access_object.EmployeeDao;
 import data_loader.data_access_object.PhoneDao;
 import data_models.Customer;
 import data_models.Email;
@@ -108,6 +109,6 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean deleteEmployee(Employee employee) {
-        return false;
+        return EmployeeDao.deleteEmployee(employee);
     }
 }
