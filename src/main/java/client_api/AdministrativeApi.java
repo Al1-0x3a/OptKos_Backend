@@ -105,4 +105,9 @@ public class AdministrativeApi implements IAdministrativeApi {
     public boolean deleteEmail(Email email) {
         return EmailDao.deleteEmailByEmailId(email.getEmailId());
     }
+
+    @Override
+    public boolean deleteEmployee(Employee employee) {
+        return false;
+    }
 }

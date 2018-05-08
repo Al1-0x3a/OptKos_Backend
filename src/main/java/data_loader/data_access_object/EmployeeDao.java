@@ -198,6 +198,10 @@ public class EmployeeDao {
         boolean b = false;
         return b;
     }
+
+    public static boolean deleteEmployee(){
+        return false;
+    }
 }
 
 

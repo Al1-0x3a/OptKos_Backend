@@ -47,4 +47,6 @@ public interface IAdministrativeApi {
     boolean updateEmail(Email email);
     @WebMethod
     boolean deleteEmail(Email email);
+    @WebMethod
+    boolean deleteEmployee(Employee employee);
 }
