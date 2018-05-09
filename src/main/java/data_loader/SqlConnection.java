@@ -9,7 +9,6 @@ public class SqlConnection {
 
 	private static Connection connection = null;
 	private static final String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
-	private static final DbLoginData loginData = new DbLoginData();
 
 	protected SqlConnection(){
 	}
@@ -17,7 +16,7 @@ public class SqlConnection {
 	public static Connection getConnection(){
 		if (connection == null){
 			try {
-				connection = DriverManager.getConnection(url, loginData.getUsername(), loginData.getPassword());
+				connection = DriverManager.getConnection(url, DbLoginData.getUsername(), DbLoginData.getPassword());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				System.err.println("Couldn't connect to Database\n exiting...");
