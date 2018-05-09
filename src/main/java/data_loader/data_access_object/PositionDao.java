@@ -21,7 +21,7 @@ public class PositionDao {
             String query = "SELECT * FROM OPTKOS.POSITION";
             ResultSet rs = stmt.executeQuery(query);
             while(rs.next()){
-                positionList.add(new Position(UUID.fromString(rs.getString("POSITIONID")),
+                positionList.add(new Position(rs.getString("POSITIONID"),
                         rs.getString("NAME"), rs.getString("DESCRIPTION"),
                         rs.getString("ANNOTATION")));
             }
@@ -31,7 +31,7 @@ public class PositionDao {
         return positionList;
     }
 
-    public static Position getPositionByPositionId(UUID positionId){
+    public static Position getPositionByPositionId(String positionId){
         if(positionList == null ){
             positionList = getAllPositionsFromDb();
         }

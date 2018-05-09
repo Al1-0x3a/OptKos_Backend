@@ -23,9 +23,9 @@ public class PhoneDao {
 
             phoneList = new ArrayList<>();
             while(rs.next()){
-                phoneList.add(new Phone(UUID.fromString(rs.getString("PHONEID")),
+                phoneList.add(new Phone(rs.getString("PHONEID"),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
-                        rs.getString("ANNOTATION"), UUID.fromString(rs.getString("PERSONID"))));
+                        rs.getString("ANNOTATION"), rs.getString("PERSONID")));
             }
 
         } catch (SQLException e) {
@@ -34,7 +34,7 @@ public class PhoneDao {
         return phoneList;
     }
 
-    public static List<Phone> getListByPersonId(UUID personId){
+    public static List<Phone> getListByPersonId(String personId){
         if(phoneList.size() == 0 ){
             phoneList = getAllPhonesFromDb();
         }
@@ -67,7 +67,7 @@ public class PhoneDao {
     }
 
 
-    public static boolean deletePhoneByPhoneId(UUID phoneId){
+    public static boolean deletePhoneByPhoneId(String phoneId){
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PHONEID =?");
@@ -87,14 +87,15 @@ public class PhoneDao {
         return b;
     }
 
-    public static boolean deleteAllPhoneByPersonId(UUID personId){
+    public static boolean deleteAllPhoneByPersonId(String personId){
         boolean b = false;
+        System.out.println(personId.toString());
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
             preparedStmt.setString(1, personId.toString());
 
             b = preparedStmt.execute();
-            if (b){
+            if (!b){
                 for (int i = 0; i< phoneList.size(); i++){
                     if(phoneList.get(i).getPersonId() == personId) {
                         phoneList.remove(i);
@@ -104,7 +105,7 @@ public class PhoneDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return b;
+        return !b;
     }
 
     public static boolean updatePhone(Phone phone){

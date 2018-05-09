@@ -8,23 +8,23 @@ import java.util.UUID;
 
 public class Employee extends Person {
 
-	private UUID employeeId;
+	private String employeeId;
 	private char isDeleted;
-	private UUID positionId;
+	private String positionId;
     private List<WorkingDay> workingDays;
 
 	public Employee(){
 	    super();
-		this.employeeId = UUID.randomUUID();
 		this.initWorkingDays();
 	}
-	public Employee(UUID personId){
+	public Employee(String personId){
 	    super(personId);
+		this.employeeId = UUID.randomUUID().toString();
 		this.initWorkingDays();
 	}
 
 
-	public Employee(UUID employeeId, char isDeleted, UUID positionId) {
+	public Employee(String employeeId, char isDeleted, String positionId) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.positionId = positionId;
@@ -39,11 +39,11 @@ public class Employee extends Person {
 		this.workingDays = workingDays;
 	}
 
-	public UUID getEmployeeId() {
+	public String getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(UUID employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -55,11 +55,11 @@ public class Employee extends Person {
 		this.isDeleted = isDeleted;
 	}
 
-	public UUID getPositionId() {
+	public String getPositionId() {
 		return positionId;
 	}
 
-	public void setPositionId(UUID positionId) {
+	public void setPositionId(String positionId) {
 		this.positionId = positionId;
 	}
 

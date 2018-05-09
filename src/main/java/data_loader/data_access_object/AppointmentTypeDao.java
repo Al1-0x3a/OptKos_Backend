@@ -23,7 +23,7 @@ public class AppointmentTypeDao {
 
             while(rs.next()){
                 AppointmentType appointmentType = new AppointmentType(
-                        UUID.fromString(rs.getString("APPOINTMENTTYPEID")),
+                        rs.getString("APPOINTMENTTYPEID"),
                         rs.getString("NAME"),
                         rs.getString("DESCRIPTION"));
                 appointmentTypeList.add(appointmentType);
@@ -35,7 +35,7 @@ public class AppointmentTypeDao {
         return appointmentTypeList;
     }
 
-    public static AppointmentType getAppointmentTypeById(UUID appTId){
+    public static AppointmentType getAppointmentTypeById(String appTId){
 
         AppointmentType appT = null;
         for(int i = 0; i< appointmentTypeList.size(); i++){
@@ -54,7 +54,7 @@ public class AppointmentTypeDao {
     }
 
 
-    public static AppointmentType getAppointmentTypeByIdFromDb(UUID appTId){
+    public static AppointmentType getAppointmentTypeByIdFromDb(String appTId){
         AppointmentType appointmentType = null;
         try {
             stmt = con.createStatement();
@@ -62,7 +62,7 @@ public class AppointmentTypeDao {
             ResultSet rs = stmt.executeQuery(query);
 
             appointmentType = new AppointmentType(
-                    UUID.fromString(rs.getString("APPOINTMENTTYPEID")),
+                    rs.getString("APPOINTMENTTYPEID"),
                     rs.getString("NAME"),
                     rs.getString("DESCRIPTION"));
         } catch (SQLException e) {

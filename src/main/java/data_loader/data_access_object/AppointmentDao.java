@@ -20,20 +20,20 @@ public class AppointmentDao {
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
-                Appointment appointment = new Appointment(UUID.fromString(rs.getString("APPOINTMENTID")),
+                Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                         rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                         rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                         rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-                appointment.setEmployee(EmployeeDao.getEmployeeById(UUID.fromString(
-                        rs.getString("EMPLOYEEID"))));
+                appointment.setEmployee(EmployeeDao.getEmployeeById(
+                        rs.getString("EMPLOYEEID")));
 
-                appointment.setCustomer(CustomerDao.getCustomerById(UUID.fromString(
-                        rs.getString("CUSTOMERID"))));
+                appointment.setCustomer(CustomerDao.getCustomerById(
+                        rs.getString("CUSTOMERID")));
 
                 appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                        UUID.fromString(rs.getString("APPOINTMENTTYPEID"))));
+                        rs.getString("APPOINTMENTTYPEID")));
             }
 
         } catch (SQLException e) {
@@ -42,7 +42,7 @@ public class AppointmentDao {
         return appointmentList;
     }
 
-    public static Appointment getAppointmentById(UUID appointmentId){
+    public static Appointment getAppointmentById(String appointmentId){
         Appointment app = null;
         for(int i = 0; i< appointmentList.size(); i++){
             if(appointmentList != null && appointmentList.get(i).getAppointmentId() == appointmentId) {
@@ -59,26 +59,26 @@ public class AppointmentDao {
         return app;
     }
 
-    public static Appointment getAppointmentByIdFromDb(UUID appointmentId){
+    public static Appointment getAppointmentByIdFromDb(String appointmentId){
         Appointment appointment = null;
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId.toString() + ";";
             ResultSet rs = stmt.executeQuery(query);
 
-            appointment = new Appointment(UUID.fromString(rs.getString("APPOINTMENTID")),
+            appointment = new Appointment(rs.getString("APPOINTMENTID"),
                     rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                     rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                     rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                     rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-            appointment.setEmployee(EmployeeDao.getEmployeeById(UUID.fromString(
-                    rs.getString("EMPLOYEEID"))));
+            appointment.setEmployee(EmployeeDao.getEmployeeById(
+                    rs.getString("EMPLOYEEID")));
 
-            appointment.setCustomer(CustomerDao.getCustomerById(UUID.fromString(rs.getString("CUSTOMERID"))));
+            appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
 
             appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                    UUID.fromString(rs.getString("APPOINTMENTTYPEID"))));
+                    rs.getString("APPOINTMENTTYPEID")));
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -5,14 +5,14 @@ import java.util.UUID;
 
 public class WorkingDay {
 
-    private UUID workingDayId;
+    private String workingDayId;
     private LocalTime startWorkingTime;
     private LocalTime endWorkingTime;
     private LocalTime startBreakTime;
     private LocalTime endBreakTime;
     private String day;
 
-    public WorkingDay(UUID workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
+    public WorkingDay(String workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
     LocalTime startBreakTime, LocalTime endBreakTime) {
         this.workingDayId = workingDayId;
         this.startWorkingTime = startWorkingTime;
@@ -22,11 +22,11 @@ public class WorkingDay {
     }
 
     public WorkingDay(){
-        this.workingDayId = UUID.randomUUID();
+        this.workingDayId = UUID.randomUUID().toString();
     }
 
     public WorkingDay(String dayName) {
-        this.workingDayId = UUID.randomUUID();
+        this.workingDayId = UUID.randomUUID().toString();
         this.day = dayName;
     }
 
@@ -80,11 +80,11 @@ public class WorkingDay {
         this.endBreakTime = endBreakTime;
     }
 
-    public UUID getWorkingDayId() {
+    public String getWorkingDayId() {
         return workingDayId;
     }
 
-    public void setWorkingDayId(UUID workingDayId) {
+    public void setWorkingDayId(String workingDayId) {
         this.workingDayId = workingDayId;
     }
 

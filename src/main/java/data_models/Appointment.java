@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Appointment {
 
-	private UUID appointmentId;
+	private String appointmentId;
 	private LocalDateTime endTime;
 	private LocalDateTime endTimeActual;
 	private LocalDateTime startTime;
@@ -15,10 +15,10 @@ public class Appointment {
 	private Customer customer;
 
 	public Appointment(){
-	    this.appointmentId = UUID.randomUUID();
+	    this.appointmentId = UUID.randomUUID().toString();
 	}
 
-	public Appointment(UUID appointmentId, LocalDateTime endTime, LocalDateTime endTimeActual,
+	public Appointment(String appointmentId, LocalDateTime endTime, LocalDateTime endTimeActual,
 					   LocalDateTime startTime, LocalDateTime startTimeActual
 					   ) {
 		this.appointmentId = appointmentId;
@@ -28,11 +28,11 @@ public class Appointment {
 		this.startTimeActual = startTimeActual;
 	}
 
-	public UUID getAppointmentId() {
+	public String getAppointmentId() {
 		return appointmentId;
 	}
 
-	public void setAppointmentId(UUID appointmentId) {
+	public void setAppointmentId(String appointmentId) {
 	    if(this.appointmentId == null)
 		this.appointmentId = appointmentId;
 	}

@@ -2,14 +2,13 @@ package data_models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class Person {
 
     private String firstname;
     private GENDER gender;
     private String lastname;
-    private UUID personId;
+    private String personId;
     private SALUTATION salutation;
     private TITLE title;
     private Address address;
@@ -26,7 +25,6 @@ public abstract class Person {
 
     public enum GENDER {
         W, M;
-
     }
 
 
@@ -34,18 +32,18 @@ public abstract class Person {
         phoneList = new ArrayList<>();
         emailList = new ArrayList<>();
 
-        personId = UUID.randomUUID();
+        // personId = UUID.randomUUID().toString();
         this.address = new Address(this.personId);
     }
 
-    public Person(UUID personId) {
+    public Person(String personId) {
         phoneList = new ArrayList<>();
         emailList = new ArrayList<>();
         this.personId = personId;
         this.address = new Address(this.personId);
     }
 
-    public void setPersonId(UUID personId) {
+    public void setPersonId(String personId) {
         if (this.personId == null)
             this.personId = personId;
     }
@@ -71,7 +69,7 @@ public abstract class Person {
     }
 
     public Address getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(Address address) {
@@ -102,7 +100,7 @@ public abstract class Person {
         this.lastname = lastname;
     }
 
-    public UUID getPersonId() {
+    public String getPersonId() {
         return personId;
     }
 

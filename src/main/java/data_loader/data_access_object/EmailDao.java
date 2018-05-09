@@ -25,8 +25,8 @@ public class EmailDao {
 
             emailList = new ArrayList<>();
             while(rs.next()){
-                emailList.add(new Email(UUID.fromString(rs.getString("EMAILID")),
-                        rs.getString("EMAIL"), UUID.fromString(rs.getString("PERSONID"))));
+                emailList.add(new Email(rs.getString("EMAILID"),
+                        rs.getString("EMAIL"), rs.getString("PERSONID")));
             }
 
         } catch (SQLException e) {
@@ -35,7 +35,7 @@ public class EmailDao {
         return emailList;
     }
 
-    public static List<Email> getEmailListByPersonId(UUID personId){
+    public static List<Email> getEmailListByPersonId(String personId){
         if(emailList.size() == 0 ){
             emailList = getAllEmailsFromDb();
         }
@@ -60,17 +60,18 @@ public class EmailDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        emailList.add(email);
         return b;
     }
 
 
-    public static void deleteEmailByPersonId(UUID personId){
+    public static void deleteEmailByPersonId(String personId){
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
             preparedStmt.setString(1, personId.toString());
 
-            if (preparedStmt.execute()){
+            if (!preparedStmt.execute()){
                 for (int i = 0; i< emailList.size(); i++){
                     if(emailList.get(i).getPersonId().equals(personId)) {
                         emailList.remove(i);
@@ -83,7 +84,7 @@ public class EmailDao {
 
     }
 
-    public static boolean deleteEmailByEmailId(UUID emailId){
+    public static boolean deleteEmailByEmailId(String emailId){
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE EMAILID =?");
@@ -106,10 +107,12 @@ public class EmailDao {
     public static boolean updateEmail(Email email){
         boolean b = false;
         try {
+
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.EMAIL SET EMAIL=?WHERE EMAILID=?");
             preparedStmt.setString(1, email.getEmail());
             preparedStmt.setString(2, email.getEmailId().toString());
-            b = preparedStmt.execute();
+            preparedStmt.executeUpdate();
+            b =true;
         } catch (SQLException e) {
             e.printStackTrace();
         }

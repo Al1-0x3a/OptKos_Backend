@@ -3,6 +3,7 @@ package manager;
 import data_loader.data_access_object.EmployeeDao;
 import data_models.Employee;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ public class AdministrativeManager {
         employeeDao = new EmployeeDao();
     }
 
-    public Employee getEmployeeById(UUID uuid) {
+    public Employee getEmployeeById(String uuid) {
         List<Employee> tmpList = employeeDao.getAllEmployeesFromDb().stream().
                 filter(employee -> employee.getEmployeeId().equals(uuid)).collect(Collectors.toList());
         if (tmpList.isEmpty()) {
@@ -34,5 +35,9 @@ public class AdministrativeManager {
 
     public boolean createEmployee(Employee employee) {
         return employeeDao.createNewEmployee(employee);
+    }
+
+    public boolean updateEmployee(Employee employee){
+        return EmployeeDao.updateEmployee(employee);
     }
 }

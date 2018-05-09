@@ -14,7 +14,7 @@ public class AppointmentApi implements IAppointmentApi{
     }
 
     @Override
-    public Appointment getApointment(UUID apointmentId) {
+    public Appointment getApointment(String apointmentId) {
         return null;
     }
 }

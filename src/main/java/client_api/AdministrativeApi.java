@@ -22,7 +22,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
-    public Employee getEmployeeById(UUID uuid) {
+    public Employee getEmployeeById(String uuid) {
         return administrativeManager.getEmployeeById(uuid);
     }
 
@@ -39,7 +39,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean updateEmployee(Employee employee) {
-        return false;
+        return administrativeManager.updateEmployee(employee);
     }
 
     // give employee object to frontend
@@ -49,7 +49,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
-    public Customer getCustomer(UUID customerId) {
+    public Customer getCustomer(String customerId) {
         return null;
     }
 
@@ -69,7 +69,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
-    public Phone getNewPhone(UUID personId) {
+    public Phone getNewPhone(String personId) {
         return new Phone(personId);
     }
 
@@ -88,7 +88,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
-    public Email getNewEmail(UUID personId) {
+    public Email getNewEmail(String personId) {
         return new Email(personId);
     }
 
@@ -111,4 +111,5 @@ public class AdministrativeApi implements IAdministrativeApi {
     public boolean deleteEmployee(Employee employee) {
         return EmployeeDao.deleteEmployee(employee);
     }
+
 }

@@ -23,10 +23,11 @@ public class AddressDao {
 
             addressList = new ArrayList<>();
             while(rs.next()){
-                addressList.add(new Address(UUID.fromString(rs.getString("ADDRESSID")),
+                addressList.add(new Address(rs.getString("ADDRESSID"),
                         rs.getString("POSTCODE"), rs.getString("CITY"),
                         rs.getString("STREET"), rs.getString("HOUSENR"),
-                        UUID.fromString(rs.getString("PERSONID"))));
+                        rs.getString("PERSONID"),
+                        rs.getString("ADDITION")));
             }
 
         } catch (SQLException e) {
@@ -35,7 +36,8 @@ public class AddressDao {
         return addressList;
     }
 
-    public static Address getAddressByPersonId(UUID personId){
+    public static Address getAddressByPersonId(String personId){
+        addressList = new ArrayList<>();
         if(addressList.size() == 0 ){
             addressList = getAllAddressFromDb();
         }
@@ -48,15 +50,18 @@ public class AddressDao {
         return null;
     }
 
-    public static void createNewAddress(Address address, UUID personId){
+    public static void createNewAddress(Address address, String personId){
         try {
-            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADDRESS (ADDRESSID, POSTCODE, CITY, STREET, HOUSENR, PERSONID) VALUES(?,?,?,?,?,?)");
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADDRESS (ADDRESSID, POSTCODE, CITY, STREET," +
+                    " HOUSENR, PERSONID, ADDITION) VALUES(?,?,?,?,?,?,?)");
             preparedStmt.setString(1, address.getAddressId().toString());
             preparedStmt.setString(2, address.getPostcode());
             preparedStmt.setString(3, address.getCity());
             preparedStmt.setString(4, address.getStreet());
             preparedStmt.setString(5, address.getHousenr());
             preparedStmt.setString(6, personId.toString());
+            // preparedStmt.setString(7, address.getAddition());
+             preparedStmt.setString(7, "");
             preparedStmt.execute();
 
             addressList.add(address);
@@ -66,7 +71,7 @@ public class AddressDao {
         }
     }
 
-    public static void deleteAddressByPersonId(UUID personId){
+    public static void deleteAddressByPersonId(String personId){
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.ADDRESS WHERE PERSONID =?");
@@ -83,5 +88,25 @@ public class AddressDao {
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean updateAddress(Address address){
+        boolean b = false;
+        try {
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.ADDRESS SET POSTCODE=?,CITY=?,STREET=?,HOUSENR=?," +
+                    "ADDITION=? WHERE ADDRESSID=?");
+            preparedStmt.setString(1, address.getPostcode());
+            preparedStmt.setString(2, address.getCity());
+            preparedStmt.setString(3, address.getStreet());
+            preparedStmt.setString(4, address.getHousenr());
+            preparedStmt.setString(5, address.getAddition());
+            preparedStmt.setString(6, address.getAddressId().toString());
+
+            preparedStmt.executeUpdate();
+            b = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 }
