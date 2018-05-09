@@ -5,7 +5,6 @@ import data_models.Appointment;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.List;
-import java.util.UUID;
 
 @WebService
 public interface IAppointmentApi {

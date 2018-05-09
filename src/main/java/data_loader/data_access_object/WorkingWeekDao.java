@@ -22,7 +22,7 @@ public class WorkingWeekDao {
         try {
             stmt = con.createStatement();
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
-            preparedStmt.setString(1, employeeId.toString());
+            preparedStmt.setString(1, employeeId);
 
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
@@ -55,7 +55,7 @@ public class WorkingWeekDao {
                 preparedStmt.setTime(4, Time.valueOf(workingDays.get(i).getEndWorkingTime()));
                 preparedStmt.setTime(5, Time.valueOf(workingDays.get(i).getStartBreakTime()));
                 preparedStmt.setTime(6, Time.valueOf(workingDays.get(i).getEndBreakTime()));
-                preparedStmt.setString(7, employeeId.toString());
+                preparedStmt.setString(7, employeeId);
                 preparedStmt.execute();
             }
         } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class WorkingWeekDao {
             preparedStmt.setTime(2, Time.valueOf(workingDay.getEndWorkingTime()));
             preparedStmt.setTime(3, Time.valueOf(workingDay.getStartBreakTime()));
             preparedStmt.setTime(4, Time.valueOf(workingDay.getEndBreakTime()));
-            preparedStmt.setString(5, workingDay.getWorkingDayId().toString());
+            preparedStmt.setString(5, workingDay.getWorkingDayId());
             result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();

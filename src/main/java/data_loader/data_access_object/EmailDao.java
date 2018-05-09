@@ -6,7 +6,6 @@ import data_models.Email;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class EmailDao {
 
@@ -38,7 +37,7 @@ public class EmailDao {
     }
 
     public static List<Email> getEmailListByPersonId(String personId){
-        if(emailList.size() == 0 ){
+        if(emailList.isEmpty()) {
             emailList = getAllEmailsFromDb();
         }
         List<Email> tmpList = new ArrayList<>();
@@ -54,9 +53,9 @@ public class EmailDao {
         boolean b = false;
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.EMAIL (EMAILID, EMAIL, PERSONID) VALUES(?,?,?)");
-            preparedStmt.setString(1, email.getEmailId().toString());
+            preparedStmt.setString(1, email.getEmailId());
             preparedStmt.setString(2,email.getEmail());
-            preparedStmt.setString(3, email.getPersonId().toString());
+            preparedStmt.setString(3, email.getPersonId());
 
             b = preparedStmt.execute();
         } catch (SQLException e) {
@@ -71,7 +70,7 @@ public class EmailDao {
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
-            preparedStmt.setString(1, personId.toString());
+            preparedStmt.setString(1, personId);
             preparedStmt.executeUpdate();
 
                 for (int i = 0; i< emailList.size(); i++){
@@ -89,7 +88,7 @@ public class EmailDao {
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE EMAILID =?");
-            preparedStmt.setString(1, emailId.toString());
+            preparedStmt.setString(1, emailId);
 
             b= preparedStmt.execute();
             if (b){
@@ -111,7 +110,7 @@ public class EmailDao {
 
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.EMAIL SET EMAIL=?WHERE EMAILID=?");
             preparedStmt.setString(1, email.getEmail());
-            preparedStmt.setString(2, email.getEmailId().toString());
+            preparedStmt.setString(2, email.getEmailId());
             preparedStmt.executeUpdate();
             b =true;
         } catch (SQLException e) {

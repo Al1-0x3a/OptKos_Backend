@@ -6,7 +6,6 @@ import data_models.Appointment;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -49,7 +48,7 @@ public class AppointmentDao {
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
         for(int i = 0; i< appointmentList.size(); i++){
-            if(appointmentList != null && appointmentList.get(i).getAppointmentId() == appointmentId) {
+            if(appointmentList.get(i).getAppointmentId() == appointmentId) {
                 appointment = appointmentList.get(i);
                 break;
             }
@@ -67,7 +66,7 @@ public class AppointmentDao {
         Appointment appointment = null;
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId.toString() + ";";
+            String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId + ";";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),

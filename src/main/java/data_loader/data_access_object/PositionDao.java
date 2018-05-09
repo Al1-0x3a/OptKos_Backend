@@ -6,7 +6,6 @@ import data_models.Position;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PositionDao {
 
@@ -22,11 +21,12 @@ public class PositionDao {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.POSITION";
-            ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()){
-                positionList.add(new Position(rs.getString("POSITIONID"),
-                        rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                        rs.getString("ANNOTATION")));
+            try (ResultSet rs = stmt.executeQuery(query)) {
+                while (rs.next()) {
+                    positionList.add(new Position(rs.getString("POSITIONID"),
+                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                            rs.getString("ANNOTATION")));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,7 +51,7 @@ public class PositionDao {
         try {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.POSITION(POSITIONID, NAME, DESCRIPTION, ANNOTATION) VALUES (?,?,?,?)");
-            preparedStmt.setString(1, position.getPositionId().toString());
+            preparedStmt.setString(1, position.getPositionId());
             preparedStmt.setString(2, position.getName());
             preparedStmt.setString(3, position.getDescription());
             preparedStmt.setString(4, position.getNote());

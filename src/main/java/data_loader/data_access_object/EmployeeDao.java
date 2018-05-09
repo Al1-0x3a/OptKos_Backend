@@ -65,10 +65,10 @@ public class EmployeeDao {
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMPLOYEE WHERE employeeId =?");
-            preparedStmt.setString(1, employee.getEmployeeId().toString());
+            preparedStmt.setString(1, employee.getEmployeeId());
 
             preparedStmt2 = con.prepareStatement("DELETE FROM OPTKOS.PERSON WHERE PERSONID =?");
-            preparedStmt2.setString(1, employee.getPersonId().toString());
+            preparedStmt2.setString(1, employee.getPersonId());
 
             AddressDao.deleteAddressByPersonId(employee.getPersonId());
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
@@ -93,7 +93,7 @@ public class EmployeeDao {
                     "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
 
 
-            preparedStmt.setString(1, employee.getPersonId().toString());
+            preparedStmt.setString(1, employee.getPersonId());
             preparedStmt.setString(2, employee.getLastname());
             preparedStmt.setString(3, employee.getFirstname());
             preparedStmt.setString(4, employee.getTitle().name());
@@ -103,8 +103,8 @@ public class EmployeeDao {
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED, POSITIONID) VALUES(?,?,?,?)");
             // preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
 
-            preparedStmt2.setString(1, employee.getEmployeeId().toString());
-            preparedStmt2.setString(2, employee.getPersonId().toString());
+            preparedStmt2.setString(1, employee.getEmployeeId());
+            preparedStmt2.setString(2, employee.getPersonId());
             preparedStmt2.setString(3, "0");
             preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
             //preparedStmt2.setString(3, employee.getPositionId().toString());
@@ -144,7 +144,7 @@ public class EmployeeDao {
     public static Employee getEmployeeById(String empolyeeId) {
         Employee employee = null;
         for (int i = 0; i < employeeList.size(); i++) {
-            if (employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
+            if (employeeList.get(i).getEmployeeId() == empolyeeId) {
                 employee = employeeList.get(i);
                 break;
             }
@@ -164,7 +164,7 @@ public class EmployeeDao {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
-                    "e.EMPLOYEEID=" + employeeId.toString() + ";";
+                    "e.EMPLOYEEID=" + employeeId + ";";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
                 // Person

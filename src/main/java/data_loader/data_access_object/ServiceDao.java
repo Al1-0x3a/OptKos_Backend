@@ -6,7 +6,6 @@ import data_models.Service;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ServiceDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -42,7 +41,7 @@ public class ServiceDao {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.SERVICE(SERVICEID, NAME, DESCRIPTION, PRICE," +
                             " DURTATIONPLANNED, DURATIONAVERAGE) VALUES(?,?,?,?,?,?)");
-            preparedStmt.setString(1, service.getServiceId().toString());
+            preparedStmt.setString(1, service.getServiceId());
             preparedStmt.setString(2, service.getName());
             preparedStmt.setString(3, service.getDescription());
             preparedStmt.setBigDecimal(4, service.getPrice());
@@ -69,11 +68,11 @@ public class ServiceDao {
         return tmp;
     }
 
-    public static void deleteServiceByServiceId(String ServiceId){
+    public static void deleteServiceByServiceId(String serviceId){
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");
-            preparedStmt.setString(1, ServiceId.toString());
+            preparedStmt.setString(1, serviceId);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,7 +1,6 @@
 package data_models;
 
 import java.time.Duration;
-import java.util.UUID;
 
 public class ServiceEmployeeDuration {
 

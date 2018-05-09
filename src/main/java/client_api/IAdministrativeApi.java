@@ -8,7 +8,6 @@ import data_models.Phone;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.List;
-import java.util.UUID;
 
 @WebService
 public interface IAdministrativeApi {

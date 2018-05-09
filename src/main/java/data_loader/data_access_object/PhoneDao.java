@@ -6,7 +6,6 @@ import data_models.Phone;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PhoneDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -39,7 +38,7 @@ public class PhoneDao {
     }
 
     public static List<Phone> getListByPersonId(String personId){
-        if(phoneList.size() == 0 ){
+        if(phoneList.isEmpty()) {
             phoneList = getAllPhonesFromDb();
         }
         List<Phone> tmpList = new ArrayList<>();
