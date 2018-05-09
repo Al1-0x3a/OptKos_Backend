@@ -194,7 +194,7 @@ public class EmployeeDao {
     }
 
     public static boolean updateEmployee(Employee employee){
-        boolean b = false;
+        boolean result;
         try {
             // Person
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.PERSON SET LASTNAME=?,FIRSTNAME=?,TITLE=?," +
@@ -212,8 +212,9 @@ public class EmployeeDao {
             preparedStmt2.setString(2, employee.getEmployeeId());
             preparedStmt2.setString(3, employee.getPersonId());
 
-            preparedStmt.executeUpdate();
-            preparedStmt2.executeUpdate();
+            boolean result1 = preparedStmt.executeUpdate() != 0;
+            boolean result2 = preparedStmt2.executeUpdate() != 0;
+            result = result1 && result2;
 
             // other
             EmailDao.deleteEmailByPersonId(employee.getEmailList().get(0).getPersonId());
@@ -238,8 +239,9 @@ public class EmployeeDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        return result;
     }
 
 }

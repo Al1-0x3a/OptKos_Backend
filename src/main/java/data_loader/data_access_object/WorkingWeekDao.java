@@ -90,7 +90,7 @@ public class WorkingWeekDao {
     }
 
     public static boolean updateWorkingDay(WorkingDay workingDay){
-        boolean b = false;
+        boolean result;
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.WORKINGDAY SET STARTWORK = ?, ENDWORK = ?, STARKBREAK = ?, ENDBREAK = ? WHERE WORKINGDAYID = ?");
             preparedStmt.setTime(1, Time.valueOf(workingDay.getStartWorkingTime()));
@@ -98,12 +98,12 @@ public class WorkingWeekDao {
             preparedStmt.setTime(3, Time.valueOf(workingDay.getStartBreakTime()));
             preparedStmt.setTime(4, Time.valueOf(workingDay.getEndBreakTime()));
             preparedStmt.setString(5, workingDay.getWorkingDayId().toString());
-            preparedStmt.executeUpdate();
-            b=true;
+            result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
-        return b;
+        return result;
     }
 }

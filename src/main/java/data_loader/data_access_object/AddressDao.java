@@ -5,7 +5,6 @@ import data_models.Address;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class AddressDao {
 
@@ -54,14 +53,13 @@ public class AddressDao {
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.ADDRESS (ADDRESSID, POSTCODE, CITY, STREET," +
                     " HOUSENR, PERSONID, ADDITION) VALUES(?,?,?,?,?,?,?)");
-            preparedStmt.setString(1, address.getAddressId().toString());
+            preparedStmt.setString(1, address.getAddressId());
             preparedStmt.setString(2, address.getPostcode());
             preparedStmt.setString(3, address.getCity());
             preparedStmt.setString(4, address.getStreet());
             preparedStmt.setString(5, address.getHousenr());
-            preparedStmt.setString(6, personId.toString());
-            // preparedStmt.setString(7, address.getAddition());
-             preparedStmt.setString(7, "");
+            preparedStmt.setString(6, personId);
+            preparedStmt.setString(7, address.getAddition());
             preparedStmt.execute();
 
             addressList.add(address);
@@ -75,7 +73,7 @@ public class AddressDao {
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.ADDRESS WHERE PERSONID =?");
-            preparedStmt.setString(1, personId.toString());
+            preparedStmt.setString(1, personId);
             preparedStmt.executeUpdate();
 
                 for (int i = 0; i< addressList.size(); i++){
@@ -90,7 +88,7 @@ public class AddressDao {
     }
 
     public static boolean updateAddress(Address address){
-        boolean b = false;
+        boolean result;
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.ADDRESS SET POSTCODE=?,CITY=?,STREET=?,HOUSENR=?," +
                     "ADDITION=? WHERE ADDRESSID=?");
@@ -99,13 +97,12 @@ public class AddressDao {
             preparedStmt.setString(3, address.getStreet());
             preparedStmt.setString(4, address.getHousenr());
             preparedStmt.setString(5, address.getAddition());
-            preparedStmt.setString(6, address.getAddressId().toString());
-
-            preparedStmt.executeUpdate();
-            b = true;
+            preparedStmt.setString(6, address.getAddressId());
+            result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        return result;
     }
 }
