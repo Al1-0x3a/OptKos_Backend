@@ -76,13 +76,12 @@ public class AddressDao {
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.ADDRESS WHERE PERSONID =?");
             preparedStmt.setString(1, personId.toString());
+            preparedStmt.executeUpdate();
 
-            if (preparedStmt.execute()){
                 for (int i = 0; i< addressList.size(); i++){
                     if(addressList.get(i).getPersonId() == personId) {
                         addressList.remove(i);
                     }
-                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

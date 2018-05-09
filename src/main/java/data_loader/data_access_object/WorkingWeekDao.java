@@ -77,8 +77,9 @@ public class WorkingWeekDao {
 
     public static void deleteWorkingDaysByEmployeeId(String employeeId) {
         try {
-            stmt = con.createStatement();
-            stmt.executeQuery("DELETE FROM OPTKOS.WORKINGDAY wd WHERE wd.EMPLOYEEID='" + employeeId.toString() + "';");
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.WORKINGDAY wd WHERE wd.EMPLOYEEID=?");
+            preparedStmt.setString(1,employeeId);
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -94,17 +94,16 @@ public class PhoneDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
             preparedStmt.setString(1, personId.toString());
 
-            b = preparedStmt.execute();
-            if (!b){
+            preparedStmt.executeUpdate();
                 for (int i = 0; i< phoneList.size(); i++){
                     if(phoneList.get(i).getPersonId() == personId) {
                         phoneList.remove(i);
                     }
                 }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        phoneList = new ArrayList<>();
         return !b;
     }
 

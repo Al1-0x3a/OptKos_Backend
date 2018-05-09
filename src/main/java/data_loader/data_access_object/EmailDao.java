@@ -70,12 +70,11 @@ public class EmailDao {
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
             preparedStmt.setString(1, personId.toString());
+            preparedStmt.executeUpdate();
 
-            if (!preparedStmt.execute()){
                 for (int i = 0; i< emailList.size(); i++){
                     if(emailList.get(i).getPersonId().equals(personId)) {
                         emailList.remove(i);
-                    }
                 }
             }
         } catch (SQLException e) {

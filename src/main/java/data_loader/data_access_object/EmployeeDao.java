@@ -75,8 +75,8 @@ public class EmployeeDao {
             PhoneDao.deleteAllPhoneByPersonId(employee.getPersonId());
             WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
 
-            preparedStmt.execute();
-            preparedStmt2.execute();
+            preparedStmt.executeUpdate();
+            preparedStmt2.executeUpdate();
 
 
             employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
@@ -197,8 +197,8 @@ public class EmployeeDao {
         boolean b = false;
         try {
             // Person
-            preparedStmt = con.prepareStatement("UPDATE OPTKOS.Person SET LASTNAME=?,FIRSTNAME=?,TITLE=?," +
-                    "SALUTATION=?,GENDER=? WHERE PERSONID=?;");
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.PERSON SET LASTNAME=?,FIRSTNAME=?,TITLE=?," +
+                    "SALUTATION=?,GENDER=? WHERE PERSONID=?");
             preparedStmt.setString(1, employee.getLastname());
             preparedStmt.setString(2, employee.getFirstname());
             preparedStmt.setString(3, employee.getTitle().name());
@@ -207,10 +207,13 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getPersonId());
 
             // Employee
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? WHERE PERSONID=?;");
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? WHERE PERSONID=?");
             preparedStmt2.setString(1, employee.getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
             preparedStmt2.setString(3, employee.getPersonId());
+
+            preparedStmt.executeUpdate();
+            preparedStmt2.executeUpdate();
 
             // other
             EmailDao.deleteEmailByPersonId(employee.getEmailList().get(0).getPersonId());
