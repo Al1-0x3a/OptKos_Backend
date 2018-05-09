@@ -20,7 +20,7 @@ public class ServiceDao {
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
-                serviceList.add(new Service(UUID.fromString(rs.getString("SERVICEID")),
+                serviceList.add(new Service(rs.getString("SERVICEID"),
                         rs.getString("NAME"), rs.getString("DESCRIPTION"),
                         rs.getBigDecimal("PRICE"), rs.getTime("DURATIONPLANNED"),
                         rs.getTime("DURATIONAVERAGE"), rs.getString("ISDELETED")));
@@ -50,7 +50,7 @@ public class ServiceDao {
         }
     }
 
-    public static Service getServiceById(UUID serviceId){
+    public static Service getServiceById(String serviceId){
         if(serviceList == null ){
             serviceList = getAllServicesFromDb();
         }
@@ -65,7 +65,7 @@ public class ServiceDao {
         return tmp;
     }
 
-    public static void deleteServiceByServiceId(UUID ServiceId){
+    public static void deleteServiceByServiceId(String ServiceId){
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");

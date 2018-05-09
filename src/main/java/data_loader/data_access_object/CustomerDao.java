@@ -21,14 +21,14 @@ public class CustomerDao {
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()){
-                Customer customer = new Customer(UUID.fromString(rs.getString("CUSTOMERID")),
+                Customer customer = new Customer(rs.getString("CUSTOMERID"),
                         rs.getDouble("MULTIPLIKATOR"),
                         rs.getString("ANNOTATION"),
                         rs.getString("PROBLEM").toCharArray()[0],
-                        UUID.fromString(rs.getString("PERSONID")));
+                        rs.getString("PERSONID"));
 
                 customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
-                        UUID.fromString(rs.getString("CUSTOMERCATEGORYID"))));
+                        rs.getString("CUSTOMERCATEGORYID")));
                 customerList.add(customer);
             }
 
@@ -40,7 +40,7 @@ public class CustomerDao {
     }
 
 
-    public static Customer getCustomerById(UUID cId){
+    public static Customer getCustomerById(String cId){
 
         Customer customer = null;
         for(int i = 0; i< customerList.size(); i++){
@@ -59,21 +59,21 @@ public class CustomerDao {
     }
 
 
-    public static Customer getCustomerByIdFromDb(UUID cId){
+    public static Customer getCustomerByIdFromDb(String cId){
         Customer customer = null;
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.CUSTOMER c WHERE c.CUSTOMERID=" + cId + ";";
             ResultSet rs = stmt.executeQuery(query);
 
-            customer = new Customer(UUID.fromString(rs.getString("CUSTOMERID")),
+            customer = new Customer(rs.getString("CUSTOMERID"),
                     rs.getDouble("MULTIPLIKATOR"),
                     rs.getString("ANNOTATION"),
                     rs.getString("PROBLEM").toCharArray()[0],
-                    UUID.fromString(rs.getString("PERSONID")));
+                    rs.getString("PERSONID"));
 
             customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
-                    UUID.fromString(rs.getString("CUSTOMERCATEGORYID"))));
+                    rs.getString("CUSTOMERCATEGORYID")));
 
         } catch (SQLException e) {
             e.printStackTrace();

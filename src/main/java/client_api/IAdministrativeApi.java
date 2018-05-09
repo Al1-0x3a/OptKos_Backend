@@ -13,7 +13,7 @@ import java.util.UUID;
 @WebService
 public interface IAdministrativeApi {
     @WebMethod
-    Employee getEmployeeById(UUID uuid);
+    Employee getEmployeeById(String uuid);
     @WebMethod
     List<Employee> getEmployees();
     @WebMethod
@@ -24,7 +24,7 @@ public interface IAdministrativeApi {
     Employee getNewEmployee();
 
     @WebMethod
-    Customer getCustomer(UUID customerId);
+    Customer getCustomer(String customerId);
     @WebMethod
     List<Customer> getCustomers();
     @WebMethod
@@ -32,7 +32,7 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean updateCustomer(Customer customer);
     @WebMethod
-    Phone getNewPhone(UUID personId);
+    Phone getNewPhone(String personId);
     @WebMethod
     boolean createPhone(Phone phone);
     @WebMethod
@@ -40,7 +40,7 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean deletePhone(Phone phone);
     @WebMethod
-    Email getNewEmail(UUID personId);
+    Email getNewEmail(String personId);
     @WebMethod
     boolean createEmail(Email email);
     @WebMethod

@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.UUID;
 
 public class Service {
-	private UUID serviceId;
+	private String serviceId;
 	private String name;
 	private String description;
 	private BigDecimal price;
@@ -15,10 +15,10 @@ public class Service {
 	private String isDeleted;
 
 	public Service(){
-this.serviceId = UUID.randomUUID();
+this.serviceId = UUID.randomUUID().toString();
 	}
 
-	public Service(UUID serviceId, String name, String description, BigDecimal price,
+	public Service(String serviceId, String name, String description, BigDecimal price,
 	Time durationPlanned, Time durationAverage, String isDeleted) {
 		this.serviceId = serviceId;
 		this.name = name;
@@ -30,11 +30,11 @@ this.serviceId = UUID.randomUUID();
 	}
 
 
-	public UUID getServiceId() {
+	public String getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(UUID serviceId) {
+	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
 	}
 

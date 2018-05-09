@@ -23,9 +23,9 @@ public class PhoneDao {
 
             phoneList = new ArrayList<>();
             while(rs.next()){
-                phoneList.add(new Phone(UUID.fromString(rs.getString("PHONEID")),
+                phoneList.add(new Phone(rs.getString("PHONEID"),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
-                        rs.getString("ANNOTATION"), UUID.fromString(rs.getString("PERSONID"))));
+                        rs.getString("ANNOTATION"), rs.getString("PERSONID")));
             }
 
         } catch (SQLException e) {
@@ -34,11 +34,11 @@ public class PhoneDao {
         return phoneList;
     }
 
-    public static List<Phone> getListByPersonId(UUID personId){
+    public static List<Phone> getListByPersonId(String personId){
         if(phoneList.size() == 0 ){
             phoneList = getAllPhonesFromDb();
         }
-        List<Phone> tmpList = new ArrayList<Phone>();
+        List<Phone> tmpList = new ArrayList<>();
         for (Phone p : phoneList)
         {
             if(p.getPersonId().equals(personId)){
@@ -52,11 +52,11 @@ public class PhoneDao {
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
-            preparedStmt.setString(1, phone.getPhoneId().toString());
+            preparedStmt.setString(1, phone.getPhoneId());
             preparedStmt.setString(2, phone.getNumber());
             preparedStmt.setString(3, phone.getDescription());
             preparedStmt.setString(4, phone.getAnnotation());
-            preparedStmt.setString(5, phone.getPersonId().toString());
+            preparedStmt.setString(5, phone.getPersonId());
             b = preparedStmt.execute();
             phoneList.add(phone);
         } catch (SQLException e) {
@@ -67,11 +67,11 @@ public class PhoneDao {
     }
 
 
-    public static boolean deletePhoneByPhoneId(UUID phoneId){
+    public static boolean deletePhoneByPhoneId(String phoneId){
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PHONEID =?");
-            preparedStmt.setString(1, phoneId.toString());
+            preparedStmt.setString(1, phoneId);
 
             b = preparedStmt.execute();
             if (b){
@@ -87,39 +87,40 @@ public class PhoneDao {
         return b;
     }
 
-    public static boolean deleteAllPhoneByPersonId(UUID personId){
-        boolean b = false;
+    public static boolean deleteAllPhoneByPersonId(String personId){
+        System.out.println(personId);
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
-            preparedStmt.setString(1, personId.toString());
+            preparedStmt.setString(1, personId);
 
-            b = preparedStmt.execute();
-            if (b){
+            preparedStmt.executeUpdate();
                 for (int i = 0; i< phoneList.size(); i++){
                     if(phoneList.get(i).getPersonId() == personId) {
                         phoneList.remove(i);
                     }
                 }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        phoneList = new ArrayList<>();
+        return true;
     }
 
     public static boolean updatePhone(Phone phone){
-        boolean b = false;
+        boolean result;
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.PHONE SET NUMBER=?, DESCRIPTION=?," +
                     " ANNOTATION=? WHERE PHONEID=?");
             preparedStmt.setString(1, phone.getNumber());
             preparedStmt.setString(2, phone.getDescription());
             preparedStmt.setString(3, phone.getAnnotation());
-            preparedStmt.setString(4, phone.getPhoneId().toString());
-            b = preparedStmt.execute();
+            preparedStmt.setString(4, phone.getPhoneId());
+            result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        return result;
     }
 }

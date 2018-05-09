@@ -5,6 +5,7 @@ package data_loader;
  * everyone has to enter own data here
  * this class shouldnt be committed with user data
  */
+
 public class DbLoginData {
     private String username = "",
     password = "";

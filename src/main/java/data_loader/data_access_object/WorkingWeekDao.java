@@ -15,7 +15,7 @@ public class WorkingWeekDao {
     private static PreparedStatement preparedStmt;
     private static List<WorkingDay> workingDays = new ArrayList<>();
 
-    public static List<WorkingDay> getWorkingDays(UUID employeeId, List<WorkingDay> employeeWorkingDays) {
+    public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
         List<WorkingDay> tmp = employeeWorkingDays;
 
         try {
@@ -27,7 +27,7 @@ public class WorkingWeekDao {
 
             int i = 0;
             while (rs.next()) {
-                tmp.get(i).setWorkingDayId(UUID.fromString(rs.getString("WORKINGDAYID")));
+                tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
                 tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
                 tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
                 tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
@@ -42,13 +42,13 @@ public class WorkingWeekDao {
     }
 
     // TODO: check if the db will save the times as LocalTime
-    public static void setWorkingWeek(List<WorkingDay> workingDays, UUID employeeId) {
+    public static void setWorkingWeek(List<WorkingDay> workingDays, String employeeId) {
 
         try {
 /*            stmt = con.createStatement();
             StringBuilder query = new StringBuilder("INSERT INTO OPTKOS.WORKINGDAY" +
                     "(WORKINGDAYID, DAY, STARTWORK, ENDWORK, STARTBREAK, ENDBREAK, EMPLOYEEID) VALUES ");*/
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 7; i++) {
 /*                query.append("('").append(workingWeek.getWorkingDayByIndex(i).getWorkingDayId().toString()).append("', '")
                         .append(workingWeek.getWorkingDayByIndex(i).getDay()).append("', '")
                         .append(workingWeek.getWorkingDayByIndex(i).getStartWorkingTime()).append("', '")
@@ -75,10 +75,11 @@ public class WorkingWeekDao {
 
     }
 
-    public static void deleteWorkingDaysByEmployeeId(UUID employeeId) {
+    public static void deleteWorkingDaysByEmployeeId(String employeeId) {
         try {
-            stmt = con.createStatement();
-            stmt.executeQuery("DELETE FROM OPTKOS.WORKINGDAY wd WHERE wd.EMPLOYEEID='" + employeeId.toString() + "';");
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.WORKINGDAY wd WHERE wd.EMPLOYEEID=?");
+            preparedStmt.setString(1,employeeId);
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -86,5 +87,23 @@ public class WorkingWeekDao {
 
     private WorkingWeekDao() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static boolean updateWorkingDay(WorkingDay workingDay){
+        boolean result;
+        try {
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.WORKINGDAY SET STARTWORK = ?, ENDWORK = ?, STARKBREAK = ?, ENDBREAK = ? WHERE WORKINGDAYID = ?");
+            preparedStmt.setTime(1, Time.valueOf(workingDay.getStartWorkingTime()));
+            preparedStmt.setTime(2, Time.valueOf(workingDay.getEndWorkingTime()));
+            preparedStmt.setTime(3, Time.valueOf(workingDay.getStartBreakTime()));
+            preparedStmt.setTime(4, Time.valueOf(workingDay.getEndBreakTime()));
+            preparedStmt.setString(5, workingDay.getWorkingDayId().toString());
+            result = preparedStmt.executeUpdate() != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return result;
     }
 }

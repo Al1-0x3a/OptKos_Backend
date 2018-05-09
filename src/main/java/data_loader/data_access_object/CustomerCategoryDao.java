@@ -23,7 +23,7 @@ public class CustomerCategoryDao {
 
             while(rs.next()){
                 CustomerCategory customerCategory = new CustomerCategory(
-                        UUID.fromString(rs.getString("CUSTOMERCATEGORYID")),
+                        rs.getString("CUSTOMERCATEGORYID"),
                         rs.getString("NAME"),
                         rs.getString("DESCRIPTION"));
                 customerCategoryList.add(customerCategory);
@@ -35,7 +35,7 @@ public class CustomerCategoryDao {
         return customerCategoryList;
     }
 
-    public static CustomerCategory getCustomerCategoryById(UUID ccId){
+    public static CustomerCategory getCustomerCategoryById(String ccId){
 
         CustomerCategory cc = null;
         for(int i = 0; i< customerCategoryList.size(); i++){
@@ -54,7 +54,7 @@ public class CustomerCategoryDao {
     }
 
 
-    public static CustomerCategory getCustomerCategoryByIdFromDb(UUID ccId){
+    public static CustomerCategory getCustomerCategoryByIdFromDb(String ccId){
         CustomerCategory customerCategory = null;
         try {
             stmt = con.createStatement();
@@ -62,7 +62,7 @@ public class CustomerCategoryDao {
             ResultSet rs = stmt.executeQuery(query);
 
             customerCategory = new CustomerCategory(
-                    UUID.fromString(rs.getString("CUSTOMERCATEGORYID")),
+                    rs.getString("CUSTOMERCATEGORYID"),
                     rs.getString("NAME"),
                     rs.getString("DESCRIPTION"));
         } catch (SQLException e) {
