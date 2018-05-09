@@ -10,30 +10,31 @@ import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
 
 public class Main {
-    private static final String success = "[Success]";
-    private static final String error = "[Error]";
+    private static final String SUCCESS = "[Success]";
+    private static final String ERROR = "[Error]";
+    private static final String FORMAT = "%-50s";
 
     public static void main (String[] args){
         System.out.println(getHeader());
 
-        System.out.print("Launching administrative endpoint...   ");
+        System.out.printf(FORMAT, "Launching administrative endpoint...");
         Endpoint.publish("http://localhost:1337/AdministrativeApi", new AdministrativeApi());
-        System.out.println(success);
+        System.out.println(SUCCESS);
 
-        System.out.print("Launching appointment endpoint...   ");
+        System.out.printf(FORMAT, "Launching appointment endpoint...");
         Endpoint.publish("http://localhost:1338/AppointmentApi", new AppointmentApi());
-        System.out.println(success);
+        System.out.println(SUCCESS);
 
         try {
-            System.out.print("Testing DB2 connection...   ");
+            System.out.printf(FORMAT, "Testing DB2 connection...");
             long start = System.currentTimeMillis();
             boolean status = SqlConnection.getConnection().isValid(60);
             long end = System.currentTimeMillis();
             if (status) {
-                System.out.println(success);
+                System.out.println(SUCCESS);
                 System.out.printf("Initial ping took %d ms%n", (end - start));
             } else {
-                System.err.println(error);
+                System.err.println(ERROR);
                 System.exit(1);
             }
         } catch (SQLException e) {
