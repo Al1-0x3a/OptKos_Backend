@@ -45,7 +45,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     // give employee object to frontend
     @Override
     public Employee getNewEmployee() {
-        return new Employee();
+        return new Employee(UUID.randomUUID().toString());
     }
 
     @Override
