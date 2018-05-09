@@ -4,13 +4,12 @@ import data_loader.data_access_object.EmployeeDao;
 import data_models.Employee;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class AdministrativeManager {
 
     public Employee getEmployeeById(String uuid) {
-        List<Employee> tmpList = employeeDao.getAllEmployeesFromDb().stream().
+        List<Employee> tmpList = EmployeeDao.getAllEmployeesFromDb().stream().
                 filter(employee -> employee.getEmployeeId().equals(uuid)).collect(Collectors.toList());
         if (tmpList.isEmpty()) {
             System.err.println("No employee with UUID " + uuid);

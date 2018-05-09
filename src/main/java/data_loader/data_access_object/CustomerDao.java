@@ -24,18 +24,18 @@ public class CustomerDao {
             String query = "SELECT * FROM OPTKOS.CUSTOMER";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            while(rs.next()){
-                Customer customer = new Customer(rs.getString("CUSTOMERID"),
-                        rs.getDouble("MULTIPLIKATOR"),
-                        rs.getString("ANNOTATION"),
-                        rs.getString("PROBLEM").toCharArray()[0],
-                        rs.getString("PERSONID"));
+                while (rs.next()) {
+                    Customer customer = new Customer(rs.getString("CUSTOMERID"),
+                            rs.getDouble("MULTIPLIKATOR"),
+                            rs.getString("ANNOTATION"),
+                            rs.getString("PROBLEM").toCharArray()[0],
+                            rs.getString("PERSONID"));
 
-                customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
-                        rs.getString("CUSTOMERCATEGORYID")));
-                customerList.add(customer);
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                            rs.getString("CUSTOMERCATEGORYID")));
+                    customerList.add(customer);
+                }
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class CustomerDao {
     }
 
 
-    public static Customer getCustomerById(String cId){
+    public static Customer getCustomerById(String uuid){
 
         Customer customer = null;
         for (Customer customers : customerList) {
@@ -63,22 +63,22 @@ public class CustomerDao {
     }
 
 
-    public static Customer getCustomerByIdFromDb(String cId){
+    public static Customer getCustomerByIdFromDb(String uuid){
         Customer customer = null;
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.CUSTOMER c WHERE c.CUSTOMERID=" + uuid + ";";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            customer = new Customer(rs.getString("CUSTOMERID"),
-                    rs.getDouble("MULTIPLIKATOR"),
-                    rs.getString("ANNOTATION"),
-                    rs.getString("PROBLEM").toCharArray()[0],
-                    rs.getString("PERSONID"));
+                customer = new Customer(rs.getString("CUSTOMERID"),
+                        rs.getDouble("MULTIPLIKATOR"),
+                        rs.getString("ANNOTATION"),
+                        rs.getString("PROBLEM").toCharArray()[0],
+                        rs.getString("PERSONID"));
 
-            customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
-                    rs.getString("CUSTOMERCATEGORYID")));
-
+                customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                        rs.getString("CUSTOMERCATEGORYID")));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

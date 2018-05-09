@@ -23,12 +23,13 @@ public class AppointmentTypeDao {
             String query = "SELECT * FROM OPTKOS.APOINTMENTTYPE";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            while(rs.next()){
-                AppointmentType appointmentType = new AppointmentType(
-                        rs.getString("APPOINTMENTTYPEID"),
-                        rs.getString("NAME"),
-                        rs.getString("DESCRIPTION"));
-                appointmentTypeList.add(appointmentType);
+                while (rs.next()) {
+                    AppointmentType appointmentType = new AppointmentType(
+                            rs.getString("APPOINTMENTTYPEID"),
+                            rs.getString("NAME"),
+                            rs.getString("DESCRIPTION"));
+                    appointmentTypeList.add(appointmentType);
+                }
             }
 
         } catch (SQLException e) {
@@ -63,10 +64,11 @@ public class AppointmentTypeDao {
             String query = "SELECT * FROM OPTKOS.APOINTMENTTYPE at WHERE at.APPOINTMENTTYPEID=" + appTId + ";";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            appointmentType = new AppointmentType(
-                    rs.getString("APPOINTMENTTYPEID"),
-                    rs.getString("NAME"),
-                    rs.getString("DESCRIPTION"));
+                appointmentType = new AppointmentType(
+                        rs.getString("APPOINTMENTTYPEID"),
+                        rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

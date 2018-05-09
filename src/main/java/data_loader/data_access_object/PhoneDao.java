@@ -61,7 +61,7 @@ public class PhoneDao {
             preparedStmt.setString(3, phone.getDescription());
             preparedStmt.setString(4, phone.getAnnotation());
             preparedStmt.setString(5, phone.getPersonId());
-            b = preparedStmt.execute();
+            result = preparedStmt.execute();
             phoneList.add(phone);
         } catch (SQLException e) {
             System.err.println("An Error occured while writing an Phone into the DB");

@@ -23,23 +23,23 @@ public class AppointmentDao {
             String query = "SELECT * FROM OPTKOS.APOINTMENT";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            while(rs.next()){
-                Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
-                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                while (rs.next()) {
+                    Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
+                            rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                            rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
+                            rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                            rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-                appointment.setEmployee(EmployeeDao.getEmployeeById(
-                        rs.getString("EMPLOYEEID")));
+                    appointment.setEmployee(EmployeeDao.getEmployeeById(
+                            rs.getString("EMPLOYEEID")));
 
-                appointment.setCustomer(CustomerDao.getCustomerById(
-                        rs.getString("CUSTOMERID")));
+                    appointment.setCustomer(CustomerDao.getCustomerById(
+                            rs.getString("CUSTOMERID")));
 
-                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                        rs.getString("APPOINTMENTTYPEID")));
+                    appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
+                            rs.getString("APPOINTMENTTYPEID")));
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,10 +47,10 @@ public class AppointmentDao {
     }
 
     public static Appointment getAppointmentById(String appointmentId){
-        Appointment app = null;
+        Appointment appointment = null;
         for(int i = 0; i< appointmentList.size(); i++){
             if(appointmentList != null && appointmentList.get(i).getAppointmentId() == appointmentId) {
-                app = appointmentList.get(i);
+                appointment = appointmentList.get(i);
                 break;
             }
         }
@@ -70,20 +70,20 @@ public class AppointmentDao {
             String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId.toString() + ";";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            appointment = new Appointment(rs.getString("APPOINTMENTID"),
-                    rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                    rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
-                    rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                    rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                appointment = new Appointment(rs.getString("APPOINTMENTID"),
+                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                        rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
+                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                        rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
 
-            appointment.setEmployee(EmployeeDao.getEmployeeById(
-                    rs.getString("EMPLOYEEID")));
+                appointment.setEmployee(EmployeeDao.getEmployeeById(
+                        rs.getString("EMPLOYEEID")));
 
-            appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
+                appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
 
-            appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                    rs.getString("APPOINTMENTTYPEID")));
-
+                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
+                        rs.getString("APPOINTMENTTYPEID")));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

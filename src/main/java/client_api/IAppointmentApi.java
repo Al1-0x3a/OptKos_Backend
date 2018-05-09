@@ -12,5 +12,5 @@ public interface IAppointmentApi {
     @WebMethod
 	List<Appointment> getAppointments();
     @WebMethod
-	Appointment getApointmentById(String apointmentId);
+	Appointment getAppointmentById(String apointmentId);
 }

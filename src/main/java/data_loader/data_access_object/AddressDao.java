@@ -22,13 +22,14 @@ public class AddressDao {
             String query = "SELECT * FROM OPTKOS.ADDRESS";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
-            addressList = new ArrayList<>();
-            while(rs.next()){
-                addressList.add(new Address(rs.getString("ADDRESSID"),
-                        rs.getString("POSTCODE"), rs.getString("CITY"),
-                        rs.getString("STREET"), rs.getString("HOUSENR"),
-                        rs.getString("PERSONID"),
-                        rs.getString("ADDITION")));
+                addressList = new ArrayList<>();
+                while (rs.next()) {
+                    addressList.add(new Address(rs.getString("ADDRESSID"),
+                            rs.getString("POSTCODE"), rs.getString("CITY"),
+                            rs.getString("STREET"), rs.getString("HOUSENR"),
+                            rs.getString("PERSONID"),
+                            rs.getString("ADDITION")));
+                }
             }
 
         } catch (SQLException e) {

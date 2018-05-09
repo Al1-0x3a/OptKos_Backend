@@ -6,7 +6,6 @@ import data_models.WorkingDay;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class WorkingWeekDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -73,10 +72,6 @@ public class WorkingWeekDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private WorkingWeekDao() {
-        throw new IllegalStateException("Utility class");
     }
 
     public static boolean updateWorkingDay(WorkingDay workingDay){
