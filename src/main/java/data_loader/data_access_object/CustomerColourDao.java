@@ -5,7 +5,6 @@ import data_models.CustomerColour;
 
 import java.sql.*;
 import java.util.List;
-import java.util.UUID;
 
 public class CustomerColourDao {
     private static Connection con = SqlConnection.getConnection();
@@ -22,9 +21,9 @@ public class CustomerColourDao {
 
             while(rs.next()){
                 CustomerColour customerColour = new CustomerColour(
-                        UUID.fromString(rs.getString("CUSTOMERCOLURID")),
+                        rs.getString("CUSTOMERCOLURID"),
                         rs.getInt("CONTENTWHITE"),
-                        UUID.fromString(rs.getString("CUSTOMERID")),
+                        rs.getString("CUSTOMERID"),
                         rs.getInt("EXPOSURETIME"),
                         rs.getString("NATURAL"),
                         rs.getString("OXIDATION"),
@@ -37,7 +36,7 @@ public class CustomerColourDao {
         return customerColourList;
     }
 
-    public static List<CustomerColour> getCustomerColourByCustomerId(UUID customerId){
+    public static List<CustomerColour> getCustomerColourByCustomerId(String customerId){
         if(customerColourList == null ){
             customerColourList = getAllCustomerColoursFromDb();
         }
@@ -53,7 +52,8 @@ public class CustomerColourDao {
 
     public static void createCustomerColour(CustomerColour customerColour){
         try {
-            preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCOLOUR (NATURALCOLOUR, OXIDATION, CONTENTWHITE, EXPOSURETIME, RESULT, CUSTOMERCOLOURID, CUSTOMERID) VALUES(?,?,?,?,?,?,?)");
+            preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCOLOUR (NATURALCOLOUR, OXIDATION," +
+                    " CONTENTWHITE, EXPOSURETIME, RESULT, CUSTOMERCOLOURID, CUSTOMERID) VALUES(?,?,?,?,?,?,?)");
             preparedStmt.setString(1, customerColour.getNatural());
             preparedStmt.setString(2,customerColour.getOxidation());
             preparedStmt.setInt(3, customerColour.getContentWhite());
@@ -61,22 +61,21 @@ public class CustomerColourDao {
             preparedStmt.setString(5, customerColour.getResult());
             preparedStmt.setString(6, customerColour.getCustomerColourId().toString());
             preparedStmt.setString(7, customerColour.getCustomerId().toString());
-            preparedStmt.execute();
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void deleteCustomerColourByCustomerId(UUID customerId){
+    public static void deleteCustomerColourByCustomerId(String customerId){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMERCOLOUR WHERE CUSTOMERID=?");
             preparedStmt.setString(1, customerId.toString());
+            preparedStmt.executeUpdate();
 
-            if (preparedStmt.execute()){
-                for (int i = 0; i< customerColourList.size(); i++){
-                    if(customerColourList.get(i).getCustomerId() == customerId) {
-                        customerColourList.remove(i);
-                    }
+            for (int i = 0; i< customerColourList.size(); i++){
+                if(customerColourList.get(i).getCustomerId() == customerId) {
+                    customerColourList.remove(i);
                 }
             }
         } catch (SQLException e) {
@@ -84,9 +83,13 @@ public class CustomerColourDao {
         }
     }
 
-    public static void changeCustomerColourByCustomerId(String customerColour, String naturalColour, String oxidation, int contenWhite, int exposureTime, String result, UUID customerId){
+    public static void changeCustomerColourByCustomerId(String customerColour, String naturalColour,
+                                                        String oxidation, int contenWhite, int exposureTime,
+                                                        String result, String customerId){
         try {
-            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCOLOUR SET CUSTOMERCOLOUR = ?, NATURALCOLOUR = ?, OXIDATION = ?, CONTENTWHITE = ?, EXPOSURETIME = ?, Result = ? WHERE CUSTOMERID=?;");
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCOLOUR SET CUSTOMERCOLOUR = ?," +
+                    " NATURALCOLOUR = ?, OXIDATION = ?, CONTENTWHITE = ?, EXPOSURETIME = ?," +
+                    " Result = ? WHERE CUSTOMERID=?");
             preparedStmt.setString(1, customerColour);
             preparedStmt.setString(2, naturalColour);
             preparedStmt.setString(3, oxidation);
@@ -94,7 +97,7 @@ public class CustomerColourDao {
             preparedStmt.setInt(5, exposureTime);
             preparedStmt.setString(6, result);
             preparedStmt.setString(7, customerId.toString());
-            preparedStmt.execute();
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -5,15 +5,15 @@ import java.util.UUID;
 public class Colour {
 
 	private String brightness;
-	private UUID colourId;
+	private String colourId;
 	private String hue;
 	private String manufacturer;
 
 	public Colour(){
-	this.colourId = UUID.randomUUID();
+	this.colourId = UUID.randomUUID().toString();
 	}
 
-	public Colour(UUID colourId, String brightness, String hue, String manufacturer) {
+	public Colour(String colourId, String brightness, String hue, String manufacturer) {
 		this.colourId = colourId;
 		this.brightness = brightness;
 		this.hue = hue;
@@ -28,11 +28,11 @@ public class Colour {
 		this.brightness = brightness;
 	}
 
-	public UUID getColourId() {
+	public String getColourId() {
 		return colourId;
 	}
 
-	public void setColourId(UUID colourId) {
+	public void setColourId(String colourId) {
 		this.colourId = colourId;
 	}
 

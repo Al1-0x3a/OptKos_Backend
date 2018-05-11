@@ -1,12 +1,11 @@
 package data_models;
 
-import java.util.UUID;
 
 public class CustomerColour {
 
-	private UUID customerColourId;
+	private String customerColourId;
 	private int contentWhite;
-	private UUID customerId;
+	private String customerId;
 	private int exposureTime;
 	private String natural;
 	private String oxidation;
@@ -16,7 +15,7 @@ public class CustomerColour {
 
 	}
 
-	public CustomerColour(UUID customerColourId, int contentWhite, UUID customerId, int exposureTime,
+	public CustomerColour(String customerColourId, int contentWhite, String customerId, int exposureTime,
 	String natural, String oxidation, String result) {
 		this.customerColourId = customerColourId;
 		this.contentWhite = contentWhite;
@@ -27,11 +26,11 @@ public class CustomerColour {
 		this.result = result;
 	}
 
-	public UUID getCustomerColourId() {
+	public String getCustomerColourId() {
 		return customerColourId;
 	}
 
-	public void setCustomerColourId(UUID CustomerColourId) {
+	public void setCustomerColourId(String CustomerColourId) {
 		this.customerColourId = customerColourId; }
 
 	public int getContentWhite() {
@@ -42,11 +41,11 @@ public class CustomerColour {
 		this.contentWhite = contentWhite;
 	}
 
-	public UUID getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(UUID customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

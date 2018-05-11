@@ -4,37 +4,37 @@ import java.util.UUID;
 
 public class ColourMixture {
 
-	private UUID colourMixtureId;
-	private UUID colourId;
-	private UUID customerId;
+	private String colourMixtureId;
+	private String colourId;
+	private String customerId;
 	private int mixingRatio;
 
 	public ColourMixture(){
-		this.colourMixtureId= UUID.randomUUID();
+		this.colourMixtureId= UUID.randomUUID().toString();
 	}
 
-	public ColourMixture(UUID colourMixtureId ,UUID colourId, UUID customerId, int mixingRatio) {
+	public ColourMixture(String colourMixtureId ,String colourId, String customerId, int mixingRatio) {
 		this.colourMixtureId = colourMixtureId;
 		this.colourId = colourId;
 		this.customerId = customerId;
 		this.mixingRatio = mixingRatio;
 	}
 
-	public UUID getColourMixtureId() { return colourMixtureId; }
+	public String getColourMixtureId() { return colourMixtureId; }
 
-	public UUID getColourId() {
+	public String getColourId() {
 		return colourId;
 	}
 
-	public void setColourId(UUID colourId) {
+	public void setColourId(String colourId) {
 		this.colourId = colourId;
 	}
 
-	public UUID getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(UUID customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

@@ -22,10 +22,10 @@ public class ColourDao {
 
             while(rs.next()){
                 Colour Colour = new Colour(
-                    UUID.fromString(rs.getString("COLOURID")),
-                    rs.getString("BRIGHTNESS"),
-                    rs.getString("HUE"),
-                    rs.getString("MANUFACTURER")
+                        rs.getString("COLOURID"),
+                        rs.getString("BRIGHTNESS"),
+                        rs.getString("HUE"),
+                        rs.getString("MANUFACTURER")
                 );
             }
         } catch (SQLException e) {
@@ -34,7 +34,7 @@ public class ColourDao {
         return colourList;
     }
 
-    public static List<Colour> getColourByColourId(UUID colourId){
+    public static List<Colour> getColourByColourId(String colourId){
         if(colourList == null ){
             colourList = getAllColoursFromDb();
         }
@@ -50,27 +50,27 @@ public class ColourDao {
 
     public static void createCustomerColour(Colour colour){
         try {
-            preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS, COLOURHUE, MANUFACTURER) VALUES(?,?,?,?)");
+            preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS," +
+                    "COLOURHUE, MANUFACTURER) VALUES(?,?,?,?)");
             preparedStmt.setString(1, colour.getColourId().toString());
             preparedStmt.setString(2,colour.getBrightness());
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
-            preparedStmt.execute();
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void deleteColourByColourId(UUID colourId){
+    public static void deleteColourByColourId(String colourId){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOUR WHERE COLOURID=?");
             preparedStmt.setString(1, colourId.toString());
+            preparedStmt.executeUpdate();
 
-            if (preparedStmt.execute()){
-                for (int i = 0; i< colourList.size(); i++){
-                    if(colourList.get(i).getColourId() == colourId) {
-                        colourList.remove(i);
-                    }
+            for (int i = 0; i< colourList.size(); i++){
+                if(colourList.get(i).getColourId() == colourId) {
+                    colourList.remove(i);
                 }
             }
         } catch (SQLException e) {
@@ -80,12 +80,13 @@ public class ColourDao {
 
     public static void changeColourByColourId(UUID colourId, String brightness, String hue, String manufacturer){
         try {
-            preparedStmt = con.prepareStatement("UPDATE OPTKOS.COLOUR SET COLOURBRIGHTNESS = ?, COLOURHUE = ?, MANUFACTURER = ? WHERE COLOURID = ?;");
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.COLOUR SET COLOURBRIGHTNESS = ?, COLOURHUE = ?," +
+                    " MANUFACTURER = ? WHERE COLOURID = ?");
             preparedStmt.setString(1, brightness);
             preparedStmt.setString(2, hue);
             preparedStmt.setString(3, manufacturer);
             preparedStmt.setString(4, colourId.toString());
-            preparedStmt.execute();
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
