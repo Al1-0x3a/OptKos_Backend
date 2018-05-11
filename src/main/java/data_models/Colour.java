@@ -8,17 +8,16 @@ public class Colour {
 	private UUID colourId;
 	private String hue;
 	private String manufacturer;
-	private String targetColor;
 
 	public Colour(){
-
+	this.colourId = UUID.randomUUID();
 	}
 
-	public Colour(String brightness, String hue, String manufacturer, String targetColor) {
+	public Colour(UUID colourId, String brightness, String hue, String manufacturer) {
+		this.colourId = colourId;
 		this.brightness = brightness;
 		this.hue = hue;
 		this.manufacturer = manufacturer;
-		this.targetColor = targetColor;
 	}
 
 	public String getBrightness() {
@@ -51,13 +50,5 @@ public class Colour {
 
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
-	}
-
-	public String getTargetColor() {
-		return targetColor;
-	}
-
-	public void setTargetColor(String targetColor) {
-		this.targetColor = targetColor;
 	}
 }
