@@ -2,6 +2,7 @@
 import client_api.AdministrativeApi;
 
 import client_api.AppointmentApi;
+import data_loader.DbLoginData;
 
 
 import javax.xml.ws.Endpoint;
@@ -16,6 +17,8 @@ public class Main {
         Endpoint.publish("http://localhost:1338/AppointmentApi", new AppointmentApi());
         System.out.println("Done");
 
+/*        DbLoginData db = new DbLoginData();
+        db.setCredentials("Username", "Passwd");*/
 
     }
 }

@@ -1,23 +1,24 @@
 package data_loader;
 
-/***
- * user login data for db connection is stored here
- * everyone has to enter own data here
- * this class shouldnt be committed with user data
- */
+import java.util.prefs.Preferences;
 
 public class DbLoginData {
-    private String username = "",
-    password = "";
+
+    public DbLoginData() {
+    }
+    Preferences preferences =
+            Preferences.userNodeForPackage(DbLoginData.class);
+
+    public void setCredentials(String username, String password) {
+        preferences.put("db_username", username);
+        preferences.put("db_password", password);
+    }
 
     public String getUsername() {
-        return username;
+        return preferences.get("db_username", null);
     }
 
     public String getPassword() {
-        return password;
-    }
-
-    public DbLoginData() {
+        return preferences.get("db_password", null);
     }
 }
