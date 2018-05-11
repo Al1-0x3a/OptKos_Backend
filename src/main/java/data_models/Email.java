@@ -4,25 +4,30 @@ import java.util.UUID;
 
 public class Email {
 
-	private UUID emailId;
+	private String emailId;
 	private String email;
-	private UUID personId;
+	private String personId;
 
 	public Email(){
-
+this.emailId = UUID.randomUUID().toString();
 	}
 
-	public Email(UUID emailId, String email, UUID personId) {
+	public Email(String personId){
+		this.personId = personId;
+		this.emailId = UUID.randomUUID().toString();
+	}
+
+	public Email(String emailId, String email, String personId) {
 		this.emailId = emailId;
 		this.email = email;
 		this.personId = personId;
 	}
 
-	public UUID getEmailId() {
+	public String getEmailId() {
 		return emailId;
 	}
 
-	public void setEmailId(UUID emailId) {
+	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
 
@@ -34,11 +39,11 @@ public class Email {
 		this.email = email;
 	}
 
-	public UUID getPersonId() {
+	public String getPersonId() {
 		return personId;
 	}
 
-	public void setPersonId(UUID personId) {
+	public void setPersonId(String personId) {
 		this.personId = personId;
 	}
 }

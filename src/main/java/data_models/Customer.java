@@ -5,17 +5,18 @@ import java.util.UUID;
 public class Customer extends Person {
 
 	private String annotation;
-	private UUID costumerId;
-	private UUID personId;
+	private String costumerId;
+	private String personId;
 	private boolean problemCustomer;
 	private double timefactor;
 	private CustomerCategory customerCategory;
 
 	public Customer() {
-
+		super();
+		this.costumerId = UUID.randomUUID().toString();
 	}
 
-	public Customer( UUID costumerId, double timefactor, String annotation, char problemCustomer, UUID personId) {
+	public Customer( String costumerId, double timefactor, String annotation, char problemCustomer, String personId) {
 		this.annotation = annotation;
 		this.costumerId = costumerId;
 		if(problemCustomer == '0')
@@ -34,11 +35,11 @@ public class Customer extends Person {
 		this.annotation = annotation;
 	}
 
-	public UUID getCostumerId() {
+	public String getCostumerId() {
 		return costumerId;
 	}
 
-	public void setCostumerId(UUID costumerId) {
+	public void setCostumerId(String costumerId) {
 		this.costumerId = costumerId;
 	}
 

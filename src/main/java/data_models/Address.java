@@ -4,31 +4,35 @@ import java.util.UUID;
 
 public class Address {
 
-	private UUID addressId;
+	private String addressId;
 	private String postcode;
 	private String city;
 	private String street;
 	private String housenr;
-	private UUID personId;
+	private String addition;
+	private String personId;
 
-	public Address(){
-		addressId = UUID.randomUUID();
+	public Address(String personId){
+		this.addressId = UUID.randomUUID().toString();
+		this.personId = personId;
 	}
+	public Address(){}
 
-	public Address(UUID addressId, String postcode, String city, String street, String housenr, UUID personId) {
-		addressId = UUID.randomUUID();
+	public Address(String addressId, String postcode, String city, String street, String housenr, String personId, String addition) {
+		this.addressId = addressId;
 		this.postcode = postcode;
 		this.city = city;
 		this.street = street;
 		this.housenr = housenr;
 		this.personId = personId;
+		this.addition = addition;
 	}
 
-	public UUID getAddressId() {
+	public String getAddressId() {
 		return addressId;
 	}
 
-	public void setAddressId(UUID addressId) {
+	public void setAddressId(String addressId) {
 		this.addressId = addressId;
 	}
 
@@ -64,11 +68,19 @@ public class Address {
 		this.housenr = housenr;
 	}
 
-	public UUID getPersonId() {
+	public String getPersonId() {
 		return personId;
 	}
 
-	public void setPersonId(UUID personId) {
+	public void setPersonId(String personId) {
 		this.personId = personId;
+	}
+
+	public String getAddition() {
+		return addition;
+	}
+
+	public void setAddition(String addition) {
+		this.addition = addition;
 	}
 }

@@ -4,22 +4,22 @@ import java.util.UUID;
 
 public class AppointmentType {
 
-	private UUID appointmentTypeId;
+	private String appointmentTypeId;
 	private String description;
 	private boolean isCustomerAppointment;
 	private String name;
 
 	public AppointmentType(){
-
+this.appointmentTypeId = UUID.randomUUID().toString();
 	}
 
-	public AppointmentType(UUID appointmentTypeId, String name, String description) {
+	public AppointmentType(String appointmentTypeId, String name, String description) {
 		this.appointmentTypeId = appointmentTypeId;
 		this.name = name;
 		this.description = description;
 	}
 
-	public UUID getAppointmentTypeId() {
+	public String getAppointmentTypeId() {
 		return appointmentTypeId;
 	}
 

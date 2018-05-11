@@ -4,23 +4,32 @@ import java.util.UUID;
 
 public class Phone {
 
-	private UUID phoneId;
+	private String phoneId;
 	private String annotation;
 	private String number;
 	private String description;
-	private UUID personId;
+	private String personId;
 
 
 	public Phone(){
-
+		this.phoneId = UUID.randomUUID().toString();
 	}
 
-	public Phone(UUID phoneId, String number, String annotation, String description, UUID personId) {
+	public Phone(String phoneId, String number, String annotation, String description, String personId) {
 		this.annotation = annotation;
 		this.number = number;
 		this.phoneId = phoneId;
 		this.description = description;
 		this.personId = personId;
+	}
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
+	}
+
+	public Phone(String personId){
+		this.personId = personId;
+		this.phoneId = UUID.randomUUID().toString();
 	}
 
 	public String getDescription() {
@@ -31,7 +40,7 @@ public class Phone {
 		this.description = description;
 	}
 
-	public UUID getPersonId() {
+	public String getPersonId() {
 		return personId;
 	}
 
@@ -51,11 +60,11 @@ public class Phone {
 		this.number = number;
 	}
 
-	public UUID getPhoneId() {
+	public String getPhoneId() {
 		return phoneId;
 	}
 
-	public void setPhoneId(UUID phoneId) {
+	public void setPhoneId(String phoneId) {
 		this.phoneId = phoneId;
 	}
 }

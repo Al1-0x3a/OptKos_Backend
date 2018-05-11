@@ -1,26 +1,33 @@
 package data_models;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorkingWeek {
 
-	private WorkingDay[] workingDays;
+	private List<WorkingDay> workingDays;
 
 	public WorkingWeek(){
-		workingDays = new WorkingDay[6];
-		for(int i = 0; i<6; i++){
-			workingDays[i] = new WorkingDay();
-		}
+		workingDays = new ArrayList<>();
+		workingDays.add(new WorkingDay("Montag"));
+		workingDays.add(new WorkingDay("Dienstag"));
+		workingDays.add(new WorkingDay("Mittwoch"));
+		workingDays.add(new WorkingDay("Donnerstag"));
+		workingDays.add(new WorkingDay("Freitag"));
+		workingDays.add(new WorkingDay("Samstag"));
+		workingDays.add(new WorkingDay("Sonntag"));
 	}
 
-	public WorkingDay[] getWorkingDays() {
+	public List<WorkingDay> getWorkingDays() {
 		return workingDays;
 	}
 
 	public WorkingDay getWorkingDayByIndex(int index){
-		return workingDays[index];
+		return workingDays.get(index);
 	}
 
-	public void setWorkingDays(WorkingDay[] workingDays) {
+	public void setWorkingDays(List<WorkingDay> workingDays) {
 		this.workingDays = workingDays;
 	}
 

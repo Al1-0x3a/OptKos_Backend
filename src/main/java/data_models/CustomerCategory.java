@@ -5,27 +5,27 @@ import java.util.UUID;
 
 public class CustomerCategory {
 
-	private UUID customerCategoryId;
+	private String customerCategoryId;
 	private String description;
 	private String name;
 	private Duration timeBonus;
 	private double timefactor;
 
 	public CustomerCategory(){
-
+this.customerCategoryId = UUID.randomUUID().toString();
 	}
 
-	public CustomerCategory(UUID customerCategoryId, String description, String name) {
+	public CustomerCategory(String customerCategoryId, String description, String name) {
 		this.customerCategoryId = customerCategoryId;
 		this.description = description;
 		this.name = name;
 	}
 
-	public UUID getCustomerCategoryId() {
+	public String getCustomerCategoryId() {
 		return customerCategoryId;
 	}
 
-	public void setCustomerCategoryId(UUID customerCategoryId) {
+	public void setCustomerCategoryId(String customerCategoryId) {
 		this.customerCategoryId = customerCategoryId;
 	}
 

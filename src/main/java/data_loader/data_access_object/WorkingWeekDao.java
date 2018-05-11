@@ -56,7 +56,6 @@ public class WorkingWeekDao {
                 preparedStmt.setString(7, employeeId.toString());
                 preparedStmt.execute();
             }
-            // stmt.executeQuery(query.toString());
         } catch (SQLException e) {
             e.printStackTrace();
         }

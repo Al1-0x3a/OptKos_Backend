@@ -7,14 +7,13 @@ public class Position {
 	private String description;
 	private String name;
 	private String note;
-	private UUID positionId;
+	private String positionId;
 
 	public Position(){
-	    this.positionId = UUID.randomUUID();
-
+	    this.positionId = UUID.randomUUID().toString();
 	}
 
-	public Position(UUID positionId, String name, String description, String note) {
+	public Position(String positionId, String name, String description, String note) {
 		this.positionId = positionId;
 		this.description = description;
 		this.name = name;
@@ -45,7 +44,7 @@ public class Position {
 		this.note = note;
 	}
 
-	public UUID getPositionId() {
+	public String getPositionId() {
 		return positionId;
 	}
 

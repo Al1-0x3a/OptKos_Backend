@@ -5,24 +5,29 @@ import java.util.UUID;
 
 public class WorkingDay {
 
-    private UUID workingDayId;
+    private String workingDayId;
     private LocalTime startWorkingTime;
     private LocalTime endWorkingTime;
     private LocalTime startBreakTime;
     private LocalTime endBreakTime;
     private String day;
 
-    public WorkingDay(UUID workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
-    LocalTime startBreakTime, LocalTime endBreakTime, String day) {
+    public WorkingDay(String workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
+    LocalTime startBreakTime, LocalTime endBreakTime) {
         this.workingDayId = workingDayId;
         this.startWorkingTime = startWorkingTime;
         this.endWorkingTime = endWorkingTime;
         this.startBreakTime = startBreakTime;
         this.endBreakTime = endBreakTime;
-        this.day = day;
     }
 
-    public WorkingDay() {
+    public WorkingDay(){
+        this.workingDayId = UUID.randomUUID().toString();
+    }
+
+    public WorkingDay(String dayName) {
+        this.workingDayId = UUID.randomUUID().toString();
+        this.day = dayName;
     }
 
 
@@ -32,6 +37,9 @@ public class WorkingDay {
     }
 
     public void setStartWorkingTime(LocalTime startWorkingTime) {
+        if( startWorkingTime == null){
+            this.startWorkingTime = LocalTime.of(00,00);
+        }else
         this.startWorkingTime = startWorkingTime;
     }
 
@@ -40,6 +48,9 @@ public class WorkingDay {
     }
 
     public void setEndWorkingTime(LocalTime endWorkingTime) {
+        if( endWorkingTime == null){
+            this.endWorkingTime = LocalTime.of(00,00);
+        }else
         this.endWorkingTime = endWorkingTime;
     }
 
@@ -48,6 +59,9 @@ public class WorkingDay {
     }
 
     public void setStartBreakTime(LocalTime startBreakTime) {
+        if( startBreakTime == null){
+            this.startBreakTime = LocalTime.of(00,00);
+        }else
         this.startBreakTime = startBreakTime;
     }
 
@@ -60,14 +74,17 @@ public class WorkingDay {
     }
 
     public void setEndBreakTime(LocalTime endBreakTime) {
+        if( endBreakTime == null){
+            this.endBreakTime = LocalTime.of(00,00);
+        }else
         this.endBreakTime = endBreakTime;
     }
 
-    public UUID getWorkingDayId() {
+    public String getWorkingDayId() {
         return workingDayId;
     }
 
-    public void setWorkingDayId(UUID workingDayId) {
+    public void setWorkingDayId(String workingDayId) {
         this.workingDayId = workingDayId;
     }
 

@@ -12,7 +12,7 @@ public interface IAppointmentApi {
     @WebMethod
 	List<Appointment> getAppointment();
     @WebMethod
-	Appointment getApointment(UUID apointmentId);
+	Appointment getApointment(String apointmentId);
 
 	// public List<Apointment> getApointment();
 
