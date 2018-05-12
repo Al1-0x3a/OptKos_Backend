@@ -6,6 +6,7 @@ import data_models.Email;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmailDao {
 
@@ -54,7 +55,7 @@ public class EmailDao {
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.EMAIL (EMAILID, EMAIL, PERSONID) VALUES(?,?,?)");
             preparedStmt.setString(1, email.getEmailId());
-            preparedStmt.setString(2,email.getEmail());
+            preparedStmt.setString(2,email.getEmailAddress());
             preparedStmt.setString(3, email.getPersonId());
 
             b = preparedStmt.execute();
@@ -93,7 +94,7 @@ public class EmailDao {
             b= preparedStmt.execute();
             if (b){
                 for (int i = 0; i< emailList.size(); i++){
-                    if(emailList.get(i).getPersonId() == emailId) {
+                    if(Objects.equals(emailList.get(i).getPersonId(), emailId)) {
                         emailList.remove(i);
                     }
                 }
@@ -105,17 +106,17 @@ public class EmailDao {
     }
 
     public static boolean updateEmail(Email email){
-        boolean b = false;
+        boolean result;
         try {
 
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.EMAIL SET EMAIL=?WHERE EMAILID=?");
-            preparedStmt.setString(1, email.getEmail());
+            preparedStmt.setString(1, email.getEmailAddress());
             preparedStmt.setString(2, email.getEmailId());
-            preparedStmt.executeUpdate();
-            b =true;
+            result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        return result;
     }
 }

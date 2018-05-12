@@ -84,8 +84,9 @@ public class AdministrativeApi implements IAdministrativeApi {
     public boolean updatePhone(Phone phone) {
         return PhoneDao.updatePhone(phone);
     }
+
     @Override
-    public boolean deletePhone(Phone phone){
+    public boolean deletePhone(Phone phone) {
         return PhoneDao.deletePhoneByPhoneId(phone.getPhoneId());
     }
 

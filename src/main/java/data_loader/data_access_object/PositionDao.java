@@ -6,6 +6,7 @@ import data_models.Position;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PositionDao {
 
@@ -40,7 +41,7 @@ public class PositionDao {
         }
         Position tmp = null;
         for (Position p : positionList) {
-            if (p.getPositionId() == positionId) {
+            if (Objects.equals(p.getPositionId(), positionId)) {
                 tmp = p;
             }
         }

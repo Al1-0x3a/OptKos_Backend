@@ -89,7 +89,6 @@ public class WorkingWeekDao {
             e.printStackTrace();
             return false;
         }
-
         return result;
     }
 }

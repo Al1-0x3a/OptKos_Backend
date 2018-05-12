@@ -6,6 +6,7 @@ import data_models.Phone;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PhoneDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -79,7 +80,7 @@ public class PhoneDao {
             b = preparedStmt.execute();
             if (b){
                 for (int i = 0; i< phoneList.size(); i++){
-                    if(phoneList.get(i).getPersonId() == phoneId) {
+                    if(Objects.equals(phoneList.get(i).getPersonId(), phoneId)) {
                         phoneList.remove(i);
                     }
                 }
@@ -97,7 +98,7 @@ public class PhoneDao {
 
             preparedStmt.executeUpdate();
                 for (int i = 0; i< phoneList.size(); i++){
-                    if(phoneList.get(i).getPersonId() == personId) {
+                    if(Objects.equals(phoneList.get(i).getPersonId(), personId)) {
                         phoneList.remove(i);
                     }
                 }

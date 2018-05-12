@@ -28,7 +28,7 @@ public class Main {
         try {
             System.out.printf(FORMAT, "Testing DB2 connection...");
             long start = System.currentTimeMillis();
-            boolean status = SqlConnection.getConnection().isValid(60);
+            boolean status = SqlConnection.getConnection().isValid(30);
             long end = System.currentTimeMillis();
             if (status) {
                 System.out.println(SUCCESS);

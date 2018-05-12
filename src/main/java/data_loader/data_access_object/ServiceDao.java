@@ -6,6 +6,7 @@ import data_models.Service;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ServiceDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -61,7 +62,7 @@ public class ServiceDao {
 
         Service tmp = null;
         for (Service p : serviceList) {
-            if (p.getServiceId() == serviceId) {
+            if (Objects.equals(p.getServiceId(), serviceId)) {
                 tmp = p;
             }
         }

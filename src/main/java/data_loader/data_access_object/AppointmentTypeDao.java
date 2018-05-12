@@ -6,6 +6,7 @@ import data_models.AppointmentType;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AppointmentTypeDao {
 
@@ -41,7 +42,7 @@ public class AppointmentTypeDao {
 
         AppointmentType appT = null;
         for (AppointmentType appointmentTypes : appointmentTypeList) {
-            if (appointmentTypes.getAppointmentTypeId() == appTId) {
+            if (Objects.equals(appointmentTypes.getAppointmentTypeId(), appTId)) {
                 appT = appointmentTypes;
                 break;
             }

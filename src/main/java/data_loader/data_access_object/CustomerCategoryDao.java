@@ -6,6 +6,7 @@ import data_models.CustomerCategory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CustomerCategoryDao {
 
@@ -41,7 +42,7 @@ public class CustomerCategoryDao {
 
         CustomerCategory customerCategory = null;
         for (CustomerCategory customerCategories : customerCategoryList) {
-            if (customerCategories.getCustomerCategoryId() == uuid) {
+            if (Objects.equals(customerCategories.getCustomerCategoryId(), uuid)) {
                 customerCategory = customerCategories;
                 break;
             }

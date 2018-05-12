@@ -6,6 +6,7 @@ import data_models.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -79,7 +80,7 @@ public class EmployeeDao {
             preparedStmt2.executeUpdate();
 
 
-            employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
+            employeeList.removeIf(o -> Objects.equals(o.getEmployeeId(), employee.getEmployeeId()));
             b = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,7 +145,7 @@ public class EmployeeDao {
     public static Employee getEmployeeById(String empolyeeId) {
         Employee employee = null;
         for (int i = 0; i < employeeList.size(); i++) {
-            if (employeeList.get(i).getEmployeeId() == empolyeeId) {
+            if (Objects.equals(employeeList.get(i).getEmployeeId(), empolyeeId)) {
                 employee = employeeList.get(i);
                 break;
             }

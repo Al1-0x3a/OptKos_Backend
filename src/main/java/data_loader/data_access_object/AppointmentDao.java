@@ -6,6 +6,7 @@ import data_models.Appointment;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -48,7 +49,7 @@ public class AppointmentDao {
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
         for(int i = 0; i< appointmentList.size(); i++){
-            if(appointmentList.get(i).getAppointmentId() == appointmentId) {
+            if(Objects.equals(appointmentList.get(i).getAppointmentId(), appointmentId)) {
                 appointment = appointmentList.get(i);
                 break;
             }

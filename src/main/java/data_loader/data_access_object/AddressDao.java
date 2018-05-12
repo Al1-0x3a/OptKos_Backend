@@ -5,6 +5,7 @@ import data_models.Address;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AddressDao {
 
@@ -80,7 +81,7 @@ public class AddressDao {
             preparedStmt.executeUpdate();
 
                 for (int i = 0; i< addressList.size(); i++){
-                    if(addressList.get(i).getPersonId() == personId) {
+                    if(Objects.equals(addressList.get(i).getPersonId(), personId)) {
                         addressList.remove(i);
                     }
             }

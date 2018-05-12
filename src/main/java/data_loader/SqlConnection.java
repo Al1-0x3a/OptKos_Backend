@@ -18,8 +18,8 @@ public class SqlConnection {
 			try {
 				connection = DriverManager.getConnection(url, DbLoginData.getUsername(), DbLoginData.getPassword());
 			} catch (SQLException e) {
+                System.err.println("Couldn't connect to Database");
 				e.printStackTrace();
-				System.err.println("Couldn't connect to Database\n exiting...");
 				exit(1);
 			}
 		}
