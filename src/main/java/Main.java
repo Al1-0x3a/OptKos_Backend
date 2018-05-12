@@ -15,6 +15,12 @@ public class Main {
     private static final String FORMAT = "%-50s";
 
     public static void main (String[] args){
+        /*
+        Uncomment and enter credentials ONLY ONCE
+        Remove personal info after first start
+        DbLoginData.setCredentials("your_username", "your_password");
+        */
+
         System.out.println(getHeader());
 
         System.out.printf(FORMAT, "Launching administrative endpoint...");
@@ -40,8 +46,6 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-/*        DbLoginData db = new DbLoginData();
-        db.setCredentials("Username", "Passwd");*/
 
     }
 

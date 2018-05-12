@@ -19,6 +19,9 @@ public class SqlConnection {
 				connection = DriverManager.getConnection(url, DbLoginData.getUsername(), DbLoginData.getPassword());
 			} catch (SQLException e) {
                 System.err.println("Couldn't connect to Database");
+                if (DbLoginData.getUsername() == null || DbLoginData.getPassword() == null) {
+					System.err.println("DB Credentials are null");
+				}
 				e.printStackTrace();
 				exit(1);
 			}
