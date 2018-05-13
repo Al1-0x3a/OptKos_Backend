@@ -217,13 +217,12 @@ public class EmployeeDao {
             result = result1 && result2;
 
             // other
-            EmailDao.deleteEmailByPersonId(employee.getEmailList().get(0).getPersonId());
-            for (Email e :
-                    employee.getEmailList()) {
-                EmailDao.createEmail(e);
-            }
-
-            PhoneDao.deleteAllPhoneByPersonId(employee.getPhoneList().get(0).getPersonId());
+                EmailDao.deleteEmailByPersonId(employee.getPersonId());
+                for (Email e :
+                        employee.getEmailList()) {
+                    EmailDao.createEmail(e);
+                }
+            PhoneDao.deleteAllPhoneByPersonId(employee.getPersonId());
             for (Phone p :
                     employee.getPhoneList()) {
                PhoneDao.createPhone(p);
