@@ -27,13 +27,13 @@ public class Customer extends Person {
 		this.personId = personId;
 	}
 
-	public String getAnnotation() {
-		return annotation;
-	}
+    public String getAnnotation() {
+        return annotation;
+    }
 
-	public void setAnnotation(String annotation) {
-		this.annotation = annotation;
-	}
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
 
 	public String getCostumerId() {
 		return costumerId;
@@ -43,27 +43,27 @@ public class Customer extends Person {
 		this.costumerId = costumerId;
 	}
 
-	public boolean isProblemCustomer() {
-		return problemCustomer;
-	}
+    public boolean isProblemCustomer() {
+        return problemCustomer;
+    }
 
-	public void setProblemCustomer(boolean problemCustomer) {
-		this.problemCustomer = problemCustomer;
-	}
+    public void setProblemCustomer(boolean problemCustomer) {
+        this.problemCustomer = problemCustomer;
+    }
 
-	public double getTimefactor() {
-		return timefactor;
-	}
+    public double getTimefactor() {
+        return timefactor;
+    }
 
-	public void setTimefactor(double timefactor) {
-		this.timefactor = timefactor;
-	}
+    public void setTimefactor(double timefactor) {
+        this.timefactor = timefactor;
+    }
 
-	public CustomerCategory getCustomerCategory() {
-		return customerCategory;
-	}
+    public CustomerCategory getCustomerCategory() {
+        return customerCategory;
+    }
 
-	public void setCustomerCategory(CustomerCategory m_CustomerCategory) {
-		this.customerCategory = m_CustomerCategory;
-	}
+    public void setCustomerCategory(CustomerCategory customerCategory) {
+        this.customerCategory = customerCategory;
+    }
 }

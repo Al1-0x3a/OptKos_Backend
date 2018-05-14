@@ -6,26 +6,30 @@ import data_models.Phone;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 public class PhoneDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Phone>phoneList = new ArrayList<>();
+    private static List<Phone> phoneList = new ArrayList<>();
 
-    public static List<Phone> getAllPhonesFromDb(){
+    private PhoneDao() {
+    }
+
+    public static List<Phone> getAllPhonesFromDb() {
 
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PHONE";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             phoneList = new ArrayList<>();
-            while(rs.next()){
+            while(rs.next()) {
                 phoneList.add(new Phone(rs.getString("PHONEID"),
                         rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
                         rs.getString("ANNOTATION"), rs.getString("PERSONID")));
+            }
             }
 
         } catch (SQLException e) {
@@ -35,7 +39,7 @@ public class PhoneDao {
     }
 
     public static List<Phone> getListByPersonId(String personId){
-        if(phoneList.size() == 0 ){
+        if(phoneList.isEmpty()) {
             phoneList = getAllPhonesFromDb();
         }
         List<Phone> tmpList = new ArrayList<>();
@@ -48,8 +52,8 @@ public class PhoneDao {
         return tmpList;
     }
 
-    public static boolean createPhone(Phone phone){
-        boolean b = false;
+    public static boolean createPhone(Phone phone) {
+        boolean result = false;
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
             preparedStmt.setString(1, phone.getPhoneId());
@@ -57,13 +61,13 @@ public class PhoneDao {
             preparedStmt.setString(3, phone.getDescription());
             preparedStmt.setString(4, phone.getAnnotation());
             preparedStmt.setString(5, phone.getPersonId());
-            b = preparedStmt.execute();
+            result = preparedStmt.execute();
             phoneList.add(phone);
         } catch (SQLException e) {
             System.err.println("An Error occured while writing an Phone into the DB");
             e.printStackTrace();
         }
-        return b;
+        return result;
     }
 
 
@@ -76,7 +80,7 @@ public class PhoneDao {
             b = preparedStmt.execute();
             if (b){
                 for (int i = 0; i< phoneList.size(); i++){
-                    if(phoneList.get(i).getPersonId() == phoneId) {
+                    if(Objects.equals(phoneList.get(i).getPersonId(), phoneId)) {
                         phoneList.remove(i);
                     }
                 }
@@ -88,14 +92,13 @@ public class PhoneDao {
     }
 
     public static boolean deleteAllPhoneByPersonId(String personId){
-        System.out.println(personId);
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
             preparedStmt.setString(1, personId);
 
             preparedStmt.executeUpdate();
                 for (int i = 0; i< phoneList.size(); i++){
-                    if(phoneList.get(i).getPersonId() == personId) {
+                    if(Objects.equals(phoneList.get(i).getPersonId(), personId)) {
                         phoneList.remove(i);
                     }
                 }

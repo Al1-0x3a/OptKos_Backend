@@ -6,20 +6,20 @@ import data_models.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
-    private static List<Employee> employeeList;
+    private static List<Employee> employeeList = new ArrayList<>();
 
-    public EmployeeDao() {
-        employeeList = new ArrayList<>();
+    private EmployeeDao() {
     }
 
     public static List<Employee> getEmployeeList() {
-        if (employeeList == null) {
+        if (employeeList.isEmpty()) {
             employeeList = getAllEmployeesFromDb();
         }
         return employeeList;
@@ -30,7 +30,7 @@ public class EmployeeDao {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
             employeeList = new ArrayList<>();
             while (rs.next()) {
@@ -53,7 +53,8 @@ public class EmployeeDao {
                 employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
 
 
-                employeeList.add(employee);
+                    employeeList.add(employee);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,10 +66,10 @@ public class EmployeeDao {
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMPLOYEE WHERE employeeId =?");
-            preparedStmt.setString(1, employee.getEmployeeId().toString());
+            preparedStmt.setString(1, employee.getEmployeeId());
 
             preparedStmt2 = con.prepareStatement("DELETE FROM OPTKOS.PERSON WHERE PERSONID =?");
-            preparedStmt2.setString(1, employee.getPersonId().toString());
+            preparedStmt2.setString(1, employee.getPersonId());
 
             AddressDao.deleteAddressByPersonId(employee.getPersonId());
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
@@ -79,7 +80,7 @@ public class EmployeeDao {
             preparedStmt2.executeUpdate();
 
 
-            employeeList.removeIf(o -> o.getEmployeeId() == employee.getEmployeeId());
+            employeeList.removeIf(o -> Objects.equals(o.getEmployeeId(), employee.getEmployeeId()));
             b = true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,7 +94,7 @@ public class EmployeeDao {
                     "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
 
 
-            preparedStmt.setString(1, employee.getPersonId().toString());
+            preparedStmt.setString(1, employee.getPersonId());
             preparedStmt.setString(2, employee.getLastname());
             preparedStmt.setString(3, employee.getFirstname());
             preparedStmt.setString(4, employee.getTitle().name());
@@ -103,8 +104,8 @@ public class EmployeeDao {
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED, POSITIONID) VALUES(?,?,?,?)");
             // preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID,POSITIONID) VALUES(?,?,?)");
 
-            preparedStmt2.setString(1, employee.getEmployeeId().toString());
-            preparedStmt2.setString(2, employee.getPersonId().toString());
+            preparedStmt2.setString(1, employee.getEmployeeId());
+            preparedStmt2.setString(2, employee.getPersonId());
             preparedStmt2.setString(3, "0");
             preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
             //preparedStmt2.setString(3, employee.getPositionId().toString());
@@ -113,16 +114,16 @@ public class EmployeeDao {
             preparedStmt2.execute();
 
             AddressDao.createNewAddress(employee.getAddress(), employee.getPersonId());
-            if(employee.getPhoneList().size()!=0) {
-                for(int i = 0; i<employee.getPhoneList().size(); i++) {
+            if (!employee.getPhoneList().isEmpty()) {
+                for (int i = 0; i < employee.getPhoneList().size(); i++) {
                     // CAUTION!! Dirty Hack
                     employee.getPhoneList().get(i).setPersonId(employee.getPersonId());
 
                     PhoneDao.createPhone(employee.getPhoneList().get(i));
                 }
             }
-            if(employee.getEmailList().size() != 0) {
-                for(int i = 0; i<employee.getEmailList().size(); i++) {
+            if (!employee.getEmailList().isEmpty()) {
+                for (int i = 0; i < employee.getEmailList().size(); i++) {
                     // CAUTION!! Dirty Hack
                     employee.getEmailList().get(i).setPersonId(employee.getPersonId());
 
@@ -144,7 +145,7 @@ public class EmployeeDao {
     public static Employee getEmployeeById(String empolyeeId) {
         Employee employee = null;
         for (int i = 0; i < employeeList.size(); i++) {
-            if (employeeList != null && employeeList.get(i).getEmployeeId() == empolyeeId) {
+            if (Objects.equals(employeeList.get(i).getEmployeeId(), empolyeeId)) {
                 employee = employeeList.get(i);
                 break;
             }
@@ -152,8 +153,7 @@ public class EmployeeDao {
 
         if (employee == null) {
             employee = getEmployeeByIdFromDb(empolyeeId);
-            if (employee != null)
-                employeeList.add(employee);
+            employeeList.add(employee);
         }
         return employee;
     }
@@ -165,21 +165,22 @@ public class EmployeeDao {
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
-                    "e.EMPLOYEEID=" + employeeId.toString() + ";";
-            ResultSet rs = stmt.executeQuery(query);
+                    "e.EMPLOYEEID=" + employeeId + ";";
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
-            // Person
-            employee.setPersonId(rs.getString("PERSONID"));
-            employee.setFirstname(rs.getString("FIRSTNAME"));
-            employee.setLastname(rs.getString("LASTNAME"));
-            System.out.println(employee.getFirstname() + " " + employee.getLastname());
-            employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
-            employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-            employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
-            // Employee
-            employee.setEmployeeId(rs.getString("EMPLOYEEID"));
-            employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-            employee.setPositionId(rs.getString("POSITIONID"));
+                // Person
+                employee.setPersonId(rs.getString("PERSONID"));
+                employee.setFirstname(rs.getString("FIRSTNAME"));
+                employee.setLastname(rs.getString("LASTNAME"));
+                System.out.println(employee.getFirstname() + " " + employee.getLastname());
+                employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
+                employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+                employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+                // Employee
+                employee.setEmployeeId(rs.getString("EMPLOYEEID"));
+                employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+                employee.setPositionId(rs.getString("POSITIONID"));
+            }
             // other objects
             employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
             employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));

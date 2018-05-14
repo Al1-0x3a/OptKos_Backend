@@ -10,12 +10,14 @@ import data_models.Phone;
 import manager.AdministrativeManager;
 
 import javax.jws.WebService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("ValidExternallyBoundObject")
 @WebService(endpointInterface = "client_api.IAdministrativeApi")
 public class AdministrativeApi implements IAdministrativeApi {
-    private AdministrativeManager administrativeManager;
+    private final AdministrativeManager administrativeManager;
 
     public AdministrativeApi() {
         administrativeManager = new AdministrativeManager();
@@ -55,7 +57,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public List<Customer> getCustomers() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -82,8 +84,9 @@ public class AdministrativeApi implements IAdministrativeApi {
     public boolean updatePhone(Phone phone) {
         return PhoneDao.updatePhone(phone);
     }
+
     @Override
-    public boolean deletePhone(Phone phone){
+    public boolean deletePhone(Phone phone) {
         return PhoneDao.deletePhoneByPhoneId(phone.getPhoneId());
     }
 

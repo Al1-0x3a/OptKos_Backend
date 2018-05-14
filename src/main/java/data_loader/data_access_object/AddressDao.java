@@ -5,28 +5,32 @@ import data_models.Address;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AddressDao {
 
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static List<Address> addressList = new ArrayList<>();
+
+    private AddressDao(){}
 
     public static List<Address> getAllAddressFromDb(){
 
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.ADDRESS";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
-            addressList = new ArrayList<>();
-            while(rs.next()){
-                addressList.add(new Address(rs.getString("ADDRESSID"),
-                        rs.getString("POSTCODE"), rs.getString("CITY"),
-                        rs.getString("STREET"), rs.getString("HOUSENR"),
-                        rs.getString("PERSONID"),
-                        rs.getString("ADDITION")));
+                addressList = new ArrayList<>();
+                while (rs.next()) {
+                    addressList.add(new Address(rs.getString("ADDRESSID"),
+                            rs.getString("POSTCODE"), rs.getString("CITY"),
+                            rs.getString("STREET"), rs.getString("HOUSENR"),
+                            rs.getString("PERSONID"),
+                            rs.getString("ADDITION")));
+                }
             }
 
         } catch (SQLException e) {
@@ -37,7 +41,7 @@ public class AddressDao {
 
     public static Address getAddressByPersonId(String personId){
         addressList = new ArrayList<>();
-        if(addressList.size() == 0 ){
+        if(addressList.isEmpty()){
             addressList = getAllAddressFromDb();
         }
         for (Address a : addressList)
@@ -77,7 +81,7 @@ public class AddressDao {
             preparedStmt.executeUpdate();
 
                 for (int i = 0; i< addressList.size(); i++){
-                    if(addressList.get(i).getPersonId() == personId) {
+                    if(Objects.equals(addressList.get(i).getPersonId(), personId)) {
                         addressList.remove(i);
                     }
             }

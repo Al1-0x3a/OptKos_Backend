@@ -16,15 +16,15 @@ public abstract class Person {
     private List<Email> emailList;
 
     public enum SALUTATION {
-        Herr, Frau;
+        Herr, Frau
     }
 
     public enum TITLE {
-        Professor, Doktor, Diplom, Senior, Junior, Default;
+        Professor, Doktor, Diplom, Senior, Junior, Default
     }
 
     public enum GENDER {
-        W, M;
+        W, M
     }
 
 

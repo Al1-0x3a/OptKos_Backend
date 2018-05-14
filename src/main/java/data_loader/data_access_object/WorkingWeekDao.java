@@ -1,19 +1,20 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
-import data_models.Employee;
 import data_models.WorkingDay;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class WorkingWeekDao {
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static List<WorkingDay> workingDays = new ArrayList<>();
+
+    private WorkingWeekDao() {
+    }
 
     public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
         List<WorkingDay> tmp = employeeWorkingDays;
@@ -21,18 +22,19 @@ public class WorkingWeekDao {
         try {
             stmt = con.createStatement();
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
-            preparedStmt.setString(1, employeeId.toString());
+            preparedStmt.setString(1, employeeId);
 
-            ResultSet rs = preparedStmt.executeQuery();
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
-            int i = 0;
-            while (rs.next()) {
-                tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
-                tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
-                tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
-                i++;
+                int i = 0;
+                while (rs.next()) {
+                    tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
+                    tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
+                    i++;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,7 +55,7 @@ public class WorkingWeekDao {
                 preparedStmt.setTime(4, Time.valueOf(workingDays.get(i).getEndWorkingTime()));
                 preparedStmt.setTime(5, Time.valueOf(workingDays.get(i).getStartBreakTime()));
                 preparedStmt.setTime(6, Time.valueOf(workingDays.get(i).getEndBreakTime()));
-                preparedStmt.setString(7, employeeId.toString());
+                preparedStmt.setString(7, employeeId);
                 preparedStmt.execute();
             }
         } catch (SQLException e) {
@@ -72,10 +74,6 @@ public class WorkingWeekDao {
         }
     }
 
-    private WorkingWeekDao() {
-        throw new IllegalStateException("Utility class");
-    }
-
     public static boolean updateWorkingDay(WorkingDay workingDay){
         boolean result;
         try {
@@ -85,13 +83,12 @@ public class WorkingWeekDao {
             preparedStmt.setTime(2, Time.valueOf(workingDay.getEndWorkingTime()));
             preparedStmt.setTime(3, Time.valueOf(workingDay.getStartBreakTime()));
             preparedStmt.setTime(4, Time.valueOf(workingDay.getEndBreakTime()));
-            preparedStmt.setString(5, workingDay.getWorkingDayId().toString());
+            preparedStmt.setString(5, workingDay.getWorkingDayId());
             result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
-
         return result;
     }
 }

@@ -8,8 +8,7 @@ import static java.lang.System.exit;
 public class SqlConnection {
 
 	private static Connection connection = null;
-	private static String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
-	private static DbLoginData loginData = new DbLoginData();
+	private static final String url = "jdbc:db2://if-db2.hs-kempten.de:50000/ERPP:retrieveMessagesFromServerOnGetMessage=true;";
 
 	protected SqlConnection(){
 	}
@@ -17,10 +16,13 @@ public class SqlConnection {
 	public static Connection getConnection(){
 		if (connection == null){
 			try {
-				connection = DriverManager.getConnection(url, loginData.getUsername(), loginData.getPassword());
+				connection = DriverManager.getConnection(url, DbLoginData.getUsername(), DbLoginData.getPassword());
 			} catch (SQLException e) {
+                System.err.println("Couldn't connect to Database");
+                if (DbLoginData.getUsername() == null || DbLoginData.getPassword() == null) {
+					System.err.println("DB Credentials are null");
+				}
 				e.printStackTrace();
-				System.err.println("Couldn't connect to Database\n exiting...");
 				exit(1);
 			}
 		}

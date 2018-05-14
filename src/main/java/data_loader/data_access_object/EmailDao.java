@@ -2,31 +2,33 @@ package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
 import data_models.Email;
-import data_models.Phone;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 public class EmailDao {
 
-    private static Connection con = SqlConnection.getConnection();
+    private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static List<Email> emailList = new ArrayList<>();
+
+    private EmailDao() {}
 
     public static List<Email> getAllEmailsFromDb(){
 
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.EMAIL";
-            ResultSet rs = stmt.executeQuery(query);
+            try (ResultSet rs = stmt.executeQuery(query)) {
 
-            emailList = new ArrayList<>();
-            while(rs.next()){
-                emailList.add(new Email(rs.getString("EMAILID"),
-                        rs.getString("EMAIL"), rs.getString("PERSONID")));
+                emailList = new ArrayList<>();
+                while (rs.next()) {
+                    emailList.add(new Email(rs.getString("EMAILID"),
+                            rs.getString("EMAIL"), rs.getString("PERSONID")));
+                }
             }
 
         } catch (SQLException e) {
@@ -36,7 +38,7 @@ public class EmailDao {
     }
 
     public static List<Email> getEmailListByPersonId(String personId){
-        if(emailList.size() == 0 ){
+        if(emailList.isEmpty()) {
             emailList = getAllEmailsFromDb();
         }
         List<Email> tmpList = new ArrayList<>();
@@ -52,9 +54,9 @@ public class EmailDao {
         boolean b = false;
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.EMAIL (EMAILID, EMAIL, PERSONID) VALUES(?,?,?)");
-            preparedStmt.setString(1, email.getEmailId().toString());
-            preparedStmt.setString(2,email.getEmail());
-            preparedStmt.setString(3, email.getPersonId().toString());
+            preparedStmt.setString(1, email.getEmailId());
+            preparedStmt.setString(2,email.getEmailAddress());
+            preparedStmt.setString(3, email.getPersonId());
 
             b = preparedStmt.execute();
         } catch (SQLException e) {
@@ -69,7 +71,7 @@ public class EmailDao {
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
-            preparedStmt.setString(1, personId.toString());
+            preparedStmt.setString(1, personId);
             preparedStmt.executeUpdate();
 
                 for (int i = 0; i< emailList.size(); i++){
@@ -87,12 +89,12 @@ public class EmailDao {
         boolean b = false;
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE EMAILID =?");
-            preparedStmt.setString(1, emailId.toString());
+            preparedStmt.setString(1, emailId);
 
             b= preparedStmt.execute();
             if (b){
                 for (int i = 0; i< emailList.size(); i++){
-                    if(emailList.get(i).getPersonId() == emailId) {
+                    if(Objects.equals(emailList.get(i).getPersonId(), emailId)) {
                         emailList.remove(i);
                     }
                 }
@@ -104,17 +106,17 @@ public class EmailDao {
     }
 
     public static boolean updateEmail(Email email){
-        boolean b = false;
+        boolean result;
         try {
 
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.EMAIL SET EMAIL=?WHERE EMAILID=?");
-            preparedStmt.setString(1, email.getEmail());
-            preparedStmt.setString(2, email.getEmailId().toString());
-            preparedStmt.executeUpdate();
-            b =true;
+            preparedStmt.setString(1, email.getEmailAddress());
+            preparedStmt.setString(2, email.getEmailId());
+            result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return b;
+        return result;
     }
 }
