@@ -65,6 +65,11 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
+    public Customer getNewCustomer() {
+        return new Customer(UUID.randomUUID().toString());
+    }
+
+    @Override
     public Phone getNewPhone(String personId) {
         return new Phone(personId);
     }

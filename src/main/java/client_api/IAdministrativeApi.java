@@ -27,6 +27,8 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean updateCustomer(Customer customer);
     @WebMethod
+    Customer getNewCustomer();
+    @WebMethod
     Phone getNewPhone(String personId);
     @WebMethod
     boolean createPhone(Phone phone);
