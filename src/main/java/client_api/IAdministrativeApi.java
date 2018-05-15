@@ -54,4 +54,6 @@ public interface IAdministrativeApi {
     boolean createService(Service service);
     @WebMethod
     boolean deleteService(Service service);
+    @WebMethod
+    List<CustomerCategory> getAllCustomerCategories();
 }
