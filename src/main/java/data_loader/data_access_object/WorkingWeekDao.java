@@ -11,9 +11,31 @@ public class WorkingWeekDao {
     private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<WorkingDay> workingDays = new ArrayList<>();
 
-    private WorkingWeekDao() {
+    public static List<WorkingDay> getAllWorkingDaysFromDb(){
+        List<WorkingDay> workingDayList = new ArrayList<>();
+
+        try {
+            stmt = con.createStatement();
+            String query = "SELECT * FROM OPTKOS.WORKINGDAY";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while(rs.next()){
+                workingDayList.add(new WorkingDay(rs.getString("WORKINGDAYID"),
+                        rs.getTime("STARTWORK").toLocalTime(),
+                        rs.getTime("ENDWORK").toLocalTime(),
+                        rs.getTime("STARKBREAK").toLocalTime(),
+                        rs.getTime("ENDBREAK").toLocalTime(),
+                        rs.getString("EMPLOYEEID"),
+                        rs.getString("DAY")
+
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return workingDayList;
     }
 
     public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
@@ -27,12 +49,26 @@ public class WorkingWeekDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 int i = 0;
+
                 while (rs.next()) {
+                    switch (rs.getString("DAY")){
+                        case "Montag": i=0;break;
+                        case "Dienstag": i=1;break;
+                        case "Mittwoch": i=2;break;
+                        case "Donnerstag": i=3;break;
+                        case "Freitag": i=4;break;
+                        case "Samstag": i=5;break;
+                        case "Sonntag": i=6;break;
+                    }
                     tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
-                    tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK").toLocalDateTime().toLocalTime());
-                    tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK").toLocalDateTime().toLocalTime());
-                    tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK").toLocalDateTime().toLocalTime());
-                    tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK").toLocalDateTime().toLocalTime());
+                    tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK")
+                            .toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK")
+                            .toLocalDateTime().toLocalTime());
+                    tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK")
+                            .toLocalDateTime().toLocalTime());
+                    tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK")
+                            .toLocalDateTime().toLocalTime());
                     i++;
                 }
             }
@@ -49,7 +85,7 @@ public class WorkingWeekDao {
             for (int i = 0; i < 7; i++) {
                 preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.WORKINGDAY (WORKINGDAYID, DAY," +
                         "STARTWORK, ENDWORK, STARKBREAK, ENDBREAK, EMPLOYEEID) VALUES(?,?,?,?,?,?,?)");
-                preparedStmt.setString(1, workingDays.get(i).getWorkingDayId().toString());
+                preparedStmt.setString(1, workingDays.get(i).getWorkingDayId());
                 preparedStmt.setString(2, workingDays.get(i).getDay());
                 preparedStmt.setTime(3, Time.valueOf(workingDays.get(i).getStartWorkingTime()));
                 preparedStmt.setTime(4, Time.valueOf(workingDays.get(i).getEndWorkingTime()));
@@ -78,12 +114,13 @@ public class WorkingWeekDao {
         boolean result;
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.WORKINGDAY SET STARTWORK = ?, ENDWORK = ?," +
-                    " STARKBREAK = ?, ENDBREAK = ? WHERE WORKINGDAYID = ?");
+                    " STARKBREAK = ?, ENDBREAK = ?, EMPLOYEEID = ? WHERE WORKINGDAYID = ?");
             preparedStmt.setTime(1, Time.valueOf(workingDay.getStartWorkingTime()));
             preparedStmt.setTime(2, Time.valueOf(workingDay.getEndWorkingTime()));
             preparedStmt.setTime(3, Time.valueOf(workingDay.getStartBreakTime()));
             preparedStmt.setTime(4, Time.valueOf(workingDay.getEndBreakTime()));
-            preparedStmt.setString(5, workingDay.getWorkingDayId());
+            preparedStmt.setString(5, workingDay.getEmployeeId());
+            preparedStmt.setString(6, workingDay.getWorkingDayId());
             result = preparedStmt.executeUpdate() != 0;
         } catch (SQLException e) {
             e.printStackTrace();

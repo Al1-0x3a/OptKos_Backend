@@ -10,15 +10,18 @@ public class WorkingDay {
     private LocalTime endWorkingTime;
     private LocalTime startBreakTime;
     private LocalTime endBreakTime;
+    private String employeeId;
     private String day;
 
     public WorkingDay(String workingDayId, LocalTime startWorkingTime, LocalTime endWorkingTime,
-    LocalTime startBreakTime, LocalTime endBreakTime) {
+    LocalTime startBreakTime, LocalTime endBreakTime, String employeeId, String day) {
         this.workingDayId = workingDayId;
         this.startWorkingTime = startWorkingTime;
         this.endWorkingTime = endWorkingTime;
         this.startBreakTime = startBreakTime;
         this.endBreakTime = endBreakTime;
+        this.employeeId = employeeId;
+        this.day = day;
     }
 
     public WorkingDay(){
@@ -89,5 +92,13 @@ public class WorkingDay {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 }
