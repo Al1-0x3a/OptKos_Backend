@@ -51,15 +51,7 @@ public class WorkingWeekDao {
                 int i = 0;
 
                 while (rs.next()) {
-                    switch (rs.getString("DAY")){
-                        case "Montag": i=0;break;
-                        case "Dienstag": i=1;break;
-                        case "Mittwoch": i=2;break;
-                        case "Donnerstag": i=3;break;
-                        case "Freitag": i=4;break;
-                        case "Samstag": i=5;break;
-                        case "Sonntag": i=6;break;
-                    }
+                    i = getDayIndex(rs.getString("DAY"));
                     tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
                     tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK")
                             .toLocalDateTime().toLocalTime());
@@ -77,6 +69,19 @@ public class WorkingWeekDao {
         }
         return tmp;
 
+    }
+
+    public static int getDayIndex(String day){
+        switch (day){
+            case "Montag": return 0;
+            case "Dienstag": return 1;
+            case "Mittwoch": return 2;
+            case "Donnerstag": return 3;
+            case "Freitag": return 4;
+            case "Samstag": return 5;
+            case "Sonntag": return 6;
+        }
+        return -1;
     }
 
     public static void setWorkingWeek(List<WorkingDay> workingDays, String employeeId) {

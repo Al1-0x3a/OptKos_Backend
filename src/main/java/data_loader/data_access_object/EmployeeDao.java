@@ -78,39 +78,11 @@ public class EmployeeDao {
         //WorkingDay
         List<WorkingDay> workingDayList = WorkingWeekDao.getAllWorkingDaysFromDb();
         for(Employee e:employeeList){
-
-/*            List<WorkingDay> filteredList = workingDayList.stream().filter(p -> p.getEmployeeId().equals(
-                    e.getEmployeeId())).collect(Collectors.toList());
-            workingDayList.remove(filteredList);
-            e.setWorkingDays(filteredList);*/
-
             WorkingDay[] workingDays = new WorkingDay[7];
             int index = 0;
             for(int i = 0; i< workingDayList.size(); i++){
                 if(workingDayList.get(i).getEmployeeId().equals(e.getEmployeeId())) {
-                    switch (workingDayList.get(i).getDay()) {
-                        case "Montag":
-                            index = 0;
-                            break;
-                        case "Dienstag":
-                            index = 1;
-                            break;
-                        case "Mittwoch":
-                            index = 2;
-                            break;
-                        case "Donnerstag":
-                            index = 3;
-                            break;
-                        case "Freitag":
-                            index = 4;
-                            break;
-                        case "Samstag":
-                            index = 5;
-                            break;
-                        case "Sonntag":
-                            index = 6;
-                            break;
-                    }
+                    index = WorkingWeekDao.getDayIndex(workingDayList.get(i).getDay());
                     workingDays[index] = workingDayList.get(i);
                 }
             }
