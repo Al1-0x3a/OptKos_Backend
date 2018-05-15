@@ -66,24 +66,55 @@ public class CustomerDao {
     public static Customer getCustomerByIdFromDb(String uuid){
         Customer customer = null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMER c WHERE c.CUSTOMERID=" + uuid + ";";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMER customer WHERE customer.CUSTOMERID=?");
+            preparedStmt.setString(1, uuid);
+            try (ResultSet rs = preparedStmt.executeQuery()) {
+                if (rs.next()) {
+                    customer = new Customer(rs.getString("CUSTOMERID"),
+                            rs.getDouble("MULTIPLIKATOR"),
+                            rs.getString("ANNOTATION"),
+                            rs.getString("PROBLEM").toCharArray()[0],
+                            rs.getString("PERSONID"));
 
-                customer = new Customer(rs.getString("CUSTOMERID"),
-                        rs.getDouble("MULTIPLIKATOR"),
-                        rs.getString("ANNOTATION"),
-                        rs.getString("PROBLEM").toCharArray()[0],
-                        rs.getString("PERSONID"));
-
-                customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
-                        rs.getString("CUSTOMERCATEGORYID")));
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                            rs.getString("CUSTOMERCATEGORYID")));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return customer;
     }
 
+    public static boolean createCustomer(Customer customer) {
+        try {
+            preparedStmt = con.prepareStatement(
+                    "INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, MULTIPLIKATOR, ANNOTATION, PROBLEM," +
+                            " PERSONID, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
+            preparedStmt.setString(1, customer.getCostumerId());
+            preparedStmt.setDouble(2, customer.getTimefactor());
+            preparedStmt.setString(3, customer.getAnnotation());
+            preparedStmt.setString(4, String.valueOf(customer.isProblemCustomer()).substring(0, 1));
+            preparedStmt.setString(5, customer.getPersonId());
+            preparedStmt.setString(6, customer.getCustomerCategory().getCustomerCategoryId());
+
+            preparedStmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean deleteCustomerByCustomerId(String customerId){
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMER WHERE CUSTOMERID =?;");
+            preparedStmt.setString(1, customerId);
+            preparedStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }

@@ -60,14 +60,16 @@ public class CustomerCategoryDao {
     public static CustomerCategory getCustomerCategoryByIdFromDb(String uuid){
         CustomerCategory customerCategory = null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMERCATEGORY customerCategory WHERE customerCategory.CUSTOMERCATEGORYID=" + uuid + ";";
-            try (ResultSet rs = stmt.executeQuery(query)) {
-
-                customerCategory = new CustomerCategory(
-                        rs.getString("CUSTOMERCATEGORYID"),
-                        rs.getString("NAME"),
-                        rs.getString("DESCRIPTION"));
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY customerCategory WHERE " +
+                    "customerCategory.CUSTOMERCATEGORYID=?");
+            preparedStmt.setString(1, uuid);
+            try (ResultSet rs = preparedStmt.executeQuery()) {
+                if (rs.next()) {
+                    customerCategory = new CustomerCategory(
+                            rs.getString("CUSTOMERCATEGORYID"),
+                            rs.getString("NAME"),
+                            rs.getString("DESCRIPTION"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

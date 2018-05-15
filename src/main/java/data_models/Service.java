@@ -1,7 +1,7 @@
 package data_models;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.time.Duration;
 import java.util.UUID;
 
 public class Service {
@@ -9,8 +9,8 @@ public class Service {
 	private String name;
 	private String description;
 	private BigDecimal price;
-	private Time durationPlanned;
-	private Time durationAverage;
+	private Duration durationPlanned;
+	private Duration durationAverage;
 	private String isDeleted;
 
 	public Service(){
@@ -18,7 +18,7 @@ this.serviceId = UUID.randomUUID().toString();
 	}
 
 	public Service(String serviceId, String name, String description, BigDecimal price,
-	Time durationPlanned, Time durationAverage, String isDeleted) {
+	Duration durationPlanned, Duration durationAverage, String isDeleted) {
 		this.serviceId = serviceId;
 		this.name = name;
 		this.description = description;
@@ -61,19 +61,19 @@ this.serviceId = UUID.randomUUID().toString();
 		this.price = price;
 	}
 
-	public Time getDurationPlanned() {
+	public Duration getDurationPlanned() {
 		return durationPlanned;
 	}
 
-	public void setDurationPlanned(Time durationPlanned) {
+	public void setDurationPlanned(Duration durationPlanned) {
 		this.durationPlanned = durationPlanned;
 	}
 
-	public Time getDurationAverage() {
+	public Duration getDurationAverage() {
 		return durationAverage;
 	}
 
-	public void setDurationAverage(Time durationAverage) {
+	public void setDurationAverage(Duration durationAverage) {
 		this.durationAverage = durationAverage;
 	}
 

@@ -4,6 +4,7 @@ import data_loader.SqlConnection;
 import data_models.Service;
 
 import java.sql.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,8 +27,8 @@ public class ServiceDao {
                 while (rs.next()) {
                     serviceList.add(new Service(rs.getString("SERVICEID"),
                             rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                            rs.getBigDecimal("PRICE"), rs.getTime("DURATIONPLANNED"),
-                            rs.getTime("DURATIONAVERAGE"), rs.getString("ISDELETED")));
+                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(rs.getInt("DURTATIONPLANNED")),
+                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")), rs.getString("ISDELETED")));
                 }
             }
         } catch (SQLException e) {
@@ -37,7 +38,7 @@ public class ServiceDao {
     }
 
     // TODO: change db type of the durations, or change type in service class
-    public static void createService(Service service) {
+    public static boolean createService(Service service) {
         try {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.SERVICE(SERVICEID, NAME, DESCRIPTION, PRICE," +
@@ -46,13 +47,15 @@ public class ServiceDao {
             preparedStmt.setString(2, service.getName());
             preparedStmt.setString(3, service.getDescription());
             preparedStmt.setBigDecimal(4, service.getPrice());
-            preparedStmt.setTime(5, service.getDurationPlanned());
-            preparedStmt.setTime(6, service.getDurationAverage());
+            preparedStmt.setInt(5, (int) service.getDurationPlanned().toMinutes());
+            preparedStmt.setInt(6, (int) service.getDurationAverage().toMinutes());
 
             preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public static Service getServiceById(String serviceId){
@@ -69,14 +72,17 @@ public class ServiceDao {
         return tmp;
     }
 
-    public static void deleteServiceByServiceId(String serviceId){
+    public static boolean deleteServiceByServiceId(String serviceId){
 
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");
             preparedStmt.setString(1, serviceId);
+            preparedStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return true;
         }
+        return false;
     }
 
 }

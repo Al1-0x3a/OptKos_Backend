@@ -1,16 +1,10 @@
 package client_api;
 
-import data_loader.data_access_object.EmailDao;
-import data_loader.data_access_object.EmployeeDao;
-import data_loader.data_access_object.PhoneDao;
-import data_models.Customer;
-import data_models.Email;
-import data_models.Employee;
-import data_models.Phone;
+import data_loader.data_access_object.*;
+import data_models.*;
 import manager.AdministrativeManager;
 
 import javax.jws.WebService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,22 +46,27 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public Customer getCustomer(String customerId) {
-        return null;
+        return administrativeManager.getCustomerById(customerId);
     }
 
     @Override
     public List<Customer> getCustomers() {
-        return new ArrayList<>();
+        return administrativeManager.getAllCustomers();
     }
 
     @Override
     public boolean createCustomer(Customer customer) {
-        return false;
+        return CustomerDao.createCustomer(customer);
     }
 
     @Override
     public boolean updateCustomer(Customer customer) {
         return false;
+    }
+
+    @Override
+    public boolean deleteCustomer(Customer customer) {
+        return CustomerDao.deleteCustomerByCustomerId(customer.getCostumerId());
     }
 
     @Override
@@ -115,4 +114,23 @@ public class AdministrativeApi implements IAdministrativeApi {
         return EmployeeDao.deleteEmployee(employee);
     }
 
+    @Override
+    public List<Service> getServices() {
+        return ServiceDao.getAllServicesFromDb();
+    }
+
+    @Override
+    public Service getServiceById(String uuid) {
+        return ServiceDao.getServiceById(uuid);
+    }
+
+    @Override
+    public boolean createService(Service service) {
+        return ServiceDao.createService(service);
+    }
+
+    @Override
+    public boolean deleteService(Service service) {
+        return ServiceDao.deleteServiceByServiceId(service.getServiceId());
+    }
 }
