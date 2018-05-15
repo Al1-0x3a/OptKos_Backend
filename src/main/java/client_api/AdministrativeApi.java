@@ -130,8 +130,18 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
+    public boolean updateService(Service service) {
+        return ServiceDao.updateService(service);
+    }
+
+    @Override
     public boolean deleteService(Service service) {
         return ServiceDao.deleteServiceByServiceId(service.getServiceId());
+    }
+
+    @Override
+    public Service getNewService() {
+        return new Service();
     }
 
     @Override

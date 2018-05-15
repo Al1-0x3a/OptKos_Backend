@@ -42,13 +42,14 @@ public class ServiceDao {
         try {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.SERVICE(SERVICEID, NAME, DESCRIPTION, PRICE," +
-                            " DURTATIONPLANNED, DURATIONAVERAGE) VALUES(?,?,?,?,?,?)");
+                            " DURTATIONPLANNED, DURATIONAVERAGE, ISDELETED) VALUES(?,?,?,?,?,?,?)");
             preparedStmt.setString(1, service.getServiceId());
             preparedStmt.setString(2, service.getName());
             preparedStmt.setString(3, service.getDescription());
             preparedStmt.setBigDecimal(4, service.getPrice());
             preparedStmt.setInt(5, (int) service.getDurationPlanned().toMinutes());
             preparedStmt.setInt(6, (int) service.getDurationAverage().toMinutes());
+            preparedStmt.setString(7, service.getIsDeleted());
 
             preparedStmt.execute();
         } catch (SQLException e) {
@@ -70,6 +71,28 @@ public class ServiceDao {
             }
         }
         return tmp;
+    }
+
+    public static boolean updateService(Service service) {
+        boolean result;
+        try {
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICE SET NAME=?, DESCRIPTION=?, PRICE=?, " +
+                    "DURTATIONPLANNED=?, DURATIONAVERAGE=?, ISDELETED=? WHERE SERVICEID=?");
+            preparedStmt.setString(1, service.getName());
+            preparedStmt.setString(2, service.getDescription());
+            preparedStmt.setBigDecimal(3, service.getPrice());
+            preparedStmt.setInt(4, (int) service.getDurationPlanned().toMinutes());
+            preparedStmt.setInt(5, (int) service.getDurationAverage().toMinutes());
+            preparedStmt.setString(6, service.getIsDeleted());
+            preparedStmt.setString(7, service.getServiceId());
+
+            result = preparedStmt.executeUpdate() != 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return result;
     }
 
     public static boolean deleteServiceByServiceId(String serviceId){

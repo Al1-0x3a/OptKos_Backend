@@ -53,7 +53,11 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean createService(Service service);
     @WebMethod
+    boolean updateService(Service service);
+    @WebMethod
     boolean deleteService(Service service);
+    @WebMethod
+    Service getNewService();
     @WebMethod
     List<CustomerCategory> getAllCustomerCategories();
 }

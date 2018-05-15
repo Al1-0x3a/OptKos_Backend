@@ -14,7 +14,7 @@ public class Service {
 	private String isDeleted;
 
 	public Service(){
-this.serviceId = UUID.randomUUID().toString();
+		this.serviceId = UUID.randomUUID().toString();
 	}
 
 	public Service(String serviceId, String name, String description, BigDecimal price,
