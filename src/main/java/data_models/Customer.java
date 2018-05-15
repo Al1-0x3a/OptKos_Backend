@@ -16,6 +16,10 @@ public class Customer extends Person {
 		this.costumerId = UUID.randomUUID().toString();
 	}
 
+	public Customer(String personId) {
+	    super(personId);
+    }
+
 	public Customer( String costumerId, double timefactor, String annotation, char problemCustomer, String personId) {
 		this.annotation = annotation;
 		this.costumerId = costumerId;

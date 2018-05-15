@@ -1,7 +1,6 @@
 package manager;
 
-import data_loader.data_access_object.CustomerDao;
-import data_loader.data_access_object.EmployeeDao;
+import data_loader.data_access_object.*;
 import data_models.Customer;
 import data_models.Employee;
 
@@ -38,6 +37,6 @@ public class AdministrativeManager {
 
     public Customer getCustomerById(String uuid) { return CustomerDao.getCustomerByIdFromDb(uuid); }
 
-    public List<Customer> getAllCustomers() { return CustomerDao.getAllCustomFromDb();
+    public List<Customer> getAllCustomers() { return CustomerDao.getAllCustomersFromDb();
     }
 }

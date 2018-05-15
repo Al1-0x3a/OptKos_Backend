@@ -56,17 +56,12 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean createCustomer(Customer customer) {
-        return CustomerDao.createCustomer(customer);
+        return CustomerDao.createNewCustomer(customer);
     }
 
     @Override
     public boolean updateCustomer(Customer customer) {
         return false;
-    }
-
-    @Override
-    public boolean deleteCustomer(Customer customer) {
-        return CustomerDao.deleteCustomerByCustomerId(customer.getCostumerId());
     }
 
     @Override

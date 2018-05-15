@@ -19,6 +19,7 @@ public class Employee extends Person {
 	}
 	public Employee(String personId){
 	    super(personId);
+	    // wtf???
 		this.employeeId = UUID.randomUUID().toString();
 		this.initWorkingDays();
 	}

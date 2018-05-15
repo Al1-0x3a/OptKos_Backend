@@ -27,8 +27,6 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean updateCustomer(Customer customer);
     @WebMethod
-    boolean deleteCustomer(Customer customer);
-    @WebMethod
     Phone getNewPhone(String personId);
     @WebMethod
     boolean createPhone(Phone phone);
