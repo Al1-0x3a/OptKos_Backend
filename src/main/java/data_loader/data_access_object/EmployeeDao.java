@@ -220,7 +220,8 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getPersonId());
 
             // Employee
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? WHERE PERSONID=?");
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? " +
+                    "WHERE PERSONID=?");
             preparedStmt2.setString(1, employee.getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
             preparedStmt2.setString(3, employee.getPersonId());

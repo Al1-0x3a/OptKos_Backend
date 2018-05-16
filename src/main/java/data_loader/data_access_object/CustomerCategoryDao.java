@@ -100,11 +100,34 @@ public class CustomerCategoryDao {
         }
 
     }
-    public static void updateCustomerCategory(){
+    public static boolean updateCustomerCategory(CustomerCategory customerCategory){
+        try{
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCATEGORY SET CUSTOMERCATEGORY=?," +
+                    "DURATIONFLAT=?, DURATIONPERCENT=?, DESCRIPTION=? WHERE CUSTOMERCATEGORYID=?");
+            preparedStmt.setString(1, customerCategory.getName());
+            preparedStmt.setInt(2, customerCategory.getTimeBonus());
+            preparedStmt.setDouble(3, customerCategory.getTimeFactor());
+            preparedStmt.setString(4, customerCategory.getDescription());
+            preparedStmt.setString(5, customerCategory.getCustomerCategoryId());
+
+            preparedStmt.executeUpdate();
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
-    public static void deleteCustomerCategory(){
+    public static boolean deleteCustomerCategory(){
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
+            preparedStmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
