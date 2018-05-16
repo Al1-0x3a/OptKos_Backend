@@ -14,7 +14,7 @@ public class CustomerCategory {
         this.customerCategoryId = UUID.randomUUID().toString();
     }
 
-    public CustomerCategory(String customerCategoryId, String description, String name, int timeBonus, double timeFactor) {
+    public CustomerCategory(String customerCategoryId, String name, String description, int timeBonus, double timeFactor) {
         this.customerCategoryId = customerCategoryId;
         this.description = description;
         this.name = name;

@@ -46,7 +46,7 @@ public class CustomerDao {
                     customer.setAnnotation(rs.getString("ANNOTATION"));
                     customer.setAnnotation(rs.getString("PROBLEM"));
 
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
 
                     customerList.add(customer);
@@ -153,7 +153,7 @@ public class CustomerDao {
                     customer.setAnnotation(rs.getString("ANNOTATION"));
                     customer.setAnnotation(rs.getString("PROBLEM"));
 
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
                 }
             }
