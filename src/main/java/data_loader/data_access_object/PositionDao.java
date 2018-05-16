@@ -6,19 +6,18 @@ import data_models.Position;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PositionDao {
 
     private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Position> positionList = new ArrayList<>();
 
     private PositionDao() {
     }
 
     public static List<Position> getAllPositionsFromDb() {
+        List<Position> positionList = new ArrayList<>();
         try {
             stmt = con.createStatement();
             String query = "SELECT * FROM OPTKOS.POSITION";
@@ -36,19 +35,27 @@ public class PositionDao {
     }
 
     public static Position getPositionByPositionId(String positionId){
-        if(positionList == null ){
-            positionList = getAllPositionsFromDb();
-        }
-        Position tmp = null;
-        for (Position p : positionList) {
-            if (Objects.equals(p.getPositionId(), positionId)) {
-                tmp = p;
+        try {
+            preparedStmt = con.prepareStatement("SELECT  * FROM OPTKOS.POSITION WHERE POSITIONID=?");
+            preparedStmt.setString(1,positionId);
+            ResultSet rs = preparedStmt.executeQuery();
+
+            Position position = new Position();
+            if(rs.next()) {
+                position.setPositionId(rs.getString("POSITIONID"));
+                position.setNote(rs.getString("ANNOTATION"));
+                position.setDescription(rs.getString("DESCRIPTION"));
+                position.setName(rs.getString("NAME"));
+                return position;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return tmp;
+
+        return null;
     }
 
-    public static void createPosition(Position position) {
+    public static boolean createPosition(Position position) {
         try {
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.POSITION(POSITIONID, NAME, DESCRIPTION, ANNOTATION) VALUES (?,?,?,?)");
@@ -57,9 +64,12 @@ public class PositionDao {
             preparedStmt.setString(3, position.getDescription());
             preparedStmt.setString(4, position.getNote());
 
-            positionList.add(position);
+            preparedStmt.executeUpdate();
+            return true;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
