@@ -173,4 +173,9 @@ public class AdministrativeApi implements IAdministrativeApi {
     public boolean deleteCustomerCategory(CustomerCategory customerCategory) {
         return CustomerCategoryDao.deleteCustomerCategory(customerCategory);
     }
+
+    @Override
+    public List<Position> getAllPositionFromDb() {
+        return PositionDao.getAllPositionsFromDb();
+    }
 }
