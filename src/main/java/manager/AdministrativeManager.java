@@ -1,6 +1,7 @@
 package manager;
 
-import data_loader.data_access_object.EmployeeDao;
+import data_loader.data_access_object.*;
+import data_models.Customer;
 import data_models.Employee;
 
 import java.util.List;
@@ -32,5 +33,10 @@ public class AdministrativeManager {
 
     public boolean updateEmployee(Employee employee){
         return EmployeeDao.updateEmployee(employee);
+    }
+
+    public Customer getCustomerById(String uuid) { return CustomerDao.getCustomerByIdFromDb(uuid); }
+
+    public List<Customer> getAllCustomers() { return CustomerDao.getAllCustomersFromDb();
     }
 }

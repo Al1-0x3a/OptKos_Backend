@@ -1,16 +1,10 @@
 package client_api;
 
-import data_loader.data_access_object.EmailDao;
-import data_loader.data_access_object.EmployeeDao;
-import data_loader.data_access_object.PhoneDao;
-import data_models.Customer;
-import data_models.Email;
-import data_models.Employee;
-import data_models.Phone;
+import data_loader.data_access_object.*;
+import data_models.*;
 import manager.AdministrativeManager;
 
 import javax.jws.WebService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,22 +46,27 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public Customer getCustomer(String customerId) {
-        return null;
+        return administrativeManager.getCustomerById(customerId);
     }
 
     @Override
     public List<Customer> getCustomers() {
-        return new ArrayList<>();
+        return administrativeManager.getAllCustomers();
     }
 
     @Override
     public boolean createCustomer(Customer customer) {
-        return false;
+        return CustomerDao.createNewCustomer(customer);
     }
 
     @Override
     public boolean updateCustomer(Customer customer) {
         return false;
+    }
+
+    @Override
+    public Customer getNewCustomer() {
+        return new Customer(UUID.randomUUID().toString());
     }
 
     @Override
@@ -115,4 +114,63 @@ public class AdministrativeApi implements IAdministrativeApi {
         return EmployeeDao.deleteEmployee(employee);
     }
 
+    @Override
+    public List<Service> getServices() {
+        return ServiceDao.getAllServicesFromDb();
+    }
+
+    @Override
+    public Service getServiceById(String uuid) {
+        return ServiceDao.getServiceById(uuid);
+    }
+
+    @Override
+    public boolean createService(Service service) {
+        return ServiceDao.createService(service);
+    }
+
+    @Override
+    public boolean updateService(Service service) {
+        return ServiceDao.updateService(service);
+    }
+
+    @Override
+    public boolean deleteService(Service service) {
+        return ServiceDao.deleteServiceByServiceId(service.getServiceId());
+    }
+
+    @Override
+    public Service getNewService() {
+        return new Service();
+    }
+
+    @Override
+    public List<CustomerCategory> getAllCustomerCategories() {
+        return CustomerCategoryDao.getAllCustomerCategoriesFromDb();
+    }
+
+    @Override
+    public CustomerCategory getCustomerCategoryById(String uuid) {
+        return CustomerCategoryDao.getCustomerCategoryByIdFromDb(uuid);
+    }
+
+    @Override
+    public CustomerCategory getNewCustomerCategory() {
+        return new CustomerCategory();
+    }
+
+    @Override
+    public boolean createCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
+
+    @Override
+    public boolean updateCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
 }

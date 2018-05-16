@@ -28,7 +28,9 @@ public class CustomerCategoryDao {
                     CustomerCategory customerCategory = new CustomerCategory(
                             rs.getString("CUSTOMERCATEGORYID"),
                             rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"));
+                            rs.getString("DESCRIPTION"),
+                            rs.getInt("DURATIONFLAT"),
+                            rs.getDouble("DURATIONPERCENT"));
                     customerCategoryList.add(customerCategory);
                 }
             }
@@ -60,14 +62,17 @@ public class CustomerCategoryDao {
     public static CustomerCategory getCustomerCategoryByIdFromDb(String uuid){
         CustomerCategory customerCategory = null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMERCATEGORY customerCategory WHERE customerCategory.CUSTOMERCATEGORYID=" + uuid + ";";
-            try (ResultSet rs = stmt.executeQuery(query)) {
-
-                customerCategory = new CustomerCategory(
-                        rs.getString("CUSTOMERCATEGORYID"),
-                        rs.getString("NAME"),
-                        rs.getString("DESCRIPTION"));
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
+            preparedStmt.setString(1, uuid);
+            try (ResultSet rs = preparedStmt.executeQuery()) {
+                if (rs.next()) {
+                    customerCategory = new CustomerCategory(
+                            rs.getString("CUSTOMERCATEGORYID"),
+                            rs.getString("NAME"),
+                            rs.getString("DESCRIPTION"),
+                            rs.getInt("DURATIONFLAT"),
+                            rs.getDouble("DURATIONPERCENT"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
