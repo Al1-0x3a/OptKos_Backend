@@ -119,9 +119,10 @@ public class CustomerCategoryDao {
 
     }
 
-    public static boolean deleteCustomerCategory(){
+    public static boolean deleteCustomerCategory(CustomerCategory customerCategory){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
+            preparedStmt.setString(1, customerCategory.getCustomerCategoryId());
             preparedStmt.executeUpdate();
             return true;
         } catch (SQLException e) {
