@@ -27,8 +27,10 @@ public class ServiceDao {
                 while (rs.next()) {
                     serviceList.add(new Service(rs.getString("SERVICEID"),
                             rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(rs.getInt("DURTATIONPLANNED")),
-                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")), rs.getString("ISDELETED")));
+                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(
+                            rs.getInt("DURTATIONPLANNED")),
+                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                            rs.getString("ISDELETED")));
                 }
             }
         } catch (SQLException e) {

@@ -61,7 +61,8 @@ public class CustomerDao {
     public static boolean createNewCustomer(Customer customer) {
         try {
             preparedStmt = con.prepareStatement(
-                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
+                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER)" +
+                            " VALUES(?,?,?,?,?,?)");
 
 
             preparedStmt.setString(1, customer.getPersonId());
@@ -71,7 +72,8 @@ public class CustomerDao {
             preparedStmt.setString(5, customer.getSalutation().name());
             preparedStmt.setString(6, customer.getGender().name());
 
-            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, PERSONID, MULTIPLIKATOR, ANNOTATION, PROBLEM, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, PERSONID," +
+                    " MULTIPLIKATOR, ANNOTATION, PROBLEM, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
 
             preparedStmt2.setString(1, customer.getCostumerId());
             preparedStmt2.setString(2, customer.getPersonId());
@@ -178,7 +180,8 @@ public class CustomerDao {
             preparedStmt.setString(6, customer.getPersonId());
 
             // Customer
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.CUSTOMER SET MULTIPLIKATOR=?, ANNOTATION=?, PROBLEM=?, CUSTOMERCATEGORYID=? WHERE PERSONID=?");
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.CUSTOMER SET MULTIPLIKATOR=?, ANNOTATION=?, " +
+                    "PROBLEM=?, CUSTOMERCATEGORYID=? WHERE PERSONID=?");
             preparedStmt2.setDouble(1, customer.getTimefactor());
             preparedStmt2.setString(2, customer.getAnnotation());
             preparedStmt2.setString(3, String.valueOf(customer.isProblemCustomer()).substring(0, 1));

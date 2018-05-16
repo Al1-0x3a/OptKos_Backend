@@ -92,7 +92,7 @@ public class EmployeeDao {
             e.setWorkingDays(Arrays.asList(workingDays));
         }
 
-        System.out.println("Time to get al Employees from Db: " + (System.nanoTime() - start)/1e6 + " ms");
+        System.out.println("Get all Employees from Db: " + (System.nanoTime() - start)/1e6 + " ms");
         return employeeList;
     }
 
@@ -123,7 +123,8 @@ public class EmployeeDao {
     public static boolean createNewEmployee(Employee employee) {
         try {
             preparedStmt = con.prepareStatement(
-                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
+                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) " +
+                            "VALUES(?,?,?,?,?,?)");
 
 
             preparedStmt.setString(1, employee.getPersonId());
@@ -133,7 +134,8 @@ public class EmployeeDao {
             preparedStmt.setString(5, employee.getSalutation().name());
             preparedStmt.setString(6, employee.getGender().name());
 
-            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED, POSITIONID) VALUES(?,?,?,?)");
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED," +
+                    " POSITIONID) VALUES(?,?,?,?)");
 
             preparedStmt2.setString(1, employee.getEmployeeId());
             preparedStmt2.setString(2, employee.getPersonId());

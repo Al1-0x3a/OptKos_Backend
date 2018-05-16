@@ -62,7 +62,8 @@ public class CustomerCategoryDao {
     public static CustomerCategory getCustomerCategoryByIdFromDb(String uuid){
         CustomerCategory customerCategory = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY " +
+                    "WHERE CUSTOMERCATEGORYID=?");
             preparedStmt.setString(1, uuid);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
@@ -80,4 +81,31 @@ public class CustomerCategoryDao {
 
         return customerCategory;
     }
+    public static boolean createCustomerCategory(CustomerCategory customerCategory){
+        try {
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCATEGORY(CUSTOMERCATEGORYID, NAME," +
+                    "DESCRIPTION, DURATIONPERCENT,DURATIONFLAT) VALUES (?,?,?,?,?)");
+
+            preparedStmt.setString(1,customerCategory.getCustomerCategoryId());
+            preparedStmt.setString(2,customerCategory.getName());
+            preparedStmt.setString(3,customerCategory.getDescription());
+            preparedStmt.setDouble(4,customerCategory.getTimeFactor());
+            preparedStmt.setInt(5, customerCategory.getTimeBonus());
+
+            preparedStmt.execute();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+    public static void updateCustomerCategory(){
+
+    }
+
+    public static void deleteCustomerCategory(){
+
+    }
+
 }
