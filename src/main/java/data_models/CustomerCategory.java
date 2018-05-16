@@ -1,63 +1,64 @@
 package data_models;
 
-import java.time.Duration;
 import java.util.UUID;
 
 public class CustomerCategory {
 
-	private String customerCategoryId;
-	private String description;
-	private String name;
-	private Duration timeBonus;
-	private double timefactor;
+    private String customerCategoryId;
+    private String description;
+    private String name;
+    private int timeBonus;
+    private double timeFactor;
 
-	public CustomerCategory(){
-this.customerCategoryId = UUID.randomUUID().toString();
-	}
+    public CustomerCategory() {
+        this.customerCategoryId = UUID.randomUUID().toString();
+    }
 
-	public CustomerCategory(String customerCategoryId, String description, String name) {
-		this.customerCategoryId = customerCategoryId;
-		this.description = description;
-		this.name = name;
-	}
+    public CustomerCategory(String customerCategoryId, String description, String name, int timeBonus, double timeFactor) {
+        this.customerCategoryId = customerCategoryId;
+        this.description = description;
+        this.name = name;
+        this.timeBonus = timeBonus;
+        this.timeFactor = timeFactor;
+    }
 
-	public String getCustomerCategoryId() {
-		return customerCategoryId;
-	}
+    public String getCustomerCategoryId() {
+        return customerCategoryId;
+    }
 
-	public void setCustomerCategoryId(String customerCategoryId) {
-		this.customerCategoryId = customerCategoryId;
-	}
+    public void setCustomerCategoryId(String customerCategoryId) {
+        this.customerCategoryId = customerCategoryId;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Duration getTimeBonus() {
-		return timeBonus;
-	}
+    public int getTimeBonus() {
+        return timeBonus;
+    }
 
-	public void setTimeBonus(Duration timeBonus) {
-		this.timeBonus = timeBonus;
-	}
+    public void setTimeBonus(int timeBonus) {
+        this.timeBonus = timeBonus;
+    }
 
-	public double getTimefactor() {
-		return timefactor;
-	}
+    public double getTimeFactor() {
+        return timeFactor;
+    }
 
-	public void setTimefactor(double timefactor) {
-		this.timefactor = timefactor;
-	}
+    public void setTimeFactor(double timeFactor) {
+        this.timeFactor = timeFactor;
+    }
 }

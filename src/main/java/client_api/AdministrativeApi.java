@@ -148,4 +148,29 @@ public class AdministrativeApi implements IAdministrativeApi {
     public List<CustomerCategory> getAllCustomerCategories() {
         return CustomerCategoryDao.getAllCustomerCategoriesFromDb();
     }
+
+    @Override
+    public CustomerCategory getCustomerCategoryById(String uuid) {
+        return CustomerCategoryDao.getCustomerCategoryByIdFromDb(uuid);
+    }
+
+    @Override
+    public CustomerCategory getNewCustomerCategory() {
+        return new CustomerCategory();
+    }
+
+    @Override
+    public boolean createCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
+
+    @Override
+    public boolean updateCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteCustomerCategory(CustomerCategory customerCategory) {
+        return false;
+    }
 }

@@ -28,7 +28,9 @@ public class CustomerCategoryDao {
                     CustomerCategory customerCategory = new CustomerCategory(
                             rs.getString("CUSTOMERCATEGORYID"),
                             rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"));
+                            rs.getString("DESCRIPTION"),
+                            rs.getInt("DURATIONFLAT"),
+                            rs.getDouble("DURATIONPERCENT"));
                     customerCategoryList.add(customerCategory);
                 }
             }
@@ -68,7 +70,9 @@ public class CustomerCategoryDao {
                     customerCategory = new CustomerCategory(
                             rs.getString("CUSTOMERCATEGORYID"),
                             rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"));
+                            rs.getString("DESCRIPTION"),
+                            rs.getInt("DURATIONFLAT"),
+                            rs.getDouble("DURATIONPERCENT"));
                 }
             }
         } catch (SQLException e) {

@@ -59,5 +59,15 @@ public interface IAdministrativeApi {
     @WebMethod
     Service getNewService();
     @WebMethod
+    CustomerCategory getCustomerCategoryById(String uuid);
+    @WebMethod
     List<CustomerCategory> getAllCustomerCategories();
+    @WebMethod
+    CustomerCategory getNewCustomerCategory();
+    @WebMethod
+    boolean createCustomerCategory(CustomerCategory customerCategory);
+    @WebMethod
+    boolean updateCustomerCategory(CustomerCategory customerCategory);
+    @WebMethod
+    boolean deleteCustomerCategory(CustomerCategory customerCategory);
 }
