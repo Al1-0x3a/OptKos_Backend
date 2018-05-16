@@ -15,6 +15,8 @@ public class EmployeeDao {
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
 
+    private EmployeeDao() {}
+
     public static List<Employee> getAllEmployeesFromDb() {
         long start = System.nanoTime();
         List<Employee> employeeList = new ArrayList<>();
@@ -23,33 +25,34 @@ public class EmployeeDao {
             String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE em, OPTKOS.ADDRESS a WHERE " +
                     "p.PERSONID = em.PERSONID AND a.PERSONID = p.PERSONID";
 
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                // Person
-                Employee employee = new Employee(rs.getString("PERSONID"));
-                employee.setFirstname(rs.getString("FIRSTNAME"));
-                employee.setLastname(rs.getString("LASTNAME"));
-                employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
-                employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+            try (ResultSet rs = stmt.executeQuery(query)) {
+                while (rs.next()) {
+                    // Person
+                    Employee employee = new Employee(rs.getString("PERSONID"));
+                    employee.setFirstname(rs.getString("FIRSTNAME"));
+                    employee.setLastname(rs.getString("LASTNAME"));
+                    employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
+                    employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+                    employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
 
-                // Employee
-                employee.setEmployeeId(rs.getString("EMPLOYEEID"));
-                employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                employee.setPositionId(rs.getString("POSITIONID"));
+                    // Employee
+                    employee.setEmployeeId(rs.getString("EMPLOYEEID"));
+                    employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+                    employee.setPositionId(rs.getString("POSITIONID"));
 
-                // Address
-                Address address = new Address();
-                address.setAddressId(rs.getString("ADDRESSID"));
-                address.setStreet(rs.getString("STREET"));
-                address.setHousenr(rs.getString("HOUSENR"));
-                address.setPostcode(rs.getString("POSTCODE"));
-                address.setCity(rs.getString("CITY"));
-                address.setAddition(rs.getString("ADDITION"));
+                    // Address
+                    Address address = new Address();
+                    address.setAddressId(rs.getString("ADDRESSID"));
+                    address.setStreet(rs.getString("STREET"));
+                    address.setHousenr(rs.getString("HOUSENR"));
+                    address.setPostcode(rs.getString("POSTCODE"));
+                    address.setCity(rs.getString("CITY"));
+                    address.setAddition(rs.getString("ADDITION"));
 
-                employee.setAddress(address);
+                    employee.setAddress(address);
 
-                employeeList.add(employee);
+                    employeeList.add(employee);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,7 +64,7 @@ public class EmployeeDao {
 
             List<Phone> filteredList = phoneList.stream().filter(p -> p.getPersonId().equals( e.getPersonId()))
                     .collect(Collectors.toList());
-            phoneList.remove(filteredList);
+            phoneList.removeAll(filteredList);
             e.getPhoneList().addAll(filteredList);
         }
 
@@ -71,7 +74,7 @@ public class EmployeeDao {
 
             List<Email> filteredList = emailList.stream().filter(p -> p.getPersonId().equals( e.getPersonId()))
                     .collect(Collectors.toList());
-            emailList.remove(filteredList);
+            emailList.removeAll(filteredList);
             e.getEmailList().addAll(filteredList);
         }
 
@@ -110,8 +113,6 @@ public class EmployeeDao {
             preparedStmt.executeUpdate();
             preparedStmt2.executeUpdate();
 
-
-            /*            employeeList.removeIf(o -> Objects.equals(o.getEmployeeId(), employee.getEmployeeId()));*/
             b = true;
         } catch (SQLException e) {
             e.printStackTrace();
