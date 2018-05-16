@@ -62,8 +62,7 @@ public class CustomerCategoryDao {
     public static CustomerCategory getCustomerCategoryByIdFromDb(String uuid){
         CustomerCategory customerCategory = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY customerCategory WHERE " +
-                    "customerCategory.CUSTOMERCATEGORYID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
             preparedStmt.setString(1, uuid);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
