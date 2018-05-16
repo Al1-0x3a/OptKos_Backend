@@ -14,16 +14,15 @@ public class EmployeeDao {
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
-
-    private EmployeeDao() {}
+    private static List<Employee> employeeList;
 
     public static List<Employee> getAllEmployeesFromDb() {
         long start = System.nanoTime();
         List<Employee> employeeList = new ArrayList<>();
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE em, OPTKOS.ADDRESS a WHERE " +
-                    "p.PERSONID = em.PERSONID AND a.PERSONID = p.PERSONID";
+            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE em, OPTKOS.ADDRESS a, OPTKOS.POSITION pos" +
+                    " WHERE p.PERSONID = em.PERSONID AND a.PERSONID = p.PERSONID AND pos.POSITIONID = em.POSITIONID";
 
             try (ResultSet rs = stmt.executeQuery(query)) {
                 while (rs.next()) {
@@ -38,7 +37,15 @@ public class EmployeeDao {
                     // Employee
                     employee.setEmployeeId(rs.getString("EMPLOYEEID"));
                     employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                    employee.setPositionId(rs.getString("POSITIONID"));
+                    // employee.setPositionId(rs.getString("POSITIONID"));
+
+                    // Position
+                    Position position = new Position();
+                    position.setName(rs.getString("NAME"));
+                    position.setDescription(rs.getString("DESCRIPTION"));
+                    position.setNote(rs.getString("ANNOTATION"));
+
+                    employee.setPosition(position);
 
                     // Address
                     Address address = new Address();
@@ -176,8 +183,8 @@ public class EmployeeDao {
         Employee employee = new Employee();
         try {
             stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e WHERE p.PERSONID = e.PERSONID AND " +
-                    "e.EMPLOYEEID=" + employeeId + ";";
+            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e, OPTKOS.POSITION pos WHERE" +
+                    " p.PERSONID = e.PERSONID AND e.EMPLOYEEID=" + employeeId + " AND pos.POSITIONID = e.POSITIONID;";
             try (ResultSet rs = stmt.executeQuery(query)) {
 
                 // Person
@@ -191,7 +198,14 @@ public class EmployeeDao {
                 // Employee
                 employee.setEmployeeId(rs.getString("EMPLOYEEID"));
                 employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                employee.setPositionId(rs.getString("POSITIONID"));
+
+                // Position
+                Position position = new Position();
+                position.setName(rs.getString("NAME"));
+                position.setDescription(rs.getString("DESCRIPTION"));
+                position.setNote(rs.getString("ANNOTATION"));
+
+                employee.setPosition(position);
             }
             // other objects
             employee.setPhoneList(PhoneDao.getListByPersonId(employee.getPersonId()));
@@ -222,7 +236,7 @@ public class EmployeeDao {
             // Employee
             preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? " +
                     "WHERE PERSONID=?");
-            preparedStmt2.setString(1, employee.getPositionId());
+            preparedStmt2.setString(1, employee.getPosition().getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
             preparedStmt2.setString(3, employee.getPersonId());
 
