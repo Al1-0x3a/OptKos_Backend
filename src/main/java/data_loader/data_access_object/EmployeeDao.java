@@ -225,7 +225,7 @@ public class EmployeeDao {
         try {
             // Person
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.PERSON SET LASTNAME=?,FIRSTNAME=?,TITLE=?," +
-                    "SALUTATION=?,GENDER=? WHERE PERSONID=?");
+                    "SALUTATION=?,GENDER=?,WHERE PERSONID=?");
             preparedStmt.setString(1, employee.getLastname());
             preparedStmt.setString(2, employee.getFirstname());
             preparedStmt.setString(3, employee.getTitle().name());

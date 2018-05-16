@@ -20,6 +20,7 @@ public class Employee extends Person {
 		super(personId);
 		this.employeeId = UUID.randomUUID().toString();
 		this.initWorkingDays();
+		this.position = new Position().setDefaultValues();
 	}
 
 
