@@ -1,6 +1,5 @@
 package data_models;
 
-import java.util.UUID;
 
 public class Position {
 
@@ -10,9 +9,11 @@ public class Position {
 	private String positionId;
 
 	public Position(){
-	    this.positionId = UUID.randomUUID().toString();
 	}
 
+	public Position(String positionId){
+		this.positionId = positionId;
+	}
 	public Position(String positionId, String name, String description, String note) {
 		this.positionId = positionId;
 		this.description = description;
@@ -48,4 +49,15 @@ public class Position {
 		return positionId;
 	}
 
+	public void setPositionId(String positionId) {
+		this.positionId = positionId;
+	}
+
+	public Position setDefaultValues(){
+		this.name = "ErstesJahr";
+		this.positionId = "81c92323-a83e-4fe9-aa95-2d33e695d79f";
+		this.description = "Azubi im ersten Lehrjahr mit keiner bis wenig Erfahrun";
+		this.note = "";
+		return this;
+	}
 }

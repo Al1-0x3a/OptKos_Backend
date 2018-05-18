@@ -61,7 +61,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean updateCustomer(Customer customer) {
-        return false;
+        return CustomerDao.updateCustomer(customer);
     }
 
     @Override
@@ -161,16 +161,21 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean createCustomerCategory(CustomerCategory customerCategory) {
-        return false;
+        return CustomerCategoryDao.createCustomerCategory(customerCategory);
     }
 
     @Override
     public boolean updateCustomerCategory(CustomerCategory customerCategory) {
-        return false;
+        return CustomerCategoryDao.updateCustomerCategory(customerCategory);
     }
 
     @Override
     public boolean deleteCustomerCategory(CustomerCategory customerCategory) {
-        return false;
+        return CustomerCategoryDao.deleteCustomerCategory(customerCategory);
+    }
+
+    @Override
+    public List<Position> getAllPositionFromDb() {
+        return PositionDao.getAllPositionsFromDb();
     }
 }

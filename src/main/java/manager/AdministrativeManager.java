@@ -35,8 +35,11 @@ public class AdministrativeManager {
         return EmployeeDao.updateEmployee(employee);
     }
 
-    public Customer getCustomerById(String uuid) { return CustomerDao.getCustomerByIdFromDb(uuid); }
+    public Customer getCustomerById(String uuid) {
+        return CustomerDao.getCustomerByIdFromDb(uuid);
+    }
 
-    public List<Customer> getAllCustomers() { return CustomerDao.getAllCustomersFromDb();
+    public List<Customer> getAllCustomers() {
+        return CustomerDao.getAllCustomersFromDb();
     }
 }

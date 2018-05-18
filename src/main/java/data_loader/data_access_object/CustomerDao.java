@@ -10,7 +10,6 @@ import java.util.Objects;
 
 public class CustomerDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
     private static List<Customer> customerList = new ArrayList<>();
@@ -21,9 +20,8 @@ public class CustomerDao {
     public static List<Customer> getAllCustomersFromDb() {
         customerList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c WHERE p.PERSONID = c.PERSONID";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c WHERE p.PERSONID = c.PERSONID");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
                 while (rs.next()) {
@@ -61,7 +59,8 @@ public class CustomerDao {
     public static boolean createNewCustomer(Customer customer) {
         try {
             preparedStmt = con.prepareStatement(
-                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER) VALUES(?,?,?,?,?,?)");
+                    "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER)" +
+                            " VALUES(?,?,?,?,?,?)");
 
 
             preparedStmt.setString(1, customer.getPersonId());
@@ -71,7 +70,8 @@ public class CustomerDao {
             preparedStmt.setString(5, customer.getSalutation().name());
             preparedStmt.setString(6, customer.getGender().name());
 
-            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, PERSONID, MULTIPLIKATOR, ANNOTATION, PROBLEM, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
+            preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, PERSONID," +
+                    " MULTIPLIKATOR, ANNOTATION, PROBLEM, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
 
             preparedStmt2.setString(1, customer.getCostumerId());
             preparedStmt2.setString(2, customer.getPersonId());
@@ -86,7 +86,6 @@ public class CustomerDao {
             AddressDao.createNewAddress(customer.getAddress(), customer.getPersonId());
             if (!customer.getPhoneList().isEmpty()) {
                 for (int i = 0; i < customer.getPhoneList().size(); i++) {
-                    // CAUTION!! Dirty Hack
                     customer.getPhoneList().get(i).setPersonId(customer.getPersonId());
 
                     PhoneDao.createPhone(customer.getPhoneList().get(i));
@@ -94,7 +93,6 @@ public class CustomerDao {
             }
             if (!customer.getEmailList().isEmpty()) {
                 for (int i = 0; i < customer.getEmailList().size(); i++) {
-                    // CAUTION!! Dirty Hack
                     customer.getEmailList().get(i).setPersonId(customer.getPersonId());
 
                     EmailDao.createEmail(customer.getEmailList().get(i));
@@ -178,7 +176,8 @@ public class CustomerDao {
             preparedStmt.setString(6, customer.getPersonId());
 
             // Customer
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.CUSTOMER SET MULTIPLIKATOR=?, ANNOTATION=?, PROBLEM=?, CUSTOMERCATEGORYID=? WHERE PERSONID=?");
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.CUSTOMER SET MULTIPLIKATOR=?, ANNOTATION=?, " +
+                    "PROBLEM=?, CUSTOMERCATEGORYID=? WHERE PERSONID=?");
             preparedStmt2.setDouble(1, customer.getTimefactor());
             preparedStmt2.setString(2, customer.getAnnotation());
             preparedStmt2.setString(3, String.valueOf(customer.isProblemCustomer()).substring(0, 1));

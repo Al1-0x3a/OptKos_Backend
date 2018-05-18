@@ -70,4 +70,6 @@ public interface IAdministrativeApi {
     boolean updateCustomerCategory(CustomerCategory customerCategory);
     @WebMethod
     boolean deleteCustomerCategory(CustomerCategory customerCategory);
+    @WebMethod
+    List<Position> getAllPositionFromDb();
 }

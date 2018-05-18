@@ -1,6 +1,5 @@
 package data_models;
 
-import data_loader.data_access_object.PositionDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ public class Employee extends Person {
 
 	private String employeeId;
 	private char isDeleted;
-	private String positionId;
+	private Position position;
     private List<WorkingDay> workingDays;
 
 	public Employee(){
@@ -18,16 +17,17 @@ public class Employee extends Person {
 		this.initWorkingDays();
 	}
 	public Employee(String personId){
-	    super(personId);
+		super(personId);
 		this.employeeId = UUID.randomUUID().toString();
 		this.initWorkingDays();
+		this.position = new Position().setDefaultValues();
 	}
 
 
-	public Employee(String employeeId, char isDeleted, String positionId) {
+	public Employee(String employeeId, char isDeleted, Position position) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
-		this.positionId = positionId;
+		this.position = position;
 		this.initWorkingDays();
 	}
 
@@ -55,25 +55,21 @@ public class Employee extends Person {
 		this.isDeleted = isDeleted;
 	}
 
-	public String getPositionId() {
-		return positionId;
+	public Position getPosition() {
+		return position;
 	}
 
-	public void setPositionId(String positionId) {
-		this.positionId = positionId;
-	}
-
-	public Position getPosition(){
-		return PositionDao.getPositionByPositionId(this.positionId);
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	@Override
 	public String toString() {
 		return "Employee{" +
-                super.toString() +
+				super.toString() +
 				"employeeId=" + employeeId +
 				", isDeleted=" + isDeleted +
-				", positionId=" + positionId +
+				", positionId=" + position +
 				'}';
 	}
 
