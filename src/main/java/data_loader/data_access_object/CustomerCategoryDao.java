@@ -10,7 +10,6 @@ import java.util.List;
 public class CustomerCategoryDao {
 
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
 
     private CustomerCategoryDao() {

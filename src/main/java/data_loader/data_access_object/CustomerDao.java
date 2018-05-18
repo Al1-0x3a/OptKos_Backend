@@ -10,7 +10,6 @@ import java.util.Objects;
 
 public class CustomerDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
     private static List<Customer> customerList = new ArrayList<>();
@@ -21,9 +20,8 @@ public class CustomerDao {
     public static List<Customer> getAllCustomersFromDb() {
         customerList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c WHERE p.PERSONID = c.PERSONID";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c WHERE p.PERSONID = c.PERSONID");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
                 while (rs.next()) {
@@ -46,7 +44,7 @@ public class CustomerDao {
                     customer.setAnnotation(rs.getString("ANNOTATION"));
                     customer.setAnnotation(rs.getString("PROBLEM"));
 
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
 
                     customerList.add(customer);
@@ -88,7 +86,6 @@ public class CustomerDao {
             AddressDao.createNewAddress(customer.getAddress(), customer.getPersonId());
             if (!customer.getPhoneList().isEmpty()) {
                 for (int i = 0; i < customer.getPhoneList().size(); i++) {
-                    // CAUTION!! Dirty Hack
                     customer.getPhoneList().get(i).setPersonId(customer.getPersonId());
 
                     PhoneDao.createPhone(customer.getPhoneList().get(i));
@@ -96,7 +93,6 @@ public class CustomerDao {
             }
             if (!customer.getEmailList().isEmpty()) {
                 for (int i = 0; i < customer.getEmailList().size(); i++) {
-                    // CAUTION!! Dirty Hack
                     customer.getEmailList().get(i).setPersonId(customer.getPersonId());
 
                     EmailDao.createEmail(customer.getEmailList().get(i));
@@ -155,7 +151,7 @@ public class CustomerDao {
                     customer.setAnnotation(rs.getString("ANNOTATION"));
                     customer.setAnnotation(rs.getString("PROBLEM"));
 
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryById(
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
                 }
             }
