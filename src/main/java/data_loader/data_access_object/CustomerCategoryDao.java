@@ -6,23 +6,21 @@ import data_models.CustomerCategory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CustomerCategoryDao {
 
     private static final Connection con = SqlConnection.getConnection();
     private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<CustomerCategory> customerCategoryList = new ArrayList<>();
 
     private CustomerCategoryDao() {
     }
 
     public static List<CustomerCategory> getAllCustomerCategoriesFromDb() {
+        List<CustomerCategory> customerCategoryList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMERCATEGORY";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt= con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCATEGORY");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
                     CustomerCategory customerCategory = new CustomerCategory(
@@ -39,25 +37,6 @@ public class CustomerCategoryDao {
         }
         return customerCategoryList;
     }
-
-    public static CustomerCategory getCustomerCategoryById(String uuid){
-
-        CustomerCategory customerCategory = null;
-        for (CustomerCategory customerCategories : customerCategoryList) {
-            if (Objects.equals(customerCategories.getCustomerCategoryId(), uuid)) {
-                customerCategory = customerCategories;
-                break;
-            }
-        }
-
-        if (customerCategory == null) {
-            customerCategory = getCustomerCategoryByIdFromDb(uuid);
-            if (customerCategory != null)
-                customerCategoryList.add(customerCategory);
-        }
-        return customerCategory;
-    }
-
 
     public static CustomerCategory getCustomerCategoryByIdFromDb(String uuid){
         CustomerCategory customerCategory = null;
@@ -81,6 +60,7 @@ public class CustomerCategoryDao {
 
         return customerCategory;
     }
+
     public static boolean createCustomerCategory(CustomerCategory customerCategory){
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCATEGORY(CUSTOMERCATEGORYID, NAME," +
@@ -130,7 +110,5 @@ public class CustomerCategoryDao {
             e.printStackTrace();
             return false;
         }
-
     }
-
 }
