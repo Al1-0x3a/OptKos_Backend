@@ -61,7 +61,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean updateCustomer(Customer customer) {
-        return false;
+        return CustomerDao.updateCustomer(customer);
     }
 
     @Override
