@@ -123,6 +123,7 @@ public class CustomerCategoryDao {
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMERCATEGORY WHERE CUSTOMERCATEGORYID=?");
             preparedStmt.setString(1, customerCategory.getCustomerCategoryId());
+
             preparedStmt.executeUpdate();
             return true;
         } catch (SQLException e) {
