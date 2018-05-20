@@ -7,20 +7,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 
 public class CustomerDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
-    private static List<Customer> customerList = new ArrayList<>();
 
     private CustomerDao() {
     }
 
     public static List<Customer> getAllCustomersFromDb() {
-        customerList = new ArrayList<>();
+        List<Customer> customerList = new ArrayList<>();
         try {
-            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c WHERE p.PERSONID = c.PERSONID");
+            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, OPTKOS.ADDRESS a WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
@@ -33,11 +34,6 @@ public class CustomerDao {
                     customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
                     customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
 
-                    // Shit
-                    customer.setPhoneList(PhoneDao.getListByPersonId(customer.getPersonId()));
-                    customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
-
                     // Customer
                     customer.setCostumerId(rs.getString("CUSTOMERID"));
                     customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
@@ -47,17 +43,50 @@ public class CustomerDao {
                     customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
 
+                    // Address
+                    Address address = new Address();
+                    address.setAddressId(rs.getString("ADDRESSID"));
+                    address.setStreet(rs.getString("STREET"));
+                    address.setHousenr(rs.getString("HOUSENR"));
+                    address.setPostcode(rs.getString("POSTCODE"));
+                    address.setCity(rs.getString("CITY"));
+                    address.setAddition(rs.getString("ADDITION"));
+
+                    customer.setAddress(address);
+
                     customerList.add(customer);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //Email
+        List<Email> emailList = EmailDao.getAllEmailsFromDb();
+        for(Customer c:customerList){
+
+            List<Email> filteredList = emailList.stream().filter(p -> p.getPersonId().equals( c.getPersonId()))
+                    .collect(Collectors.toList());
+            emailList.removeAll(filteredList);
+            c.getEmailList().addAll(filteredList);
+        }
+
+        //Phone
+        List<Phone> phoneList = PhoneDao.getAllPhonesFromDb();
+        for(Customer c:customerList){
+
+            List<Phone> filteredList = phoneList.stream().filter(p -> p.getPersonId().equals( c.getPersonId()))
+                    .collect(Collectors.toList());
+            phoneList.removeAll(filteredList);
+            c.getPhoneList().addAll(filteredList);
+        }
+
         return customerList;
     }
 
     public static boolean createNewCustomer(Customer customer) {
         try {
+            List<Customer> customerList = new ArrayList<>();
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER)" +
                             " VALUES(?,?,?,?,?,?)");
@@ -108,6 +137,7 @@ public class CustomerDao {
     }
 
     public static Customer getCustomerById(String customerId) {
+        List<Customer> customerList = new ArrayList<>();
         Customer customer = null;
         for (int i = 0; i < customerList.size(); i++) {
             if (Objects.equals(customerList.get(i).getCostumerId(), customerId)) {

@@ -11,18 +11,15 @@ import java.util.Objects;
 public class EmailDao {
 
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Email> emailList = new ArrayList<>();
 
     private EmailDao() {}
 
     public static List<Email> getAllEmailsFromDb(){
-
+        List<Email> emailList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.EMAIL";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMAIL");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 emailList = new ArrayList<>();
                 while (rs.next()) {
@@ -38,6 +35,7 @@ public class EmailDao {
     }
 
     public static List<Email> getEmailListByPersonId(String personId){
+        List<Email> emailList = new ArrayList<>();
         if(emailList.isEmpty()) {
             emailList = getAllEmailsFromDb();
         }
@@ -52,6 +50,7 @@ public class EmailDao {
     }
     public static boolean createEmail(Email email){
         boolean b = false;
+        List<Email> emailList = new ArrayList<>();
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.EMAIL (EMAILID, EMAIL, PERSONID) VALUES(?,?,?)");
             preparedStmt.setString(1, email.getEmailId());
@@ -68,7 +67,7 @@ public class EmailDao {
 
 
     public static void deleteEmailByPersonId(String personId){
-
+        List<Email> emailList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
             preparedStmt.setString(1, personId);
@@ -87,6 +86,7 @@ public class EmailDao {
 
     public static boolean deleteEmailByEmailId(String emailId){
         boolean b = false;
+        List<Email> emailList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE EMAILID =?");
             preparedStmt.setString(1, emailId);

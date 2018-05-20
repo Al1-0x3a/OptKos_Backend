@@ -9,16 +9,14 @@ import java.util.List;
 
 public class WorkingWeekDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
 
     public static List<WorkingDay> getAllWorkingDaysFromDb(){
         List<WorkingDay> workingDayList = new ArrayList<>();
 
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.WORKINGDAY";
-            ResultSet rs = stmt.executeQuery(query);
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY");
+            ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
                 workingDayList.add(new WorkingDay(rs.getString("WORKINGDAYID"),
@@ -42,7 +40,6 @@ public class WorkingWeekDao {
         List<WorkingDay> tmp = employeeWorkingDays;
 
         try {
-            stmt = con.createStatement();
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
             preparedStmt.setString(1, employeeId);
 

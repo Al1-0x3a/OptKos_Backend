@@ -4,21 +4,20 @@ import data_loader.SqlConnection;
 import data_models.Colour;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class ColourDao {
     private static Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Colour> colourList;
 
     public static List<Colour> getAllColoursFromDb(){
-
+        List<Colour> colourList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.COLOUR";
-            ResultSet rs = stmt.executeQuery(query);
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOUR");
+            ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
                 Colour Colour = new Colour(
@@ -27,6 +26,7 @@ public class ColourDao {
                         rs.getString("HUE"),
                         rs.getString("MANUFACTURER")
                 );
+                colourList.add(Colour);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,6 +35,7 @@ public class ColourDao {
     }
 
     public static List<Colour> getColourByColourId(String colourId){
+        List<Colour> colourList = new ArrayList<>();
         if(colourList == null ){
             colourList = getAllColoursFromDb();
         }
@@ -63,6 +64,7 @@ public class ColourDao {
     }
 
     public static void deleteColourByColourId(String colourId){
+        List<Colour> colourList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOUR WHERE COLOURID=?");
             preparedStmt.setString(1, colourId.toString());

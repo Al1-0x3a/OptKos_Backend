@@ -11,20 +11,17 @@ import java.util.stream.Collectors;
 
 public class EmployeeDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
     private static PreparedStatement preparedStmt2;
-    private static List<Employee> employeeList;
 
     public static List<Employee> getAllEmployeesFromDb() {
         long start = System.nanoTime();
         List<Employee> employeeList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE em, OPTKOS.ADDRESS a, OPTKOS.POSITION pos" +
-                    " WHERE p.PERSONID = em.PERSONID AND a.PERSONID = p.PERSONID AND pos.POSITIONID = em.POSITIONID";
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE em, OPTKOS.ADDRESS a, OPTKOS.POSITION pos " +
+                    "WHERE p.PERSONID = em.PERSONID AND a.PERSONID = p.PERSONID AND pos.POSITIONID = em.POSITIONID");
 
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            try (ResultSet rs = preparedStmt.executeQuery()) {
                 while (rs.next()) {
                     // Person
                     Employee employee = new Employee(rs.getString("PERSONID"));
@@ -182,10 +179,9 @@ public class EmployeeDao {
 
         Employee employee = new Employee();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e, OPTKOS.POSITION pos WHERE" +
-                    " p.PERSONID = e.PERSONID AND e.EMPLOYEEID=" + employeeId + " AND pos.POSITIONID = e.POSITIONID;";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e, OPTKOS.POSITION pos " +
+                    "WHERE p.PERSONID = e.PERSONID AND e.EMPLOYEEID= " + employeeId + " AND pos.POSITIONID = e.POSITIONID;");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 // Person
                 employee.setPersonId(rs.getString("PERSONID"));

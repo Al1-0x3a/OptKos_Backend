@@ -5,18 +5,18 @@ import data_models.ColourMixture;
 
 import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ColourMixtureDao {
     private static Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<ColourMixture> colourMixtureList;
 
     public static List<ColourMixture> getAllColourMixturesFromDb(){
+        List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.COLOURMIXTURE";
-            ResultSet rs = stmt.executeQuery(query);
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE");
+            ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
                 ColourMixture colourMixture = new ColourMixture(
@@ -33,6 +33,7 @@ public class ColourMixtureDao {
     }
 
     public static List<ColourMixture> getColourMixtureByColourMixtureId(String colourMixtureId){
+        List<ColourMixture> colourMixtureList = new ArrayList<>();
         if(colourMixtureList == null ){
             colourMixtureList = getAllColourMixturesFromDb();
         }
@@ -61,6 +62,7 @@ public class ColourMixtureDao {
     }
 
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
+        List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId.toString());

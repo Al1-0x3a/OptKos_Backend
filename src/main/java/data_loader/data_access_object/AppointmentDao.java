@@ -10,18 +10,16 @@ import java.util.Objects;
 
 public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Appointment> appointmentList = new ArrayList<>();
 
     private AppointmentDao() {
     }
 
     public static List<Appointment> getAllAppointmentsFromDb() {
+        List<Appointment> appointmentList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.APOINTMENT";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
                     Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
@@ -48,6 +46,7 @@ public class AppointmentDao {
 
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
+        List<Appointment> appointmentList = new ArrayList<>();
         for(int i = 0; i< appointmentList.size(); i++){
             if(Objects.equals(appointmentList.get(i).getAppointmentId(), appointmentId)) {
                 appointment = appointmentList.get(i);
@@ -66,9 +65,8 @@ public class AppointmentDao {
     public static Appointment getAppointmentByIdFromDb(String appointmentId){
         Appointment appointment = null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId + ";";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=\" + appointmentId + \";");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),

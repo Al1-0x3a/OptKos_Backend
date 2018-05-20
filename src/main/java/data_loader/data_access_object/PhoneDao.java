@@ -10,19 +10,16 @@ import java.util.Objects;
 
 public class PhoneDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Phone> phoneList = new ArrayList<>();
 
     private PhoneDao() {
     }
 
     public static List<Phone> getAllPhonesFromDb() {
-
+        List<Phone> phoneList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.PHONE";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PHONE");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
             phoneList = new ArrayList<>();
             while(rs.next()) {
@@ -39,6 +36,7 @@ public class PhoneDao {
     }
 
     public static List<Phone> getListByPersonId(String personId){
+        List<Phone> phoneList = new ArrayList<>();
         if(phoneList.isEmpty()) {
             phoneList = getAllPhonesFromDb();
         }
@@ -54,6 +52,7 @@ public class PhoneDao {
 
     public static boolean createPhone(Phone phone) {
         boolean result = false;
+        List<Phone> phoneList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.PHONE (PHONEID, NUMBER, DESCRIPTION, ANNOTATION, PERSONID) VALUES(?,?,?,?,?)");
             preparedStmt.setString(1, phone.getPhoneId());
@@ -73,6 +72,7 @@ public class PhoneDao {
 
     public static boolean deletePhoneByPhoneId(String phoneId){
         boolean b = false;
+        List<Phone> phoneList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PHONEID =?");
             preparedStmt.setString(1, phoneId);
@@ -92,6 +92,7 @@ public class PhoneDao {
     }
 
     public static boolean deleteAllPhoneByPersonId(String personId){
+        List<Phone> phoneList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.PHONE WHERE PERSONID =?");
             preparedStmt.setString(1, personId);

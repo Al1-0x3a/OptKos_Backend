@@ -5,19 +5,18 @@ import data_models.CustomerColour;
 
 import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CustomerColourDao {
     private static Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<CustomerColour> customerColourList;
 
     public static List<CustomerColour> getAllCustomerColoursFromDb(){
-
+        List<CustomerColour> customerColourList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.CUSTOMERCOLOUR";
-            ResultSet rs = stmt.executeQuery(query);
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCOLOUR");
+            ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
                 CustomerColour customerColour = new CustomerColour(
@@ -37,6 +36,7 @@ public class CustomerColourDao {
     }
 
     public static List<CustomerColour> getCustomerColourByCustomerId(String customerId){
+        List<CustomerColour> customerColourList = new ArrayList<>();
         if(customerColourList == null ){
             customerColourList = getAllCustomerColoursFromDb();
         }
@@ -68,6 +68,7 @@ public class CustomerColourDao {
     }
 
     public static void deleteCustomerColourByCustomerId(String customerId){
+        List<CustomerColour> customerColourList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.CUSTOMERCOLOUR WHERE CUSTOMERID=?");
             preparedStmt.setString(1, customerId.toString());

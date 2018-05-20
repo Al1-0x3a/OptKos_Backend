@@ -11,18 +11,16 @@ import java.util.Objects;
 
 public class ServiceDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Service> serviceList = new ArrayList<>();
 
     private ServiceDao() {
     }
 
     public static List<Service> getAllServicesFromDb() {
+        List<Service> serviceList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.SERVICE";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
                     serviceList.add(new Service(rs.getString("SERVICEID"),
@@ -62,6 +60,7 @@ public class ServiceDao {
     }
 
     public static Service getServiceById(String serviceId){
+        List<Service> serviceList = new ArrayList<>();
         if(serviceList == null){
             serviceList = getAllServicesFromDb();
         }
