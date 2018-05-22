@@ -4,6 +4,7 @@ import data_models.*;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.time.Duration;
 import java.util.List;
 
 @WebService
@@ -72,4 +73,10 @@ public interface IAdministrativeApi {
     boolean deleteCustomerCategory(CustomerCategory customerCategory);
     @WebMethod
     List<Position> getAllPositionFromDb();
+    @WebMethod
+    boolean createServiceDuration(String employeeId, String serviceId, int duration);
+    @WebMethod
+    List<Integer> getServiceDuration(String employeeId, String serviceId);
+    @WebMethod
+    boolean deleteServiceDuration(String serviceDurationId);
 }

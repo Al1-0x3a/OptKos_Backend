@@ -5,6 +5,7 @@ import data_models.*;
 import manager.AdministrativeManager;
 
 import javax.jws.WebService;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -177,5 +178,20 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public List<Position> getAllPositionFromDb() {
         return PositionDao.getAllPositionsFromDb();
+    }
+
+    @Override
+    public boolean createServiceDuration(String employeeId, String serviceId, int duration) {
+        return ServiceDurationDao.createServiceDuration(employeeId, serviceId, duration);
+    }
+
+    @Override
+    public List<Integer> getServiceDuration(String employeeId, String serviceId) {
+        return ServiceDurationDao.getServiceDuration(employeeId, serviceId);
+    }
+
+    @Override
+    public boolean deleteServiceDuration(String serviceDurationId) {
+        return ServiceDurationDao.deleteServiceDuration(serviceDurationId);
     }
 }
