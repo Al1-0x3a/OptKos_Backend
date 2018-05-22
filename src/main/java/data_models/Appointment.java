@@ -1,7 +1,5 @@
 package data_models;
 
-import com.sun.istack.internal.Nullable;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
