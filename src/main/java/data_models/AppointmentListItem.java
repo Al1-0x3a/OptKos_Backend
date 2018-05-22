@@ -34,4 +34,20 @@ public class AppointmentListItem {
     public void addAppointment(Appointment appointment){
         this.appointmentList.add(appointment);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 }
