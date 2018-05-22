@@ -1,5 +1,7 @@
 package data_models;
 
+import com.sun.istack.internal.Nullable;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,21 +13,20 @@ public class Appointment {
 	private LocalDateTime startTime;
 	private LocalDateTime startTimeActual;
 	private AppointmentType appointmentType;
-	private Employee employee;
-	private Customer customer;
+	private String employeeid;
+	private String customerid;
 
 	public Appointment(){
 	    this.appointmentId = UUID.randomUUID().toString();
 	}
 
-	public Appointment(String appointmentId, LocalDateTime endTime, LocalDateTime endTimeActual,
-					   LocalDateTime startTime, LocalDateTime startTimeActual
-					   ) {
+	public Appointment(String appointmentId, LocalDateTime endTime,
+					   LocalDateTime startTime, String employeeid, String customerid) {
 		this.appointmentId = appointmentId;
 		this.endTime = endTime;
-		this.endTimeActual = endTimeActual;
 		this.startTime = startTime;
-		this.startTimeActual = startTimeActual;
+		this.employeeid = employeeid;
+		this.customerid = customerid;
 	}
 
 	public String getAppointmentId() {
@@ -77,19 +78,19 @@ public class Appointment {
 		this.appointmentType = appointmentType;
 	}
 
-	public Employee getEmployee() {
-		return employee;
+	public String getEmployeeid() {
+		return employeeid;
 	}
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setEmployeeid(String employeeid) {
+		this.employeeid = employeeid;
 	}
 
-	public Customer getCustomer() {
-		return customer;
+	public String getCustomerid() {
+		return customerid;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setCustomerid(String customerid) {
+		this.customerid = customerid;
 	}
 }

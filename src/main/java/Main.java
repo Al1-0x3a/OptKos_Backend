@@ -47,6 +47,7 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     private static String getHeader() {

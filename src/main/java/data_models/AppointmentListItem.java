@@ -5,11 +5,13 @@ import java.util.List;
 
 public class AppointmentListItem {
 
-    private String employeeId;
+    private String employeeId, name, firstname;
     private List<Appointment> appointmentList;
 
-    public AppointmentListItem(String employeeId){
+    public AppointmentListItem(String employeeId, String name, String firstname){
         this.employeeId = employeeId;
+        this.name = name;
+        this.firstname = firstname;
         this.appointmentList = new ArrayList<>();
     }
 
@@ -27,5 +29,9 @@ public class AppointmentListItem {
 
     public void setAppointmentList(List<Appointment> appointmentList) {
         this.appointmentList = appointmentList;
+    }
+
+    public void addAppointment(Appointment appointment){
+        this.appointmentList.add(appointment);
     }
 }

@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,15 +30,16 @@ public class AppointmentDao {
                 while (rs.next()) {
                     Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                            rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                            rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                            rs.getString("EMPLOYEEID"),
+                            rs.getString("CUSTOMERID"));
 
-                    appointment.setEmployee(EmployeeDao.getEmployeeById(
-                            rs.getString("EMPLOYEEID")));
-
-                    appointment.setCustomer(CustomerDao.getCustomerById(
-                            rs.getString("CUSTOMERID")));
+                    if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                        appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                    }
+                    if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                    }
 
                     appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                             rs.getString("APPOINTMENTTYPEID")));
@@ -77,48 +77,80 @@ public class AppointmentDao {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                         rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                        rs.getString("EMPLOYEEID"),
+                        rs.getString("CUSTOMERID"));
 
-                appointment.setEmployee(EmployeeDao.getEmployeeById(
-                        rs.getString("EMPLOYEEID")));
-
-                appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
-
+                if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                    appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                }
+                if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                    appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                }
                 appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                         rs.getString("APPOINTMENTTYPEID")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }//
 
         return appointment;
     }
 
 
-    public static List<AppointmentListItem> getAppointmentsByCalendarWeek(LocalDate ldt){
+    public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e, OPTKOS.APOINTMENT a WHERE" +
-                    " e.EMPLOYEEID=a.EMPLOYEEID AND a.PLANTIMESTART>=? AND a.PLANTIMEEND<?");
+            preparedStmt = con.prepareStatement("SELECT p.LASTNAME, p.FIRSTNAME, e.EMPLOYEEID, a.* FROM" +
+                    " OPTKOS.EMPLOYEE e, OPTKOS.APOINTMENT a, OPTKOS.PERSON p  WHERE e.EMPLOYEEID=a.EMPLOYEEID AND " +
+                    "p.PERSONID=e.PERSONID AND a.PLANTIMESTART>=? AND a.PLANTIMEEND<?");
 
-            LocalDate localDate = LocalDate.from(ldt);
+            LocalDate localDate = LocalDate.parse(ldt);
             int weekNumber = localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 
             LocalDate date = LocalDate.of(2018, Month.JANUARY, 10);
             LocalDate dayInWeek = date.with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber);
             LocalDate start = dayInWeek.with(DayOfWeek.MONDAY);
-            //preparedStmt.setTime(1, start.to);
-            System.out.println(start);
+            LocalDate end = dayInWeek.with(DayOfWeek.SUNDAY);
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+            ResultSet rs = preparedStmt.executeQuery();
+
+            AppointmentListItem  ali = null;
+            String tmpEmployeeId = "";
+
+            while (rs.next()){
+                String tmp = rs.getString("EMPLOYEEID");
+                if(!tmp.equals(tmpEmployeeId)){
+                    if(ali !=null){
+                        appointmentList.add(ali);
+                    }
+                    tmpEmployeeId = rs.getString("EMPLOYEEID");
+                    ali = new AppointmentListItem(tmpEmployeeId, rs.getString("LASTNAME"),
+                            rs.getString("FIRSTNAME"));
+                }
+                Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
+                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                        rs.getString("EMPLOYEEID"),
+                        rs.getString("CUSTOMERID"));
+
+                if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                    appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                }
+                if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                    appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                }
+                ali.addAppointment(appointment);
+            }
+            return appointmentList;
 
 
 
-            // preparedStmt.setTimestamp(1, );
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
 }

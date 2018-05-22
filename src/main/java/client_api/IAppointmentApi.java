@@ -11,7 +11,7 @@ import java.util.List;
 @WebService
 public interface IAppointmentApi {
     @WebMethod
-    List<AppointmentListItem> getAppointmentsByCalendarWeek(LocalDate ldt);
+    List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt);
     @WebMethod
 	Appointment getAppointmentById(String apointmentId);
 }

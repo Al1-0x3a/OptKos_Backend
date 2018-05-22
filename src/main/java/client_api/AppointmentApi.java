@@ -15,9 +15,9 @@ import java.util.List;
 public class AppointmentApi implements IAppointmentApi{
 
     @Override
-    public List<AppointmentListItem> getAppointmentsByCalendarWeek(LocalDate ldt) {
-        // return AppointmentDao.getAppointmentsByCalendarWeek(ldt);
-        return null;
+    public List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt) {
+        return AppointmentDao.getAppointmentsByCalendarWeek(ldt);
+        // return null;
     }
 
     @Override
