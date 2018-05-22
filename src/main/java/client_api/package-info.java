@@ -1,15 +1,14 @@
 @XmlJavaTypeAdapters({
-        @XmlJavaTypeAdapter(type=LocalTime.class,
-                value=LocalTimeXmlAdapter.class),
+        @XmlJavaTypeAdapter(type = LocalTime.class, value = LocalTimeXmlAdapter.class),
         @XmlJavaTypeAdapter(type = Duration.class , value = DurationXmlAdapter.class),
-        @XmlJavaTypeAdapter(type = LocalDate.class , value = LocalDateXmlAdapter.class)
+        @XmlJavaTypeAdapter(type = LocalDate.class , value = LocalDateAdapter.class)
 })
 
 
-package data_models;
+package client_api;
 
+import client_api.XmlAdapter.LocalDateAdapter;
 import com.migesok.jaxb.adapter.javatime.DurationXmlAdapter;
-import com.migesok.jaxb.adapter.javatime.LocalDateXmlAdapter;
 import com.migesok.jaxb.adapter.javatime.LocalTimeXmlAdapter;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;

@@ -8,6 +8,7 @@ import data_loader.SqlConnection;
 
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Main {
     private static final String SUCCESS = "[Success]";
@@ -46,7 +47,6 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private static String getHeader() {
