@@ -2,39 +2,44 @@ package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
 import data_models.Appointment;
+import data_models.AppointmentListItem;
 
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Appointment> appointmentList = new ArrayList<>();
 
     private AppointmentDao() {
     }
 
     public static List<Appointment> getAllAppointmentsFromDb() {
+        List<Appointment> appointmentList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.APOINTMENT";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
                     Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                            rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                            rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                            rs.getString("EMPLOYEEID"),
+                            rs.getString("CUSTOMERID"));
 
-                    appointment.setEmployee(EmployeeDao.getEmployeeById(
-                            rs.getString("EMPLOYEEID")));
-
-                    appointment.setCustomer(CustomerDao.getCustomerById(
-                            rs.getString("CUSTOMERID")));
+                    if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                        appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                    }
+                    if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                    }
 
                     appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                             rs.getString("APPOINTMENTTYPEID")));
@@ -48,6 +53,7 @@ public class AppointmentDao {
 
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
+        List<Appointment> appointmentList = new ArrayList<>();
         for(int i = 0; i< appointmentList.size(); i++){
             if(Objects.equals(appointmentList.get(i).getAppointmentId(), appointmentId)) {
                 appointment = appointmentList.get(i);
@@ -66,29 +72,85 @@ public class AppointmentDao {
     public static Appointment getAppointmentByIdFromDb(String appointmentId){
         Appointment appointment = null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=" + appointmentId + ";";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=\" + appointmentId + \";");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
                         rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                        rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                        rs.getString("EMPLOYEEID"),
+                        rs.getString("CUSTOMERID"));
 
-                appointment.setEmployee(EmployeeDao.getEmployeeById(
-                        rs.getString("EMPLOYEEID")));
-
-                appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
-
+                if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                    appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                }
+                if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                    appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                }
                 appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                         rs.getString("APPOINTMENTTYPEID")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }//
 
         return appointment;
+    }
+
+
+    public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
+        List<AppointmentListItem> appointmentList = new ArrayList<>();
+        try {
+            preparedStmt = con.prepareStatement("SELECT p.LASTNAME, p.FIRSTNAME, e.EMPLOYEEID, a.* FROM" +
+                    " OPTKOS.EMPLOYEE e, OPTKOS.APOINTMENT a, OPTKOS.PERSON p  WHERE e.EMPLOYEEID=a.EMPLOYEEID AND " +
+                    "p.PERSONID=e.PERSONID AND a.PLANTIMESTART>=? AND a.PLANTIMEEND<?");
+
+            LocalDate localDate = LocalDate.parse(ldt);
+            int weekNumber = localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+
+            LocalDate date = LocalDate.of(2018, Month.JANUARY, 10);
+            LocalDate dayInWeek = date.with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber);
+            LocalDate start = dayInWeek.with(DayOfWeek.MONDAY);
+            LocalDate end = dayInWeek.with(DayOfWeek.SUNDAY);
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+            ResultSet rs = preparedStmt.executeQuery();
+
+            AppointmentListItem  ali = null;
+            String tmpEmployeeId = "";
+
+            while (rs.next()){
+                String tmp = rs.getString("EMPLOYEEID");
+                if(!tmp.equals(tmpEmployeeId)){
+                    if(ali !=null){
+                        appointmentList.add(ali);
+                    }
+                    tmpEmployeeId = rs.getString("EMPLOYEEID");
+                    ali = new AppointmentListItem(tmpEmployeeId, rs.getString("LASTNAME"),
+                            rs.getString("FIRSTNAME"));
+                }
+                Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
+                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                        rs.getString("EMPLOYEEID"),
+                        rs.getString("CUSTOMERID"));
+
+                if(rs.getTimestamp("INDEEDTIMEEND") != null){
+                    appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
+                }
+                if(rs.getTimestamp("INDEEDTIMESTART") != null){
+                    appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                }
+                ali.addAppointment(appointment);
+            }
+            return appointmentList;
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
