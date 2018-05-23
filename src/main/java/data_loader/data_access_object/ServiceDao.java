@@ -99,7 +99,7 @@ public class ServiceDao {
     public static boolean deleteServiceByServiceId(String serviceId){
 
         try {
-            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?");
             preparedStmt.setString(1, serviceId);
             preparedStmt.executeUpdate();
         } catch (SQLException e) {
