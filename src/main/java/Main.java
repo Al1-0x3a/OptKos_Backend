@@ -2,6 +2,7 @@
 import client_api.AdministrativeApi;
 
 import client_api.AppointmentApi;
+import com.ibm.db2.jcc.am.Sqlca;
 import data_loader.DbLoginData;
 import data_loader.SqlConnection;
 
@@ -47,6 +48,25 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.printf(FORMAT, "Closing Databse Connection...");
+
+                if (SqlConnection.getConnection() != null) {
+                    try {
+                        SqlConnection.getConnection().close();
+                    } catch (Exception e) {
+                        System.out.println(ERROR);
+                        e.printStackTrace();
+                    }
+                    System.out.println(SUCCESS);
+                }
+            }
+        }){});
 
     }
 

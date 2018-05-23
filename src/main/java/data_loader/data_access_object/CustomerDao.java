@@ -17,6 +17,7 @@ public class CustomerDao {
     }
 
     public static List<Customer> getAllCustomersFromDb() {
+        long start = System.nanoTime();
         List<Customer> customerList = new ArrayList<>();
         try {
             preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, " +
@@ -83,6 +84,7 @@ public class CustomerDao {
             c.getPhoneList().addAll(filteredList);
         }
 
+        System.out.println("Get all Customers from Db: " + (System.nanoTime() - start)/1e6 + " ms");
         return customerList;
     }
 

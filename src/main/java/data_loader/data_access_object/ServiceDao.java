@@ -16,6 +16,7 @@ public class ServiceDao {
     }
 
     public static List<Service> getAllServicesFromDb() {
+        long start = System.nanoTime();
         List<Service> serviceList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE");
@@ -33,6 +34,7 @@ public class ServiceDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("Get all Services from Db: " + (System.nanoTime() - start)/1e6 + " ms");
         return serviceList;
     }
 
