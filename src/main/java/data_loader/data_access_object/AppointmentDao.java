@@ -50,7 +50,7 @@ public class AppointmentDao {
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=?");
             preparedStmt.setString(1, appointmentId);
-            ResultSet rs = preparedStmt.executeQuery();
+            try(ResultSet rs = preparedStmt.executeQuery()) {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
@@ -65,6 +65,7 @@ public class AppointmentDao {
 
                 appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
                         rs.getString("APPOINTMENTTYPEID")));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

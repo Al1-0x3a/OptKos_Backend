@@ -6,14 +6,12 @@ import data_models.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 public class CustomerDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static PreparedStatement preparedStmt;
-    private static PreparedStatement preparedStmt2;
+    private static PreparedStatement preparedStmt, preparedStmt2;
 
     private CustomerDao() {
     }
@@ -21,7 +19,8 @@ public class CustomerDao {
     public static List<Customer> getAllCustomersFromDb() {
         List<Customer> customerList = new ArrayList<>();
         try {
-            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, OPTKOS.ADDRESS a WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID");
+            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, " +
+                    "OPTKOS.ADDRESS a WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
@@ -86,7 +85,6 @@ public class CustomerDao {
 
     public static boolean createNewCustomer(Customer customer) {
         try {
-            List<Customer> customerList = new ArrayList<>();
             preparedStmt = con.prepareStatement(
                     "INSERT INTO OPTKOS.PERSON (PERSONID, LASTNAME, FIRSTNAME, TITLE, SALUTATION, GENDER)" +
                             " VALUES(?,?,?,?,?,?)");
@@ -127,7 +125,6 @@ public class CustomerDao {
                     EmailDao.createEmail(customer.getEmailList().get(i));
                 }
             }
-            customerList.add(customer);
 
             return true;
         } catch (SQLException e) {
@@ -137,24 +134,6 @@ public class CustomerDao {
     }
 
     public static Customer getCustomerById(String customerId) {
-        List<Customer> customerList = new ArrayList<>();
-        Customer customer = null;
-        for (int i = 0; i < customerList.size(); i++) {
-            if (Objects.equals(customerList.get(i).getCostumerId(), customerId)) {
-                customer = customerList.get(i);
-                break;
-            }
-        }
-
-        if (customer == null) {
-            customer = getCustomerByIdFromDb(customerId);
-            customerList.add(customer);
-        }
-        return customer;
-    }
-
-
-    public static Customer getCustomerByIdFromDb(String customerId) {
 
         Customer customer = new Customer();
         try {
@@ -171,7 +150,7 @@ public class CustomerDao {
                     customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
                     customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
                     // Shit
-                    customer.setPhoneList(PhoneDao.getListByPersonId(customer.getPersonId()));
+                    customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
                     customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
 

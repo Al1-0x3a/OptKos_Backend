@@ -6,7 +6,6 @@ import data_models.ColourMixture;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ColourMixtureDao {
     private static Connection con = SqlConnection.getConnection();
@@ -16,15 +15,16 @@ public class ColourMixtureDao {
         List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE");
-            ResultSet rs = preparedStmt.executeQuery();
+            try(ResultSet rs = preparedStmt.executeQuery()){
 
-            while(rs.next()){
-                ColourMixture colourMixture = new ColourMixture(
-                        rs.getString("COLOURMIXTUREID"),
-                        rs.getString("COLOURID"),
-                        rs.getString("CUSTOMERID"),
-                        rs.getInt("MIXINGRATIO")
-                );
+                while(rs.next()){
+                    ColourMixture colourMixture = new ColourMixture(
+                            rs.getString("COLOURMIXTUREID"),
+                            rs.getString("COLOURID"),
+                            rs.getString("CUSTOMERID"),
+                            rs.getInt("MIXINGRATIO")
+                    );
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -32,19 +32,25 @@ public class ColourMixtureDao {
         return colourMixtureList;
     }
 
-    public static List<ColourMixture> getColourMixtureByColourMixtureId(String colourMixtureId){
-        List<ColourMixture> colourMixtureList = new ArrayList<>();
-        if(colourMixtureList == null ){
-            colourMixtureList = getAllColourMixturesFromDb();
-        }
-        List<ColourMixture> tmpList = null;
-        for (ColourMixture comi : colourMixtureList)
-        {
-            if(comi.getCustomerId() == colourMixtureId){
-                tmpList.add(comi);
+    public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
+        ColourMixture colourMixture = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
+            preparedStmt.setString(1, colourMixtureId);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+              while(rs.next()){
+                  colourMixture = new ColourMixture(
+                          rs.getString("COLOURMIXTUREID"),
+                          rs.getString("COLOURID"),
+                          rs.getString("CUSTOMERID"),
+                          rs.getInt("MIXINGRATIO"));
+
+              }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return tmpList;
+        return colourMixture;
     }
 
     public static void createColourMixture(ColourMixture colourMixture){

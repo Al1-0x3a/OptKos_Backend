@@ -6,7 +6,6 @@ import data_models.CustomerColour;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CustomerColourDao {
     private static Connection con = SqlConnection.getConnection();
@@ -16,18 +15,20 @@ public class CustomerColourDao {
         List<CustomerColour> customerColourList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCOLOUR");
-            ResultSet rs = preparedStmt.executeQuery();
+            try(ResultSet rs = preparedStmt.executeQuery()) {
 
-            while(rs.next()){
-                CustomerColour customerColour = new CustomerColour(
-                        rs.getString("CUSTOMERCOLURID"),
-                        rs.getInt("CONTENTWHITE"),
-                        rs.getString("CUSTOMERID"),
-                        rs.getInt("EXPOSURETIME"),
-                        rs.getString("NATURAL"),
-                        rs.getString("OXIDATION"),
-                        rs.getString("RESULT")
-                );
+                while (rs.next()) {
+                    CustomerColour customerColour = new CustomerColour(
+                            rs.getString("CUSTOMERCOLURID"),
+                            rs.getInt("CONTENTWHITE"),
+                            rs.getString("CUSTOMERID"),
+                            rs.getInt("EXPOSURETIME"),
+                            rs.getString("NATURAL"),
+                            rs.getString("OXIDATION"),
+                            rs.getString("RESULT")
+                    );
+                    customerColourList.add(customerColour);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,17 +38,27 @@ public class CustomerColourDao {
 
     public static List<CustomerColour> getCustomerColourByCustomerId(String customerId){
         List<CustomerColour> customerColourList = new ArrayList<>();
-        if(customerColourList == null ){
-            customerColourList = getAllCustomerColoursFromDb();
-        }
-        List<CustomerColour> tmpList = null;
-        for (CustomerColour cuco : customerColourList)
-        {
-            if(cuco.getCustomerId() == customerId){
-                tmpList.add(cuco);
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCOLOUR WHERE CUSTOMERID=?");
+            preparedStmt.setString(1, customerId);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while (rs.next()){
+                    CustomerColour customerColour = new CustomerColour(
+                            rs.getString("CUSTOMERCOLURID"),
+                            rs.getInt("CONTENTWHITE"),
+                            rs.getString("CUSTOMERID"),
+                            rs.getInt("EXPOSURETIME"),
+                            rs.getString("NATURAL"),
+                            rs.getString("OXIDATION"),
+                            rs.getString("RESULT")
+                    );
+                    customerColourList.add(customerColour);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return tmpList;
+        return customerColourList;
     }
 
     public static void createCustomerColour(CustomerColour customerColour){

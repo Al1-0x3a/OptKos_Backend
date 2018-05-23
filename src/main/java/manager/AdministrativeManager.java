@@ -36,7 +36,7 @@ public class AdministrativeManager {
     }
 
     public Customer getCustomerById(String uuid) {
-        return CustomerDao.getCustomerByIdFromDb(uuid);
+        return CustomerDao.getCustomerById(uuid);
     }
 
     public List<Customer> getAllCustomers() {
