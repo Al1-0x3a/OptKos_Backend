@@ -178,4 +178,19 @@ public class AdministrativeApi implements IAdministrativeApi {
     public List<Position> getAllPositionFromDb() {
         return PositionDao.getAllPositionsFromDb();
     }
+
+    @Override
+    public boolean createServiceDuration(String employeeId, String serviceId, int duration) {
+        return ServiceDurationDao.createServiceDuration(employeeId, serviceId, duration);
+    }
+
+    @Override
+    public List<Integer> getServiceDuration(String employeeId, String serviceId) {
+        return ServiceDurationDao.getServiceDuration(employeeId, serviceId);
+    }
+
+    @Override
+    public boolean deleteServiceDuration(String serviceDurationId) {
+        return ServiceDurationDao.deleteServiceDuration(serviceDurationId);
+    }
 }
