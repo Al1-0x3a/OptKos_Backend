@@ -39,7 +39,6 @@ public class ServiceDao {
         return serviceList;
     }
 
-    // TODO: change db type of the durations, or change type in service class
     public static boolean createService(Service service) {
         try {
             preparedStmt = con.prepareStatement(

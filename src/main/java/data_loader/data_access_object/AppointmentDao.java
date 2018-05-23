@@ -7,7 +7,6 @@ import data_models.AppointmentListItem;
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
@@ -97,7 +96,7 @@ public class AppointmentDao {
         return appointment;
     }
 
-
+// TODO: Es sollen auch Employees, welche keine Appointments haben dargestellt werden
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {

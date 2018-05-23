@@ -42,7 +42,10 @@ public class CustomerDao {
                     customer.setCostumerId(rs.getString("CUSTOMERID"));
                     customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
                     customer.setAnnotation(rs.getString("ANNOTATION"));
-                    customer.setAnnotation(rs.getString("PROBLEM"));
+                    // TODO: test dis shit
+                    if(rs.getString("PROBLEM").charAt(0) == 't')
+                    customer.setProblemCustomer(true);
+                    else customer.setProblemCustomer(false);
 
                     customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
                             rs.getString("CUSTOMERCATEGORYID")));
