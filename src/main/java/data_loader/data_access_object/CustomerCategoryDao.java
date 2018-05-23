@@ -81,7 +81,7 @@ public class CustomerCategoryDao {
     }
     public static boolean updateCustomerCategory(CustomerCategory customerCategory){
         try{
-            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCATEGORY SET CUSTOMERCATEGORY=?," +
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCATEGORY SET NAME=?," +
                     "DURATIONFLAT=?, DURATIONPERCENT=?, DESCRIPTION=? WHERE CUSTOMERCATEGORYID=?");
             preparedStmt.setString(1, customerCategory.getName());
             preparedStmt.setInt(2, customerCategory.getTimeBonus());
