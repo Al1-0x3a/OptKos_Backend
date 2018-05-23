@@ -7,22 +7,19 @@ import java.sql.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ServiceDao {
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Service> serviceList = new ArrayList<>();
 
     private ServiceDao() {
     }
 
     public static List<Service> getAllServicesFromDb() {
+        List<Service> serviceList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.SERVICE";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
                     serviceList.add(new Service(rs.getString("SERVICEID"),
@@ -61,17 +58,22 @@ public class ServiceDao {
     }
 
     public static Service getServiceById(String serviceId){
-        if(serviceList == null){
-            serviceList = getAllServicesFromDb();
-        }
-
-        Service tmp = null;
-        for (Service p : serviceList) {
-            if (Objects.equals(p.getServiceId(), serviceId)) {
-                tmp = p;
+        Service service = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE WHERE SERVICEID=?");
+            preparedStmt.setString(1, serviceId);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+               service = new Service(rs.getString("SERVICEID"),
+                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(
+                            rs.getInt("DURTATIONPLANNED")),
+                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                            rs.getString("ISDELETED"));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return tmp;
+        return service;
     }
 
     public static boolean updateService(Service service) {
@@ -99,7 +101,7 @@ public class ServiceDao {
     public static boolean deleteServiceByServiceId(String serviceId){
 
         try {
-            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?;");
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?");
             preparedStmt.setString(1, serviceId);
             preparedStmt.executeUpdate();
         } catch (SQLException e) {

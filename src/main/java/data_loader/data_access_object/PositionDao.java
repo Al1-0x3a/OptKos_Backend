@@ -10,7 +10,6 @@ import java.util.List;
 public class PositionDao {
 
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
 
     private PositionDao() {
@@ -19,9 +18,8 @@ public class PositionDao {
     public static List<Position> getAllPositionsFromDb() {
         List<Position> positionList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.POSITION";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.POSITION");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
                 while (rs.next()) {
                     positionList.add(new Position(rs.getString("POSITIONID"),
                             rs.getString("NAME"), rs.getString("DESCRIPTION"),

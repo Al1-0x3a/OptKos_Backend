@@ -5,26 +5,26 @@ import data_models.ColourMixture;
 
 import java.sql.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ColourMixtureDao {
     private static Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<ColourMixture> colourMixtureList;
 
     public static List<ColourMixture> getAllColourMixturesFromDb(){
+        List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.COLOURMIXTURE";
-            ResultSet rs = stmt.executeQuery(query);
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE");
+            try(ResultSet rs = preparedStmt.executeQuery()){
 
-            while(rs.next()){
-                ColourMixture colourMixture = new ColourMixture(
-                        rs.getString("COLOURMIXTUREID"),
-                        rs.getString("COLOURID"),
-                        rs.getString("CUSTOMERID"),
-                        rs.getInt("MIXINGRATIO")
-                );
+                while(rs.next()){
+                    ColourMixture colourMixture = new ColourMixture(
+                            rs.getString("COLOURMIXTUREID"),
+                            rs.getString("COLOURID"),
+                            rs.getString("CUSTOMERID"),
+                            rs.getInt("MIXINGRATIO")
+                    );
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -32,18 +32,25 @@ public class ColourMixtureDao {
         return colourMixtureList;
     }
 
-    public static List<ColourMixture> getColourMixtureByColourMixtureId(String colourMixtureId){
-        if(colourMixtureList == null ){
-            colourMixtureList = getAllColourMixturesFromDb();
-        }
-        List<ColourMixture> tmpList = null;
-        for (ColourMixture comi : colourMixtureList)
-        {
-            if(comi.getCustomerId() == colourMixtureId){
-                tmpList.add(comi);
+    public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
+        ColourMixture colourMixture = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
+            preparedStmt.setString(1, colourMixtureId);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+              while(rs.next()){
+                  colourMixture = new ColourMixture(
+                          rs.getString("COLOURMIXTUREID"),
+                          rs.getString("COLOURID"),
+                          rs.getString("CUSTOMERID"),
+                          rs.getInt("MIXINGRATIO"));
+
+              }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return tmpList;
+        return colourMixture;
     }
 
     public static void createColourMixture(ColourMixture colourMixture){
@@ -61,6 +68,7 @@ public class ColourMixtureDao {
     }
 
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
+        List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId.toString());

@@ -52,27 +52,11 @@ public class AppointmentDao {
 
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
-        List<Appointment> appointmentList = new ArrayList<>();
-        for(int i = 0; i< appointmentList.size(); i++){
-            if(Objects.equals(appointmentList.get(i).getAppointmentId(), appointmentId)) {
-                appointment = appointmentList.get(i);
-                break;
-            }
-        }
-
-        if (appointment == null) {
-            appointment = getAppointmentByIdFromDb(appointmentId);
-            if (appointment != null)
-                appointmentList.add(appointment);
-        }
-        return appointment;
-    }
-
-    public static Appointment getAppointmentByIdFromDb(String appointmentId){
-        Appointment appointment = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=\" + appointmentId + \";");
-            try (ResultSet rs = preparedStmt.executeQuery()) {
+
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=?");
+            preparedStmt.setString(1, appointmentId);
+            try(ResultSet rs = preparedStmt.executeQuery()) {
 
                 appointment = new Appointment(rs.getString("APPOINTMENTID"),
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
@@ -91,7 +75,7 @@ public class AppointmentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }//
+        }
 
         return appointment;
     }
