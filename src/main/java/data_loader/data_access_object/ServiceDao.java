@@ -48,7 +48,7 @@ public class ServiceDao {
             preparedStmt.setString(3, service.getDescription());
             preparedStmt.setBigDecimal(4, service.getPrice());
             preparedStmt.setInt(5, (int) service.getDurationPlanned().toMinutes());
-            preparedStmt.setInt(6, (int) service.getDurationAverage().toMinutes());
+            preparedStmt.setInt(6, (int) service.getDurationPlanned().toMinutes());
             preparedStmt.setString(7, service.getIsDeleted());
 
             preparedStmt.execute();
