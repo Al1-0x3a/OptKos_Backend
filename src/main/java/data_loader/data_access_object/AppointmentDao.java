@@ -26,6 +26,10 @@ public class AppointmentDao {
         List<Appointment> appointmentList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT");
+
+            /*Get All Customers*/
+            List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
+
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
@@ -34,6 +38,24 @@ public class AppointmentDao {
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                             rs.getString("EMPLOYEEID"));
 
+                    /*Search for matching customer and set it in appointment*/
+                    String customerid = rs.getString("CUSTOMERID");
+                    for (Customer customer :
+                            customerList) {
+                        if(customer.getCostumerId().equals(customerid)) {
+                            appointment.setCustomer(customer);
+                            break;
+                        }
+                    }
+                    /*Add Service to appointment*/
+                    Service service = new Service(rs.getString("SERVICEID"),
+                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(
+                            rs.getInt("DURTATIONPLANNED")),
+                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                            rs.getString("ISDELETED"));
+
+                    appointment.setService(service);
                     if(rs.getTimestamp("INDEEDTIMEEND") != null){
                         appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
                     }
@@ -54,8 +76,8 @@ public class AppointmentDao {
     public static Appointment getAppointmentById(String appointmentId){
         Appointment appointment = null;
         try {
-
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a WHERE a.APOINTMENTID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s" +
+                    " WHERE a.APOINTMENTID=? AND s.SERVICEID=a.SERVICEID");
             preparedStmt.setString(1, appointmentId);
             try(ResultSet rs = preparedStmt.executeQuery()) {
 
@@ -63,8 +85,18 @@ public class AppointmentDao {
                         rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                         rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                         rs.getString("EMPLOYEEID"));
+
                 appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
 
+                /*Add Service to appointment*/
+                Service service = new Service(rs.getString("SERVICEID"),
+                        rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                        rs.getBigDecimal("PRICE"), Duration.ofMinutes(
+                        rs.getInt("DURTATIONPLANNED")),
+                        Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                        rs.getString("ISDELETED"));
+
+                appointment.setService(service);
                 if(rs.getTimestamp("INDEEDTIMEEND") != null){
                     appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
                 }
@@ -82,13 +114,15 @@ public class AppointmentDao {
     }
 
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
+        long start = System.nanoTime();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e LEFT JOIN OPTKOS.APOINTMENT a" +
-                    " ON e.EMPLOYEEID = a.EMPLOYEEID LEFT JOIN OPTKOS.PERSON p ON" +
-                    " e.PERSONID = p.PERSONID, OPTKOS.SERVICE s" +
-                    " WHERE e.EMPLOYEEID=a.EMPLOYEEID AND p.PERSONID=e.PERSONID AND a.PLANTIMESTART>=? AND" +
-                    " a.PLANTIMEEND<? AND a.SERVICEID=s.SERVICEID");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
+                    " e.PERSONID = p.PERSONID LEFT JOIN(SELECT * FROM OPTKOS.APOINTMENT a " +
+                    "WHERE a.PLANTIMESTART>=? AND a.PLANTIMEEND<?) a ON " +
+                    "e.EMPLOYEEID = a.EMPLOYEEID LEFT JOIN OPTKOS.SERVICE s ON a.SERVICEID=s.SERVICEID " +
+                    "ORDER BY e.EMPLOYEEID");
+
 
             LocalDate localDate = LocalDate.parse(ldt);
             int weekNumber = localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
@@ -96,10 +130,10 @@ public class AppointmentDao {
             /*Get the first and last day of Calendarweek*/
             LocalDate date = LocalDate.of(2018, Month.JANUARY, 10);
             LocalDate dayInWeek = date.with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber);
-            LocalDate start = dayInWeek.with(DayOfWeek.MONDAY);
-            LocalDate end = dayInWeek.with(DayOfWeek.SUNDAY);
-            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
-            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+            LocalDate startDay = dayInWeek.with(DayOfWeek.MONDAY);
+            LocalDate endDay = dayInWeek.with(DayOfWeek.SUNDAY);
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(startDay.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(endDay.atStartOfDay()));
             ResultSet rs = preparedStmt.executeQuery();
 
             /*Get All Customers*/
@@ -118,12 +152,13 @@ public class AppointmentDao {
                     ali = new AppointmentListItem(tmpEmployeeId, rs.getString("LASTNAME"),
                             rs.getString("FIRSTNAME"));
                 }
-
-                /*Build Appointment*/
-                Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
-                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                        rs.getString("EMPLOYEEID"));
+                Appointment appointment = null;
+                if(rs.getString("APOINTMENTID")!=null) {
+                    /*Build Appointment*/
+                    appointment = new Appointment(rs.getString("APOINTMENTID"),
+                            rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                            rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                            rs.getString("EMPLOYEEID"));
 
                 /*Search for matching customer and set it in appointment*/
                 String customerid = rs.getString("CUSTOMERID");
@@ -143,7 +178,7 @@ public class AppointmentDao {
                         rs.getString("ISDELETED"));
 
                 appointment.setService(service);
-
+                }
                 /*Check if indeedtime exists and add it*/
                 if(rs.getTimestamp("INDEEDTIMEEND") != null){
                     appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
@@ -154,12 +189,56 @@ public class AppointmentDao {
 
                 ali.addAppointment(appointment);
             }
-
+            appointmentList.add(ali);
+            System.out.println("Get all Customers from Db: " + (System.nanoTime() - start)/1e6 + " ms");
             return appointmentList;
 
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static boolean updateAppointment(Appointment appointment){
+        try {
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.APOINTMENT SET PLANTIMESTART=?, PLANTIMEEND=?, " +
+                    "INDEEDTIMESTART=?, INDEEDTIMEEND=?, EMPLOYEEID=?, CUSTOMERID=?, APOINTMENTTYPEID=?, SERVICEID=? " +
+                    "WHERE APOINTMENTID=?");
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(appointment.getStartTime()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getEndTime()));
+            preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
+            preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
+            preparedStmt.setString(5, appointment.getEmployeeid());
+            preparedStmt.setString(6, appointment.getCustomer().getCostumerId());
+            preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
+            preparedStmt.setString(8, appointment.getService().getServiceId());
+            preparedStmt.setString(9, appointment.getAppointmentId());
+
+            return preparedStmt.executeUpdate() != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public static boolean createAppointment(Appointment appointment){
+        try {
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT (APOINTMENTID, PLANTIMESTART," +
+                    " PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID, CUSTOMERID," +
+                    " APOINTMENTTYPEID, SERVICEID) VALUES (?,?,?,?,?,?,?,?,?)");
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(appointment.getStartTime()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getEndTime()));
+            preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
+            preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
+            preparedStmt.setString(5, appointment.getEmployeeid());
+            preparedStmt.setString(6, appointment.getCustomer().getCostumerId());
+            preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
+            preparedStmt.setString(8, appointment.getService().getServiceId());
+            preparedStmt.setString(9, appointment.getAppointmentId());
+
+            return preparedStmt.executeUpdate() != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
