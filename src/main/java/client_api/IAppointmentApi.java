@@ -14,4 +14,6 @@ public interface IAppointmentApi {
     List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt);
     @WebMethod
 	Appointment getAppointmentById(String apointmentId);
+    @WebMethod
+    boolean isSlotFree(Appointment appointment, String ltd);
 }
