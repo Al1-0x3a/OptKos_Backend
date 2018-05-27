@@ -28,7 +28,7 @@ public class AppointmentApi implements IAppointmentApi{
     }
 
     @Override
-    public boolean isSlotFree(Appointment appointment, String ltd) {
-        return appointmentManager.isFree(appointment, ltd);
+    public boolean isSlotFree(Appointment appointment, String week) {
+        return appointmentManager.isFree(appointment, week);
     }
 }
