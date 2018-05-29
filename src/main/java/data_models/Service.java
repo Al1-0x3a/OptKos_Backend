@@ -2,6 +2,8 @@ package data_models;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Service {
@@ -12,6 +14,7 @@ public class Service {
 	private Duration durationPlanned;
 	private Duration durationAverage;
 	private String isDeleted;
+	private List<ServiceEmployeeDuration> sedList;
 
 	public Service(){
 		this.serviceId = UUID.randomUUID().toString();
@@ -26,6 +29,7 @@ public class Service {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.isDeleted = isDeleted;
+		sedList = new ArrayList<>();
 	}
 
 
@@ -80,4 +84,12 @@ public class Service {
 	public String getIsDeleted(){ return isDeleted; }
 
 	public void setIsDeleted(String isDeleted) { this.isDeleted = isDeleted; }
+
+	public List<ServiceEmployeeDuration> getSedList() {
+		return sedList;
+	}
+
+	public void setSedList(List<ServiceEmployeeDuration> sedList) {
+		this.sedList = sedList;
+	}
 }
