@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -78,7 +77,7 @@ public class AppointmentGenerator {
 
             String week = day.format(DateTimeFormatter.ISO_DATE);
 
-            if (manager.isFree(appointment, week)) {
+            if (manager.isFree(appointment, week, AppointmentManager.STATIC_FETCH)) {
                 try {
                     try (PreparedStatement appointmentStatement = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT " +
                             "(APOINTMENTID, PLANTIMESTART, PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID, " +

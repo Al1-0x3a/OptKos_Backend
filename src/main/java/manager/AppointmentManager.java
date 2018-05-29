@@ -13,12 +13,23 @@ import java.util.List;
 import java.util.Locale;
 
 public class AppointmentManager {
+    // use this option for the generator
+    public static final int STATIC_FETCH = 0;
+    // use this option for requests from the frontend
+    public static final int DYNAMIC_FETCH = 1;
 
-    public boolean isFree(Appointment appointment, String week) {
-        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeekFast(week);
-        if (appointmentListItems == null) {
-            // pessimistic decision
+    public boolean isFree(Appointment appointment, String week, int strategy) {
+        List<AppointmentListItem> appointmentListItems;
+        if (strategy == STATIC_FETCH) {
+            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeekFast(week);
+        } else if (strategy == DYNAMIC_FETCH) {
+            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
+        } else {
+            System.err.println("Invalid fetch strategy: " + strategy);
             return false;
+        }
+        if (appointmentListItems == null) {
+            return true;
         }
         for (AppointmentListItem appointmentListItem: appointmentListItems) {
             if (appointment.getEmployeeid().equals(appointmentListItem.getEmployee().getEmployeeId())) {
