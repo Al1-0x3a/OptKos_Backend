@@ -5,22 +5,20 @@ import java.util.List;
 
 public class AppointmentListItem {
 
-    private String employeeId, name, firstname;
+    private Employee employee;
     private List<Appointment> appointmentList;
 
-    public AppointmentListItem(String employeeId, String name, String firstname){
-        this.employeeId = employeeId;
-        this.name = name;
-        this.firstname = firstname;
+    public AppointmentListItem(Employee employee){
+        this.employee = employee;
         this.appointmentList = new ArrayList<>();
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployeeId(Employee employee) {
+        this.employee = employee;
     }
 
     public List<Appointment> getAppointmentList() {
@@ -33,21 +31,5 @@ public class AppointmentListItem {
 
     public void addAppointment(Appointment appointment){
         this.appointmentList.add(appointment);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
     }
 }

@@ -177,7 +177,7 @@ public class EmployeeDao {
     }
 
     public static Employee getEmployeeById(String employeeId) {
-
+        System.out.println(employeeId);
         Employee employee = new Employee();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e, " +

@@ -23,6 +23,7 @@ public class Appointment {
 		this.appointmentId = appointmentId;
 		this.endTime = endTime;
 		this.startTime = startTime;
+		this.employeeid = employeeid;
 	}
 
 	public String getAppointmentId() {
