@@ -1,7 +1,6 @@
 package manager;
 
 import data_loader.data_access_object.AppointmentDao;
-import data_loader.data_access_object.EmployeeDao;
 import data_models.Appointment;
 import data_models.AppointmentListItem;
 import data_models.Employee;
@@ -16,8 +15,11 @@ import java.util.Locale;
 public class AppointmentManager {
 
     public boolean isFree(Appointment appointment, String week) {
-        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
-        assert appointmentListItems != null;
+        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeekFast(week);
+        if (appointmentListItems == null) {
+            // pessimistic decision
+            return false;
+        }
         for (AppointmentListItem appointmentListItem: appointmentListItems) {
             if (appointment.getEmployeeid().equals(appointmentListItem.getEmployee().getEmployeeId())) {
                 // check if within working day and not within break time
@@ -40,6 +42,9 @@ public class AppointmentManager {
                 List<Appointment> employeeAppointments = appointmentListItem.getAppointmentList();
                 for (Appointment employeeAppointment: employeeAppointments) {
                     // check if slot not already taken
+                    if (employeeAppointment == null) {
+                        return true;
+                    }
                     if (isCollision(appointment.getStartTime(), appointment.getEndTime(), 
                             employeeAppointment.getStartTime(), employeeAppointment.getEndTime())) return false;
                 }

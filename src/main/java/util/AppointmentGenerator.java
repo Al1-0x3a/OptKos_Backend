@@ -28,8 +28,8 @@ public class AppointmentGenerator {
     private static final Connection con = SqlConnection.getConnection();
 
     private static final String APPOINTMENT_TYPE = "26f35e62-ba3d-4210-b5db-633668509e02";
-    private static final long MIN_DATE = LocalDate.of(2018, 5, 1).toEpochDay();
-    private static final long MAX_DATE = LocalDate.of(2019, 5, 1).toEpochDay();
+    private static final long MIN_DATE = LocalDate.of(2018, 5, 4).toEpochDay();
+    private static final long MAX_DATE = LocalDate.of(2018, 5, 10).toEpochDay();
 
     private static final int WORKING_DAY_START = 8;
     private static final int WORKING_DAY_END = 20;
@@ -50,7 +50,7 @@ public class AppointmentGenerator {
         while (counter < AMOUNT) {
             Employee employee = employees.get(random().nextInt(employees.size()));
             Customer customer = customers.get(random().nextInt(customers.size()));
-            Service service = services.remove(random().nextInt(services.size()));
+            Service service = services.get(random().nextInt(services.size()));
             String appointmentId = UUID.randomUUID().toString();
 
             LocalDate day = LocalDate.ofEpochDay(random().nextLong(MIN_DATE, MAX_DATE));
@@ -70,9 +70,11 @@ public class AppointmentGenerator {
             }
 
             Appointment appointment = new Appointment(appointmentId, LocalDateTime.of(day, endTime),
-                    LocalDateTime.of(day, startTime), employee.getEmployeeId(), customer.getCostumerId());
+                    LocalDateTime.of(day, startTime), employee.getEmployeeId());
             appointment.setStartTimeActual(appointment.getStartTime());
             appointment.setEndTimeActual(appointment.getEndTime());
+            appointment.setCustomer(customer);
+            appointment.setService(service);
 
             String week = day.format(DateTimeFormatter.ISO_DATE);
 
@@ -87,9 +89,9 @@ public class AppointmentGenerator {
                         appointmentStatement.setTimestamp(4, Timestamp.valueOf(appointment.getStartTime()));
                         appointmentStatement.setTimestamp(5, Timestamp.valueOf(appointment.getEndTime()));
                         appointmentStatement.setString(6, appointment.getEmployeeid());
-                        appointmentStatement.setString(7, appointment.getCustomerid());
+                        appointmentStatement.setString(7, appointment.getCustomer().getCostumerId());
                         appointmentStatement.setString(8, APPOINTMENT_TYPE);
-
+                        appointmentStatement.setString(9, appointment.getService().getServiceId());
                         appointmentStatement.execute();
                     }
                 } catch (SQLException e) {
