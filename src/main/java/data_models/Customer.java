@@ -32,6 +32,7 @@ public class Customer extends Person {
 		this.personId = personId;
 	}
 
+
     public String getAnnotation() {
         return annotation;
     }

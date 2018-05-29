@@ -11,19 +11,18 @@ public class Appointment {
 	private LocalDateTime startTimeActual;
 	private AppointmentType appointmentType;
 	private String employeeid;
-	private String customerid;
+	private Customer customer;
+	private Service service;
 
 	public Appointment(){
 	    this.appointmentId = UUID.randomUUID().toString();
 	}
 
 	public Appointment(String appointmentId, LocalDateTime endTime,
-					   LocalDateTime startTime, String employeeid, String customerid) {
+					   LocalDateTime startTime, String employeeid) {
 		this.appointmentId = appointmentId;
 		this.endTime = endTime;
 		this.startTime = startTime;
-		this.employeeid = employeeid;
-		this.customerid = customerid;
 	}
 
 	public String getAppointmentId() {
@@ -83,11 +82,20 @@ public class Appointment {
 		this.employeeid = employeeid;
 	}
 
-	public String getCustomerid() {
-		return customerid;
+
+	public Customer getCustomer() {
+		return customer;
 	}
 
-	public void setCustomerid(String customerid) {
-		this.customerid = customerid;
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Service getService() {
+		return service;
+	}
+
+	public void setService(Service service) {
+		this.service = service;
 	}
 }
