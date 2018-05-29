@@ -5,6 +5,7 @@ import data_models.Appointment;
 import data_models.AppointmentListItem;
 import data_models.Customer;
 import data_models.Service;
+import data_models.Employee;
 
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -18,6 +19,9 @@ import java.util.List;
 public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
+
+    // this list should only be used when generating appointments
+    private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
 
     private AppointmentDao() {
     }

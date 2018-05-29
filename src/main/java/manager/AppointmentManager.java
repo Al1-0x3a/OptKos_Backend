@@ -17,10 +17,11 @@ public class AppointmentManager {
 
     public boolean isFree(Appointment appointment, String week) {
         List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
+        assert appointmentListItems != null;
         for (AppointmentListItem appointmentListItem: appointmentListItems) {
-            if (appointment.getEmployeeid().equals(appointmentListItem.getEmployeeId())) {
+            if (appointment.getEmployeeid().equals(appointmentListItem.getEmployee().getEmployeeId())) {
                 // check if within working day and not within break time
-                Employee currentEmployee = EmployeeDao.getEmployeeById(appointment.getEmployeeid());
+                Employee currentEmployee = appointmentListItem.getEmployee();
                 LocalDate currentWeek = LocalDate.parse(week);
                 WorkingDay currentWorkingDay = currentEmployee.getWorkingDays().stream().filter(w -> w.getDay().
                         equals(currentWeek.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN))).
