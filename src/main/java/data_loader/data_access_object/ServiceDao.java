@@ -34,6 +34,7 @@ public class ServiceDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        ServiceEmployeeDurationDao.setDurationsToService(serviceList);
         System.out.println("Get all Services from Db: " + (System.nanoTime() - start)/1e6 + " ms");
         return serviceList;
     }
