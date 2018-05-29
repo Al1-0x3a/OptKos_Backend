@@ -13,12 +13,12 @@ public class AppointmentListItem {
         this.appointmentList = new ArrayList<>();
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public void setEmployeeId(Employee employee) {
-        this.employee = employee;
+    public Employee getEmployee() {
+        return employee;
     }
 
     public List<Appointment> getAppointmentList() {
