@@ -20,9 +20,9 @@ public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
 
-    // this list should only be used when generating appointments
-/*    private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-    private static List<Customer> customers = null;*/
+    // these lists should only be used when generating appointments
+    // private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+    // private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
 
     private AppointmentDao() {
     }
@@ -253,9 +253,9 @@ public class AppointmentDao {
 
     @SuppressWarnings("Duplicates")
     public static List<AppointmentListItem> getAppointmentsByCalendarWeekFast(String ldt){
-        List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+        // Uncomment static lists and comment the two following lines
+        List<Employee> employees = null;
         List<Customer> customers = null;
-        long start = System.nanoTime();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
@@ -329,6 +329,7 @@ public class AppointmentDao {
 
                     ali.addAppointment(appointment);
                 }
+                preparedStmt.close();
             }
             appointmentList.add(ali);
             return appointmentList;

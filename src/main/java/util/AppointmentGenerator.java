@@ -27,8 +27,8 @@ public class AppointmentGenerator {
     private static final Connection con = SqlConnection.getConnection();
 
     private static final String APPOINTMENT_TYPE = "26f35e62-ba3d-4210-b5db-633668509e02";
-    private static final long MIN_DATE = LocalDate.of(2018, 5, 4).toEpochDay();
-    private static final long MAX_DATE = LocalDate.of(2018, 5, 10).toEpochDay();
+    private static final long MIN_DATE = LocalDate.of(2018, 5, 1).toEpochDay();
+    private static final long MAX_DATE = LocalDate.of(2018, 11, 30).toEpochDay();
 
     private static final int WORKING_DAY_START = 8;
     private static final int WORKING_DAY_END = 20;
@@ -95,6 +95,7 @@ public class AppointmentGenerator {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    break;
                 }
                 System.out.println("Generated appointment " + counter);
                 counter++;
