@@ -181,7 +181,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     }
 
     @Override
-    public List<Integer> getServiceDuration(String employeeId, String serviceId) {
+    public List<ServiceEmployeeDuration> getServiceDuration(String employeeId, String serviceId) {
         return ServiceDurationDao.getServiceDuration(employeeId, serviceId);
     }
 

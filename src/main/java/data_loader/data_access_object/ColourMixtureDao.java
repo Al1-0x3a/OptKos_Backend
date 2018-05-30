@@ -18,12 +18,7 @@ public class ColourMixtureDao {
             try(ResultSet rs = preparedStmt.executeQuery()){
 
                 while(rs.next()){
-                    ColourMixture colourMixture = new ColourMixture(
-                            rs.getString("COLOURMIXTUREID"),
-                            rs.getString("COLOURID"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("MIXINGRATIO")
-                    );
+                    ColourMixture colourMixture = buildMixture(rs);
                 }
             }
             preparedStmt.close();
@@ -33,6 +28,23 @@ public class ColourMixtureDao {
         return colourMixtureList;
     }
 
+    public static ColourMixture buildMixture(ResultSet rs){
+        ColourMixture colourMixture = null;
+        try {
+            colourMixture = new ColourMixture(
+                    rs.getString("COLOURMIXTUREID"),
+                    rs.getString("COLOURID"),
+                    rs.getString("CUSTOMERID"),
+                    rs.getInt("MIXINGRATIO")
+            );
+        } catch (SQLException e) {
+            System.err.println("Error while building ColourMixture");
+            e.printStackTrace();
+            return null;
+        }
+        return colourMixture;
+    }
+
     public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
         ColourMixture colourMixture = null;
         try {
@@ -40,12 +52,7 @@ public class ColourMixtureDao {
             preparedStmt.setString(1, colourMixtureId);
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()){
-                    colourMixture = new ColourMixture(
-                            rs.getString("COLOURMIXTUREID"),
-                            rs.getString("COLOURID"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("MIXINGRATIO"));
-
+                    colourMixture = buildMixture(rs);
                 }
             }
             preparedStmt.close();

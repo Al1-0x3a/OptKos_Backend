@@ -24,18 +24,7 @@ public class EmployeeDao {
 
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 while (rs.next()) {
-                    // Person
-                    Employee employee = new Employee(rs.getString("PERSONID"));
-                    employee.setFirstname(rs.getString("FIRSTNAME"));
-                    employee.setLastname(rs.getString("LASTNAME"));
-                    employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
-                    employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                    employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
-
-                    // Employee
-                    employee.setEmployeeId(rs.getString("EMPLOYEEID"));
-                    employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-                    // employee.setPositionId(rs.getString("POSITIONID"));
+                    Employee employee = buildEmployee(rs);
 
                     // Position
                     Position position = new Position();
@@ -46,13 +35,7 @@ public class EmployeeDao {
                     employee.setPosition(position);
 
                     // Address
-                    Address address = new Address();
-                    address.setAddressId(rs.getString("ADDRESSID"));
-                    address.setStreet(rs.getString("STREET"));
-                    address.setHousenr(rs.getString("HOUSENR"));
-                    address.setPostcode(rs.getString("POSTCODE"));
-                    address.setCity(rs.getString("CITY"));
-                    address.setAddition(rs.getString("ADDITION"));
+                    Address address = AddressDao.buildAddress(rs);
 
                     employee.setAddress(address);
 
@@ -121,6 +104,7 @@ public class EmployeeDao {
 
             b = true;
             preparedStmt.close();
+            preparedStmt2.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -142,12 +126,13 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getGender().name());
 
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED," +
-                    " POSITIONID) VALUES(?,?,?,?)");
+                    " POSITIONID, COLOUR) VALUES(?,?,?,?,?)");
 
             preparedStmt2.setString(1, employee.getEmployeeId());
             preparedStmt2.setString(2, employee.getPersonId());
             preparedStmt2.setString(3, "0");
             preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
+            preparedStmt2.setString(5, employee.getDisplayColor());
 
             preparedStmt.execute();
             preparedStmt2.execute();
@@ -195,11 +180,12 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getPersonId());
 
             // Employee
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? " +
-                    "WHERE PERSONID=?");
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=?, " +
+                    "COLOUR=? WHERE PERSONID=?");
             preparedStmt2.setString(1, employee.getPosition().getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
-            preparedStmt2.setString(3, employee.getPersonId());
+            preparedStmt2.setString(3, employee.getDisplayColor());
+            preparedStmt2.setString(4, employee.getPersonId());
 
             boolean result1 = preparedStmt.executeUpdate() != 0;
             boolean result2 = preparedStmt2.executeUpdate() != 0;
@@ -234,6 +220,28 @@ public class EmployeeDao {
         return result;
     }
 
+    public static Employee buildEmployee(ResultSet rs){
+        Employee employee = null;
+        try {
+            employee = new Employee(rs.getString("PERSONID"));
+            employee.setFirstname(rs.getString("FIRSTNAME"));
+            employee.setLastname(rs.getString("LASTNAME"));
+            employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
+            employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+            employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+
+            // Employee
+            employee.setEmployeeId(rs.getString("EMPLOYEEID"));
+            employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
+            employee.setDisplayColor(rs.getString("COLOUR"));
+            // employee.setPositionId(rs.getString("POSITIONID"));
+        } catch (SQLException e) {
+            System.err.println("Error while building Employee");
+            e.printStackTrace();
+            return null;
+        }
+        return employee;
+    }
 }
 
 

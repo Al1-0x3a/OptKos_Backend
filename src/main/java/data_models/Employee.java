@@ -11,6 +11,7 @@ public class Employee extends Person {
 	private char isDeleted;
 	private Position position;
     private List<WorkingDay> workingDays;
+    private String displayColor;
 
 	public Employee(){
 	    super();
@@ -24,10 +25,11 @@ public class Employee extends Person {
 	}
 
 
-	public Employee(String employeeId, char isDeleted, Position position) {
+	public Employee(String employeeId, char isDeleted, Position position, String displayColor) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.position = position;
+		this.displayColor = displayColor;
 		this.initWorkingDays();
 	}
 
@@ -82,5 +84,13 @@ public class Employee extends Person {
 		workingDays.add(new WorkingDay("Freitag"));
 		workingDays.add(new WorkingDay("Samstag"));
 		workingDays.add(new WorkingDay("Sonntag"));
+	}
+
+	public String getDisplayColor() {
+		return displayColor;
+	}
+
+	public void setDisplayColor(String displayColor) {
+		this.displayColor = displayColor;
 	}
 }

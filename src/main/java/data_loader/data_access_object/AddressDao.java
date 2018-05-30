@@ -22,11 +22,7 @@ public class AddressDao {
 
                 addressList = new ArrayList<>();
                 while (rs.next()) {
-                    addressList.add(new Address(rs.getString("ADDRESSID"),
-                            rs.getString("POSTCODE"), rs.getString("CITY"),
-                            rs.getString("STREET"), rs.getString("HOUSENR"),
-                            rs.getString("PERSONID"),
-                            rs.getString("ADDITION")));
+                    addressList.add(buildAddress(rs));
                 }
                 preparedStmt.close();
             }
@@ -107,7 +103,7 @@ public class AddressDao {
         return result;
     }
 
-    private static Address buildAddress(ResultSet rs){
+    public static Address buildAddress(ResultSet rs){
         Address address = null;
         try {
             address = new Address(rs.getString("ADDRESSID"),

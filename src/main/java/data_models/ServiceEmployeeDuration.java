@@ -8,6 +8,7 @@ public class ServiceEmployeeDuration {
 	private Duration durationAverage;
 	private String employeeId;
 	private String serviceId;
+	private String firstName, lastName;
 
 	public ServiceEmployeeDuration(){
 
@@ -19,6 +20,7 @@ public class ServiceEmployeeDuration {
 		this.durationAverage = durationAverage;
 		this.employeeId = employeeId;
 		this.serviceId = serviceId;
+		this.firstName = this.lastName = "";
 	}
 
 	public Duration getDurationPlanned() {
@@ -51,5 +53,21 @@ public class ServiceEmployeeDuration {
 
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }

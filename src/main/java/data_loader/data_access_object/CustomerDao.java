@@ -20,53 +20,47 @@ public class CustomerDao {
         long start = System.nanoTime();
         List<Customer> customerList = new ArrayList<>();
         try {
-            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, " +
-                    "OPTKOS.ADDRESS a, OPTKOS.CUSTOMERCATEGORY cc WHERE p.PERSONID = c.PERSONID AND" +
-                    " a.PERSONID = p.PERSONID AND c.CUSTOMERCATEGORYID=cc.CUSTOMERCATEGORYID");
+            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c," +
+                    " OPTKOS.ADDRESS a, OPTKOS.CUSTOMERCATEGORY cc, OPTKOS.CUSTOMERCOLOUR color," +
+                    " OPTKOS.COLOURMIXTURE cm WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID AND" +
+                    " c.CUSTOMERCATEGORYID=cc.CUSTOMERCATEGORYID AND c.CUSTOMERID=color.CUSTOMERID AND" +
+                    " c.CUSTOMERID=cm.CUSTOMERID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
+                String cusId = null;
+                Customer customer = null;
                 while (rs.next()) {
-                    // Person
-                    Customer customer = new Customer(rs.getString("PERSONID"));
-                    customer.setFirstname(rs.getString("FIRSTNAME"));
-                    customer.setLastname(rs.getString("LASTNAME"));
-                    customer.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
-                    customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                    customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
 
-                    // Customer
-                    customer.setCostumerId(rs.getString("CUSTOMERID"));
-                    customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
-                    customer.setAnnotation(rs.getString("ANNOTATION"));
-                    if(rs.getString("PROBLEM").charAt(0) == 't')
-                    customer.setProblemCustomer(true);
-                    else customer.setProblemCustomer(false);
+                    if (cusId != null && cusId.equals(rs.getString("CUSTOMERID"))) {
+                        customer.getColourMixtureList().add(ColourMixtureDao.buildMixture(rs));
+                    }
+                    else{
+                        cusId = rs.getString("CUSTOMERID");
+                        if(customer!= null)
+                            customerList.add(customer);
 
-                    customer.setCustomerCategory(new CustomerCategory(rs.getString("CUSTOMERCATEGORYID"),
-                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                            rs.getInt("DURATIONFLAT"), rs.getDouble("DURATIONPERCENT")));
+                        customer = buildCustomer(rs);
 
-                    // Address
-                    Address address = new Address();
-                    address.setAddressId(rs.getString("ADDRESSID"));
-                    address.setStreet(rs.getString("STREET"));
-                    address.setHousenr(rs.getString("HOUSENR"));
-                    address.setPostcode(rs.getString("POSTCODE"));
-                    address.setCity(rs.getString("CITY"));
-                    address.setAddition(rs.getString("ADDITION"));
+                        /* CustomerCategory */
+                        customer.setCustomerCategory(CustomerCategoryDao.buildCustomercategory(rs));
 
-                    customer.setAddress(address);
+                        /* Address */
+                        Address address = AddressDao.buildAddress(rs);
 
-                    customerList.add(customer);
+                        customer.setAddress(address);
+                        customer.setCustomerColour(CustomerColourDao.buildColour(rs));
+
+                    }
                 }
+                customerList.add(customer);
             }
             preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        //Email
+        /* Email */
         List<Email> emailList = EmailDao.getAllEmailsFromDb();
         for(Customer c:customerList){
 
@@ -76,7 +70,7 @@ public class CustomerDao {
             c.getEmailList().addAll(filteredList);
         }
 
-        //Phone
+        /* Phone */
         List<Phone> phoneList = PhoneDao.getAllPhonesFromDb();
         for(Customer c:customerList){
 
@@ -231,4 +225,29 @@ public class CustomerDao {
         return result;
     }
 
+    public static Customer buildCustomer(ResultSet rs){
+        Customer customer = null;
+        try {
+            // Person
+            customer = new Customer(rs.getString("PERSONID"));
+            customer.setFirstname(rs.getString("FIRSTNAME"));
+            customer.setLastname(rs.getString("LASTNAME"));
+            customer.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
+            customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
+            customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+
+            // Customer
+            customer.setCostumerId(rs.getString("CUSTOMERID"));
+            customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
+            customer.setAnnotation(rs.getString("ANNOTATION"));
+            if(rs.getString("PROBLEM").charAt(0) == 't')
+                customer.setProblemCustomer(true);
+            else customer.setProblemCustomer(false);
+
+        } catch (SQLException e) {
+            System.err.println("Error while building Cutomer");
+            e.printStackTrace();
+        }
+        return customer;
+    }
 }

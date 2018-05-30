@@ -1,11 +1,13 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
+import data_models.ServiceEmployeeDuration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,19 +33,29 @@ public class ServiceDurationDao {
         }
 
     }
+    // TODO: Look at dis sql query
 
-    //TODO: employeename mitgeben
-    public static List<Integer> getServiceDuration(String employeeId, String serviceId){
-        List<Integer> durations = new ArrayList<>();
+    public static List<ServiceEmployeeDuration> getServiceDuration(String employeeId, String serviceId){
+        List<ServiceEmployeeDuration> durations = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICEEMPLOYEEDURATION WHERE EMPLOYEEID=?" +
-                    " AND SERVICEID=?");
+            preparedStmt = con.prepareStatement("SELECT sed.*, p.LASTNAME, p.FIRSTNAME FROM " +
+                    "OPTKOS.SERVICEEMPLOYEEDURATION sed, OPTKOS.EMPLOYEE e, OPTKOS.PERSON p WHERE sed.EMPLOYEEID=? " +
+                    "AND sed.SERVICEID=? AND e.PERSONID=? AND e.PERSONID=p.PERSONID");
+
             preparedStmt.setString(1, employeeId);
             preparedStmt.setString(2, serviceId);
-            ResultSet rs = preparedStmt.executeQuery();
+            preparedStmt.setString(3, employeeId);
+            try(ResultSet rs = preparedStmt.executeQuery()) {
 
-            while(rs.next()){
-                durations.add(rs.getInt("DURATION"));
+                while (rs.next()) {
+                    durations.add(new ServiceEmployeeDuration(Duration.ofMinutes(
+                            rs.getInt("DURATIONPLANNED")),
+                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                            rs.getString("EMPLOYEEID"),
+                            rs.getString("SERVICEID")));
+                    durations.get(durations.size()).setFirstName(rs.getString("FIRSTNAME"));
+                    durations.get(durations.size()).setLastName(rs.getString("LASTNAME"));
+                }
             }
             preparedStmt.close();
 

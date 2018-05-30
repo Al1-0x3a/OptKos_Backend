@@ -1,15 +1,18 @@
 package data_models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Customer extends Person {
-
 	private String annotation;
 	private String costumerId;
 	private String personId;
 	private boolean problemCustomer;
 	private double timefactor;
 	private CustomerCategory customerCategory;
+	private CustomerColour customerColour;
+	private List<ColourMixture> colourMixtureList = new ArrayList<>();
 
 	public Customer() {
 		super();
@@ -72,4 +75,20 @@ public class Customer extends Person {
     public void setCustomerCategory(CustomerCategory customerCategory) {
         this.customerCategory = customerCategory;
     }
+
+	public CustomerColour getCustomerColour() {
+		return customerColour;
+	}
+
+	public void setCustomerColour(CustomerColour customerColour) {
+		this.customerColour = customerColour;
+	}
+
+	public List<ColourMixture> getColourMixtureList() {
+		return colourMixtureList;
+	}
+
+	public void setColourMixtureList(List<ColourMixture> colourMixtureList) {
+		this.colourMixtureList = colourMixtureList;
+	}
 }

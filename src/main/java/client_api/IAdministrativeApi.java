@@ -74,7 +74,7 @@ public interface IAdministrativeApi {
     @WebMethod
     boolean createServiceDuration(String employeeId, String serviceId, int duration);
     @WebMethod
-    List<Integer> getServiceDuration(String employeeId, String serviceId);
+    List<ServiceEmployeeDuration> getServiceDuration(String employeeId, String serviceId);
     @WebMethod
     boolean deleteServiceDuration(String serviceDurationId);
 }
