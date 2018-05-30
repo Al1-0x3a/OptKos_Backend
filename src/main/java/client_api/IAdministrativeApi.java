@@ -10,8 +10,6 @@ import java.util.List;
 @WebService
 public interface IAdministrativeApi {
     @WebMethod
-    Employee getEmployeeById(String uuid);
-    @WebMethod
     List<Employee> getEmployees();
     @WebMethod
     boolean createEmployee(Employee employee);

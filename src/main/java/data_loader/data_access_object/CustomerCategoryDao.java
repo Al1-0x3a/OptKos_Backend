@@ -31,6 +31,7 @@ public class CustomerCategoryDao {
                     customerCategoryList.add(customerCategory);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -53,6 +54,7 @@ public class CustomerCategoryDao {
                             rs.getDouble("DURATIONPERCENT"));
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,6 +74,7 @@ public class CustomerCategoryDao {
             preparedStmt.setInt(5, customerCategory.getTimeBonus());
 
             preparedStmt.execute();
+            preparedStmt.close();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -90,6 +93,7 @@ public class CustomerCategoryDao {
             preparedStmt.setString(5, customerCategory.getCustomerCategoryId());
 
             preparedStmt.executeUpdate();
+            preparedStmt.close();
             return true;
         }catch (SQLException e){
             e.printStackTrace();
@@ -104,6 +108,7 @@ public class CustomerCategoryDao {
             preparedStmt.setString(1, customerCategory.getCustomerCategoryId());
 
             preparedStmt.executeUpdate();
+            preparedStmt.close();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

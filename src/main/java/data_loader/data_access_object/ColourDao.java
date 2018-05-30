@@ -27,6 +27,7 @@ public class ColourDao {
                     colourList.add(Colour);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -48,6 +49,7 @@ public class ColourDao {
                     );
                 }
             }
+            preparedStmt.close();
             return colour;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,6 +66,7 @@ public class ColourDao {
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,6 +78,7 @@ public class ColourDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOUR WHERE COLOURID=?");
             preparedStmt.setString(1, colourId.toString());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,6 +93,7 @@ public class ColourDao {
             preparedStmt.setString(3, manufacturer);
             preparedStmt.setString(4, colourId);
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

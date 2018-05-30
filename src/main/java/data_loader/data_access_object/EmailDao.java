@@ -26,6 +26,7 @@ public class EmailDao {
                             rs.getString("EMAIL"), rs.getString("PERSONID")));
                 }
             }
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,6 +46,7 @@ public class EmailDao {
                     emailList.add(email);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,6 +62,7 @@ public class EmailDao {
             preparedStmt.setString(3, email.getPersonId());
 
             b = preparedStmt.execute();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -72,6 +75,7 @@ public class EmailDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE PERSONID =?");
             preparedStmt.setString(1, personId);
             preparedStmt.executeUpdate();
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,6 +89,7 @@ public class EmailDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.EMAIL WHERE EMAILID =?");
             preparedStmt.setString(1, emailId);
             b= preparedStmt.execute();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,6 +104,7 @@ public class EmailDao {
             preparedStmt.setString(1, email.getEmailAddress());
             preparedStmt.setString(2, email.getEmailId());
             result = preparedStmt.executeUpdate() != 0;
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

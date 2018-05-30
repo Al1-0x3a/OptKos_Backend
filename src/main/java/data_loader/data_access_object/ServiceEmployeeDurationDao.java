@@ -32,6 +32,7 @@ public class ServiceEmployeeDurationDao {
                             rs.getString("EMPLOYEEID"), rs.getString("SERVICEID"));
                 }
             }
+            preparedStmt.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
@@ -48,6 +49,7 @@ public class ServiceEmployeeDurationDao {
             preparedStmt.setInt(3, (int)sed.getDurationAverage().toMinutes());
             preparedStmt.setString(4, sed.getEmployeeId());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -63,6 +65,7 @@ public class ServiceEmployeeDurationDao {
             preparedStmt.setString(2, sed.getServiceId());
             preparedStmt.setString(3, sed.getEmployeeId());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -81,6 +84,7 @@ public class ServiceEmployeeDurationDao {
                             rs.getString("EMPLOYEEID"), rs.getString("SERVICEID")));
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

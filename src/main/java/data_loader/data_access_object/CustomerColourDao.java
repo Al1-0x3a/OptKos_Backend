@@ -30,6 +30,7 @@ public class CustomerColourDao {
                     customerColourList.add(customerColour);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,6 +56,7 @@ public class CustomerColourDao {
                     customerColourList.add(customerColour);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -73,6 +75,7 @@ public class CustomerColourDao {
             preparedStmt.setString(6, customerColour.getCustomerColourId().toString());
             preparedStmt.setString(7, customerColour.getCustomerId().toString());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,6 +93,7 @@ public class CustomerColourDao {
                     customerColourList.remove(i);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -110,6 +114,7 @@ public class CustomerColourDao {
             preparedStmt.setString(6, result);
             preparedStmt.setString(7, customerId.toString());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

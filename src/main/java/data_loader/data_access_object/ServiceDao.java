@@ -31,6 +31,7 @@ public class ServiceDao {
                             rs.getString("ISDELETED")));
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -53,6 +54,7 @@ public class ServiceDao {
             preparedStmt.setString(7, service.getIsDeleted());
 
             preparedStmt.execute();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -66,13 +68,14 @@ public class ServiceDao {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE WHERE SERVICEID=?");
             preparedStmt.setString(1, serviceId);
             try(ResultSet rs = preparedStmt.executeQuery()){
-               service = new Service(rs.getString("SERVICEID"),
-                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(
-                            rs.getInt("DURTATIONPLANNED")),
-                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
-                            rs.getString("ISDELETED"));
+                service = new Service(rs.getString("SERVICEID"),
+                        rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                        rs.getBigDecimal("PRICE"), Duration.ofMinutes(
+                        rs.getInt("DURTATIONPLANNED")),
+                        Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
+                        rs.getString("ISDELETED"));
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -93,6 +96,7 @@ public class ServiceDao {
             preparedStmt.setString(7, service.getServiceId());
 
             result = preparedStmt.executeUpdate() != 0;
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,6 +111,7 @@ public class ServiceDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICE WHERE SERVICEID =?");
             preparedStmt.setString(1, serviceId);
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return true;

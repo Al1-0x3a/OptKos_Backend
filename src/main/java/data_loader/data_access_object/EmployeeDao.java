@@ -59,6 +59,7 @@ public class EmployeeDao {
                     employeeList.add(employee);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -119,6 +120,7 @@ public class EmployeeDao {
             preparedStmt2.executeUpdate();
 
             b = true;
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,6 +151,8 @@ public class EmployeeDao {
 
             preparedStmt.execute();
             preparedStmt2.execute();
+            preparedStmt.close();
+            preparedStmt2.close();
 
             AddressDao.createNewAddress(employee.getAddress(), employee.getPersonId());
             if (!employee.getPhoneList().isEmpty()) {
@@ -176,48 +180,6 @@ public class EmployeeDao {
         }
     }
 
-    public static Employee getEmployeeById(String employeeId) {
-        System.out.println(employeeId);
-        Employee employee = new Employee();
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.EMPLOYEE e, " +
-                    "OPTKOS.POSITION pos WHERE p.PERSONID = e.PERSONID AND e.EMPLOYEEID=? " +
-                    "AND pos.POSITIONID = e.POSITIONID;");
-            preparedStmt.setString(1, employeeId);
-            try (ResultSet rs = preparedStmt.executeQuery()) {
-
-                // Person
-                employee.setPersonId(rs.getString("PERSONID"));
-                employee.setFirstname(rs.getString("FIRSTNAME"));
-                employee.setLastname(rs.getString("LASTNAME"));
-                System.out.println(employee.getFirstname() + " " + employee.getLastname());
-                employee.setTitle(Person.TITLE.valueOf(rs.getString("TITEL")));
-                employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
-                // Employee
-                employee.setEmployeeId(rs.getString("EMPLOYEEID"));
-                employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-
-                // Position
-                Position position = new Position();
-                position.setName(rs.getString("NAME"));
-                position.setDescription(rs.getString("DESCRIPTION"));
-                position.setNote(rs.getString("ANNOTATION"));
-
-                employee.setPosition(position);
-            }
-            // other objects
-            employee.setPhoneList(PhoneDao.getPhoneListByPersonId(employee.getPersonId()));
-            employee.setEmailList(EmailDao.getEmailListByPersonId(employee.getPersonId()));
-            employee.setAddress(AddressDao.getAddressByPersonId(employee.getPersonId()));
-            employee.setWorkingDays(WorkingWeekDao.getWorkingDays(employee.getEmployeeId(), employee.getWorkingDays()));
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return employee;
-    }
 
     public static boolean updateEmployee(Employee employee){
         boolean result;
@@ -241,6 +203,8 @@ public class EmployeeDao {
 
             boolean result1 = preparedStmt.executeUpdate() != 0;
             boolean result2 = preparedStmt2.executeUpdate() != 0;
+            preparedStmt.close();
+            preparedStmt2.close();
             result = result1 && result2;
 
             // other

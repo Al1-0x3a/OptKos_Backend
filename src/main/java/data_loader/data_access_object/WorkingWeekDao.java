@@ -29,6 +29,7 @@ public class WorkingWeekDao {
 
                 ));
             }
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,6 +62,7 @@ public class WorkingWeekDao {
                     i++;
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,6 +98,7 @@ public class WorkingWeekDao {
                 preparedStmt.setString(7, employeeId);
                 preparedStmt.execute();
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,6 +110,7 @@ public class WorkingWeekDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.WORKINGDAY wd WHERE wd.EMPLOYEEID=?");
             preparedStmt.setString(1,employeeId);
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -124,6 +128,7 @@ public class WorkingWeekDao {
             preparedStmt.setString(5, workingDay.getEmployeeId());
             preparedStmt.setString(6, workingDay.getWorkingDayId());
             result = preparedStmt.executeUpdate() != 0;
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

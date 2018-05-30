@@ -21,7 +21,8 @@ public class CustomerDao {
         List<Customer> customerList = new ArrayList<>();
         try {
             preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c, " +
-                    "OPTKOS.ADDRESS a WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID");
+                    "OPTKOS.ADDRESS a, OPTKOS.CUSTOMERCATEGORY cc WHERE p.PERSONID = c.PERSONID AND" +
+                    " a.PERSONID = p.PERSONID AND c.CUSTOMERCATEGORYID=cc.CUSTOMERCATEGORYID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
@@ -38,13 +39,13 @@ public class CustomerDao {
                     customer.setCostumerId(rs.getString("CUSTOMERID"));
                     customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
                     customer.setAnnotation(rs.getString("ANNOTATION"));
-                    // TODO: test dis shit
                     if(rs.getString("PROBLEM").charAt(0) == 't')
                     customer.setProblemCustomer(true);
                     else customer.setProblemCustomer(false);
 
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
-                            rs.getString("CUSTOMERCATEGORYID")));
+                    customer.setCustomerCategory(new CustomerCategory(rs.getString("CUSTOMERCATEGORYID"),
+                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
+                            rs.getInt("DURATIONFLAT"), rs.getDouble("DURATIONPERCENT")));
 
                     // Address
                     Address address = new Address();
@@ -60,6 +61,7 @@ public class CustomerDao {
                     customerList.add(customer);
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -114,6 +116,8 @@ public class CustomerDao {
 
             preparedStmt.execute();
             preparedStmt2.execute();
+            preparedStmt.close();
+            preparedStmt2.close();
 
             AddressDao.createNewAddress(customer.getAddress(), customer.getPersonId());
             if (!customer.getPhoneList().isEmpty()) {
@@ -169,6 +173,7 @@ public class CustomerDao {
                             rs.getString("CUSTOMERCATEGORYID")));
                 }
             }
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -200,6 +205,8 @@ public class CustomerDao {
 
             boolean result1 = preparedStmt.executeUpdate() != 0;
             boolean result2 = preparedStmt2.executeUpdate() != 0;
+            preparedStmt.close();
+            preparedStmt2.close();
             result = result1 && result2;
 
             // other

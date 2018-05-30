@@ -22,6 +22,7 @@ public class ServiceDurationDao {
             preparedStmt.setString(3, employeeId);
 
             preparedStmt.execute();
+            preparedStmt.close();
             return true;
 
         } catch (SQLException e) {
@@ -31,6 +32,7 @@ public class ServiceDurationDao {
 
     }
 
+    //TODO: employeename mitgeben
     public static List<Integer> getServiceDuration(String employeeId, String serviceId){
         List<Integer> durations = new ArrayList<>();
         try {
@@ -43,6 +45,7 @@ public class ServiceDurationDao {
             while(rs.next()){
                 durations.add(rs.getInt("DURATION"));
             }
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,6 +59,7 @@ public class ServiceDurationDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.SERVICEEMPLOYEEDURATION WHERE SERVICEID=?");
             preparedStmt.setString(1, serviceDurationId);
             preparedStmt.executeUpdate();
+            preparedStmt.close();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

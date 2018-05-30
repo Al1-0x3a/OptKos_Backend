@@ -21,8 +21,8 @@ public class AppointmentDao {
     private static PreparedStatement preparedStmt;
 
     // this list should only be used when generating appointments
-    private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-    private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
+/*    private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+    private static List<Customer> customers = null;*/
 
     private AppointmentDao() {
     }
@@ -65,7 +65,8 @@ public class AppointmentDao {
                         appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
                     }
                     if(rs.getTimestamp("INDEEDTIMESTART") != null){
-                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
+                                .toLocalDateTime());
                     }
 
                     appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
@@ -120,6 +121,7 @@ public class AppointmentDao {
 
     @SuppressWarnings("Duplicates")
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
+        List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
@@ -141,7 +143,6 @@ public class AppointmentDao {
             preparedStmt.setTimestamp(2, Timestamp.valueOf(endDay.atStartOfDay()));
             AppointmentListItem ali;
             try (ResultSet rs = preparedStmt.executeQuery()) {
-
                 /*Get All Customers*/
                 List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
 
@@ -155,7 +156,8 @@ public class AppointmentDao {
                             appointmentList.add(ali);
                         }
                         tmpEmployeeId = rs.getString("EMPLOYEEID");
-                        ali = new AppointmentListItem(employees.stream().filter(e -> e.getEmployeeId().equals(tmp)).findFirst().get());
+                        ali = new AppointmentListItem(employees.stream().filter(e -> e.getEmployeeId().equals(tmp))
+                                .findFirst().get());
                     }
                     Appointment appointment = null;
                     if (rs.getString("APOINTMENTID") != null) {
@@ -189,11 +191,13 @@ public class AppointmentDao {
                         appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
                     }
                     if (rs.getTimestamp("INDEEDTIMESTART") != null) {
-                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
+                                .toLocalDateTime());
                     }
 
                     ali.addAppointment(appointment);
                 }
+                preparedStmt.close();
             }
             appointmentList.add(ali);
             return appointmentList;
@@ -249,6 +253,8 @@ public class AppointmentDao {
 
     @SuppressWarnings("Duplicates")
     public static List<AppointmentListItem> getAppointmentsByCalendarWeekFast(String ldt){
+        List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+        List<Customer> customers = null;
         long start = System.nanoTime();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
@@ -282,7 +288,8 @@ public class AppointmentDao {
                             appointmentList.add(ali);
                         }
                         tmpEmployeeId = rs.getString("EMPLOYEEID");
-                        ali = new AppointmentListItem(employees.stream().filter(e -> e.getEmployeeId().equals(tmp)).findFirst().get());
+                        ali = new AppointmentListItem(employees.stream().filter(e -> e.getEmployeeId().equals(tmp))
+                                .findFirst().get());
                     }
                     Appointment appointment = null;
                     if (rs.getString("APOINTMENTID") != null) {
@@ -316,7 +323,8 @@ public class AppointmentDao {
                         appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
                     }
                     if (rs.getTimestamp("INDEEDTIMESTART") != null) {
-                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
+                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
+                                .toLocalDateTime());
                     }
 
                     ali.addAppointment(appointment);

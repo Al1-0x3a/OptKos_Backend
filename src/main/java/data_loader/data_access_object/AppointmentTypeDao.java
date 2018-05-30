@@ -27,6 +27,7 @@ public class AppointmentTypeDao {
                             rs.getString("DESCRIPTION"));
                     appointmentTypeList.add(appointmentType);
                 }
+                preparedStmt.close();
             }
 
         } catch (SQLException e) {
@@ -49,6 +50,7 @@ public class AppointmentTypeDao {
                         rs.getString("NAME"),
                         rs.getString("DESCRIPTION"));
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

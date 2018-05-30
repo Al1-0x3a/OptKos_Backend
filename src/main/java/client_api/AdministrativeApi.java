@@ -17,10 +17,6 @@ public class AdministrativeApi implements IAdministrativeApi {
         administrativeManager = new AdministrativeManager();
     }
 
-    @Override
-    public Employee getEmployeeById(String uuid) {
-        return administrativeManager.getEmployeeById(uuid);
-    }
 
     @Override
     public List<Employee> getEmployees() {

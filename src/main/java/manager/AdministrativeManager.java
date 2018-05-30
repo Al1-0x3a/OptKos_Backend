@@ -9,20 +9,6 @@ import java.util.stream.Collectors;
 
 public class AdministrativeManager {
 
-    public Employee getEmployeeById(String uuid) {
-        List<Employee> tmpList = EmployeeDao.getAllEmployeesFromDb().stream().
-                filter(employee -> employee.getEmployeeId().equals(uuid)).collect(Collectors.toList());
-        if (tmpList.isEmpty()) {
-            System.err.println("No employee with UUID " + uuid);
-            return null;
-        }
-        if (tmpList.size() > 1) {
-            System.err.println("Two employees with same UUID. You probably fucked something up.");
-            return null;
-        }
-        return tmpList.get(0);
-    }
-
     public List<Employee> getAllEmployees() {
         return EmployeeDao.getAllEmployeesFromDb();
     }

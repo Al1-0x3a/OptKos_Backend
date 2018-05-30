@@ -10,18 +10,15 @@ import java.util.Objects;
 public class AddressDao {
 
     private static final Connection con = SqlConnection.getConnection();
-    private static Statement stmt;
     private static PreparedStatement preparedStmt;
-    private static List<Address> addressList = new ArrayList<>();
 
     private AddressDao(){}
 
     public static List<Address> getAllAddressFromDb(){
-
+        List<Address> addressList=null;
         try {
-            stmt = con.createStatement();
-            String query = "SELECT * FROM OPTKOS.ADDRESS";
-            try (ResultSet rs = stmt.executeQuery(query)) {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.ADDRESS");
+            try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 addressList = new ArrayList<>();
                 while (rs.next()) {
@@ -31,6 +28,7 @@ public class AddressDao {
                             rs.getString("PERSONID"),
                             rs.getString("ADDITION")));
                 }
+                preparedStmt.close();
             }
 
         } catch (SQLException e) {
@@ -39,18 +37,23 @@ public class AddressDao {
         return addressList;
     }
 
+
     public static Address getAddressByPersonId(String personId){
-        addressList = new ArrayList<>();
-        if(addressList.isEmpty()){
-            addressList = getAllAddressFromDb();
-        }
-        for (Address a : addressList)
-        {
-            if(a.getPersonId().equals(personId)){
-                return a;
+        Address address = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.ADDRESS WHERE PERSONID=?");
+            preparedStmt.setString(1, personId);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    address = buildAddress(rs);
+                }
             }
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
+        return address;
     }
 
     public static void createNewAddress(Address address, String personId){
@@ -65,9 +68,7 @@ public class AddressDao {
             preparedStmt.setString(6, personId);
             preparedStmt.setString(7, address.getAddition());
             preparedStmt.execute();
-
-            addressList.add(address);
-
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -79,12 +80,7 @@ public class AddressDao {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.ADDRESS WHERE PERSONID =?");
             preparedStmt.setString(1, personId);
             preparedStmt.executeUpdate();
-
-                for (int i = 0; i< addressList.size(); i++){
-                    if(Objects.equals(addressList.get(i).getPersonId(), personId)) {
-                        addressList.remove(i);
-                    }
-            }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -103,10 +99,26 @@ public class AddressDao {
             preparedStmt.setString(5, address.getAddition());
             preparedStmt.setString(6, address.getAddressId());
             result = preparedStmt.executeUpdate() != 0;
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
         return result;
+    }
+
+    private static Address buildAddress(ResultSet rs){
+        Address address = null;
+        try {
+            address = new Address(rs.getString("ADDRESSID"),
+                    rs.getString("POSTCODE"), rs.getString("CITY"),
+                    rs.getString("STREET"), rs.getString("HOUSENR"),
+                    rs.getString("PERSONID"),
+                    rs.getString("ADDITION"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return address;
     }
 }

@@ -26,6 +26,7 @@ public class ColourMixtureDao {
                     );
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -38,15 +39,16 @@ public class ColourMixtureDao {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId);
             try(ResultSet rs = preparedStmt.executeQuery()){
-              while(rs.next()){
-                  colourMixture = new ColourMixture(
-                          rs.getString("COLOURMIXTUREID"),
-                          rs.getString("COLOURID"),
-                          rs.getString("CUSTOMERID"),
-                          rs.getInt("MIXINGRATIO"));
+                while(rs.next()){
+                    colourMixture = new ColourMixture(
+                            rs.getString("COLOURMIXTUREID"),
+                            rs.getString("COLOURID"),
+                            rs.getString("CUSTOMERID"),
+                            rs.getInt("MIXINGRATIO"));
 
-              }
+                }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,23 +64,18 @@ public class ColourMixtureDao {
             preparedStmt.setString(3, colourMixture.getColourMixtureId().toString());
             preparedStmt.setString(4, colourMixture.getCustomerId().toString());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
-        List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId.toString());
             preparedStmt.executeUpdate();
-
-            for (int i = 0; i< colourMixtureList.size(); i++){
-                if(colourMixtureList.get(i).getColourMixtureId() == colourMixtureId) {
-                    colourMixtureList.remove(i);
-                }
-            }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,6 +88,7 @@ public class ColourMixtureDao {
             preparedStmt.setInt(1, mixingRatio);
             preparedStmt.setString(2, colourMixtureId.toString());
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

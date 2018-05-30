@@ -26,6 +26,7 @@ public class PositionDao {
                             rs.getString("ANNOTATION")));
                 }
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,6 +47,7 @@ public class PositionDao {
                 position.setName(rs.getString("NAME"));
                 return position;
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,6 +65,7 @@ public class PositionDao {
             preparedStmt.setString(4, position.getNote());
 
             preparedStmt.executeUpdate();
+            preparedStmt.close();
             return true;
 
         } catch (SQLException e) {

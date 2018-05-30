@@ -21,12 +21,13 @@ public class PhoneDao {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PHONE");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
-            while(rs.next()) {
-                phoneList.add(new Phone(rs.getString("PHONEID"),
-                        rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
-                        rs.getString("ANNOTATION"), rs.getString("PERSONID")));
+                while(rs.next()) {
+                    phoneList.add(new Phone(rs.getString("PHONEID"),
+                            rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
+                            rs.getString("ANNOTATION"), rs.getString("PERSONID")));
+                }
             }
-            }
+            preparedStmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,6 +46,7 @@ public class PhoneDao {
                         rs.getString("ANNOTATION"), rs.getString("PERSONID"));
                 phoneList.add(phone);
             }
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -62,6 +64,7 @@ public class PhoneDao {
             preparedStmt.setString(4, phone.getAnnotation());
             preparedStmt.setString(5, phone.getPersonId());
             result = preparedStmt.execute();
+            preparedStmt.close();
         } catch (SQLException e) {
             System.err.println("An Error occured while writing an Phone into the DB");
             e.printStackTrace();
@@ -77,6 +80,7 @@ public class PhoneDao {
             preparedStmt.setString(1, phoneId);
 
             b = preparedStmt.execute();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -89,6 +93,7 @@ public class PhoneDao {
             preparedStmt.setString(1, personId);
 
             preparedStmt.executeUpdate();
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -106,6 +111,7 @@ public class PhoneDao {
             preparedStmt.setString(3, phone.getAnnotation());
             preparedStmt.setString(4, phone.getPhoneId());
             result = preparedStmt.executeUpdate() != 0;
+            preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
