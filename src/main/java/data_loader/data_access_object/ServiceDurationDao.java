@@ -1,6 +1,7 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
+import data_models.Service;
 import data_models.ServiceEmployeeDuration;
 
 import java.sql.Connection;
@@ -17,7 +18,7 @@ public class ServiceDurationDao {
 
     public static boolean createServiceDuration(String employeeId, String serviceId,int duration){
         try {
-            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.SERVICEEMPLOYEEDURATION(DURATION, " +
+            preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.SERVICEEMPLOYEEDURATION(DURATIONPLANNED, " +
                     "SERVICEID, EMPLOYEEID) VALUES (?,?,?)");
             preparedStmt.setInt(1, duration);
             preparedStmt.setString(2, serviceId);
@@ -33,7 +34,43 @@ public class ServiceDurationDao {
         }
 
     }
-    // TODO: Look at dis sql query
+
+   public static boolean createServiceDurationForEveryEmployee(Service service){
+        ArrayList<String> employeeList = new ArrayList<>();
+       StringBuilder sb = new StringBuilder();
+       sb.append("INSERT INTO OPTKOS.SERVICEEMPLOYEEDURATION(DURATIONPLANNED, SERVICEID, EMPLOYEEID," +
+               " DURATIONAVERAGE) VALUES ");
+       
+       try {
+           preparedStmt = con.prepareStatement("SELECT EMPLOYEEID FROM OPTKOS.EMPLOYEE");
+           try(ResultSet rs = preparedStmt.executeQuery()){
+               employeeList.add(rs.getString("EMPLOYEEID"));
+           }
+           preparedStmt.close();
+           
+           for(int i = 0; i<employeeList.size()-1; i++){
+               sb.append("(?,?,?,?), ");
+           }
+           sb.append("(?,?,?,?)");
+           int counter = 1;
+
+           for (String s :
+                   employeeList) {
+               preparedStmt.setInt(counter, ((int) service.getDurationPlanned().toMinutes()));
+               preparedStmt.setString(counter+1, service.getServiceId());
+               preparedStmt.setString(counter+2, s);
+               preparedStmt.setInt(counter+3, 0);
+               counter += 4;
+           }
+           preparedStmt.execute();
+           preparedStmt.close();
+       } catch (SQLException e) {
+           System.err.println("Error while Inserting ServiceEmployeeDurations");
+           e.printStackTrace();
+           return false;
+       }
+       return true;
+   }
 
     public static List<ServiceEmployeeDuration> getServiceDuration(String employeeId, String serviceId){
         List<ServiceEmployeeDuration> durations = new ArrayList<>();
@@ -65,6 +102,20 @@ public class ServiceDurationDao {
         return durations;
     }
 
+   public static boolean updateServicesDurations(Service service){
+       try {
+           preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICEEMPLOYEEDURATION SET DURATIONPLANNED WHERE " +
+                   "SERVICEID=?");
+           preparedStmt.setInt(1, ((int) service.getDurationPlanned().toMinutes()));
+           preparedStmt.executeUpdate();
+           preparedStmt.close();
+       } catch (SQLException e) {
+           System.err.println("Error while updateing ServiceEmployeeDurations");
+           e.printStackTrace();
+           return false;
+       }
+       return true;
+   }
 
     public static boolean deleteServiceDuration(String serviceDurationId){
         try {

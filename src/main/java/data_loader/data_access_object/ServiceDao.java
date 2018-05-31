@@ -55,7 +55,10 @@ public class ServiceDao {
 
             preparedStmt.execute();
             preparedStmt.close();
+
+            ServiceDurationDao.createServiceDurationForEveryEmployee(service);
         } catch (SQLException e) {
+            System.err.println("Error while creating Service");
             e.printStackTrace();
             return false;
         }
@@ -97,8 +100,10 @@ public class ServiceDao {
 
             result = preparedStmt.executeUpdate() != 0;
             preparedStmt.close();
+            ServiceDurationDao.updateServicesDurations(service);
 
         } catch (SQLException e) {
+            System.err.println("Error while updating Service");
             e.printStackTrace();
             return false;
         }
