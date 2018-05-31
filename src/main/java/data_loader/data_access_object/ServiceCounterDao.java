@@ -31,7 +31,7 @@ public class ServiceCounterDao {
                 while (rs.next()) {
                     ServiceCounter serviceCounter = new ServiceCounter(rs.getString("SERVICEID"));
                     serviceCounter.setServiceName(rs.getString("NAME"));
-                    serviceCounter.setServiceCounter(rs.getString("COUNTER"));
+                    serviceCounter.setServiceCounter(rs.getInt("COUNTER"));
 
                     serviceCounterList.add(serviceCounter);
                 }
