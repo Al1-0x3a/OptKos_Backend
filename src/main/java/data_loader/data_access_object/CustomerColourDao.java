@@ -33,11 +33,11 @@ public class CustomerColourDao {
         CustomerColour cc = null;
         try {
             cc = new CustomerColour(
-                    rs.getString("CUSTOMERCOLURID"),
+                    rs.getString("CUSTOMERCOLOURID"),
                     rs.getInt("CONTENTWHITE"),
                     rs.getString("CUSTOMERID"),
                     rs.getInt("EXPOSURETIME"),
-                    rs.getString("NATURAL"),
+                    rs.getString("NATURALCOLOUR"),
                     rs.getString("OXIDATION"),
                     rs.getString("RESULT")
             );

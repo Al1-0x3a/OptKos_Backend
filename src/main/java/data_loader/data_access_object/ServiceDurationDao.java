@@ -44,7 +44,9 @@ public class ServiceDurationDao {
        try {
            preparedStmt = con.prepareStatement("SELECT EMPLOYEEID FROM OPTKOS.EMPLOYEE");
            try(ResultSet rs = preparedStmt.executeQuery()){
-               employeeList.add(rs.getString("EMPLOYEEID"));
+               while(rs.next()) {
+                   employeeList.add(rs.getString("EMPLOYEEID"));
+               }
            }
            preparedStmt.close();
            
@@ -53,10 +55,11 @@ public class ServiceDurationDao {
            }
            sb.append("(?,?,?,?)");
            int counter = 1;
+           preparedStmt = con.prepareStatement(sb.toString());
 
            for (String s :
                    employeeList) {
-               preparedStmt.setInt(counter, ((int) service.getDurationPlanned().toMinutes()));
+               preparedStmt.setInt(counter, ((int)service.getDurationPlanned().toMinutes()));
                preparedStmt.setString(counter+1, service.getServiceId());
                preparedStmt.setString(counter+2, s);
                preparedStmt.setInt(counter+3, 0);
@@ -104,9 +107,10 @@ public class ServiceDurationDao {
 
    public static boolean updateServicesDurations(Service service){
        try {
-           preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICEEMPLOYEEDURATION SET DURATIONPLANNED WHERE " +
+           preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICEEMPLOYEEDURATION SET DURATIONPLANNED=? WHERE " +
                    "SERVICEID=?");
            preparedStmt.setInt(1, ((int) service.getDurationPlanned().toMinutes()));
+           preparedStmt.setString(2, service.getServiceId());
            preparedStmt.executeUpdate();
            preparedStmt.close();
        } catch (SQLException e) {
