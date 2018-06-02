@@ -31,7 +31,7 @@ public class EmployeeDao {
                     employee.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
                     employee.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
                     employee.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
-
+                    employee.setColour(rs.getString("COLOUR"));
                     // Employee
                     employee.setEmployeeId(rs.getString("EMPLOYEEID"));
                     employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
@@ -142,12 +142,13 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getGender().name());
 
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED," +
-                    " POSITIONID) VALUES(?,?,?,?)");
+                    " POSITIONID,COLOUR) VALUES(?,?,?,?,?)");
 
             preparedStmt2.setString(1, employee.getEmployeeId());
             preparedStmt2.setString(2, employee.getPersonId());
             preparedStmt2.setString(3, "0");
             preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
+            preparedStmt2.setString(5, employee.getColour());
 
             preparedStmt.execute();
             preparedStmt2.execute();
@@ -195,11 +196,12 @@ public class EmployeeDao {
             preparedStmt.setString(6, employee.getPersonId());
 
             // Employee
-            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=? " +
+            preparedStmt2 = con.prepareStatement("UPDATE OPTKOS.EMPLOYEE SET POSITIONID=?, EMPLOYEEID=?, COLOUR=? " +
                     "WHERE PERSONID=?");
             preparedStmt2.setString(1, employee.getPosition().getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
-            preparedStmt2.setString(3, employee.getPersonId());
+            preparedStmt2.setString(3,employee.getColour());
+            preparedStmt2.setString(4, employee.getPersonId());
 
             boolean result1 = preparedStmt.executeUpdate() != 0;
             boolean result2 = preparedStmt2.executeUpdate() != 0;
