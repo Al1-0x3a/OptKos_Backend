@@ -38,7 +38,7 @@ public class AppointmentDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
-                    Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
+                    Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                             rs.getString("EMPLOYEEID"));
