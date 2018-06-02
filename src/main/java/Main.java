@@ -2,6 +2,7 @@
 import client_api.AdministrativeApi;
 
 import client_api.AppointmentApi;
+import client_api.StatisticApi;
 import data_loader.SqlConnection;
 
 
@@ -28,6 +29,10 @@ public class Main {
 
         System.out.printf(FORMAT, "Launching appointment endpoint...");
         Endpoint.publish("http://localhost:1338/AppointmentApi", new AppointmentApi());
+        System.out.println(SUCCESS);
+
+        System.out.printf(FORMAT, "Launching statistics endpoint...");
+        Endpoint.publish("http://localhost:1339/StatisticApi", new StatisticApi());
         System.out.println(SUCCESS);
 
         try {
