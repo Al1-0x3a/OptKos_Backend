@@ -1,6 +1,7 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
+import data_models.Customer;
 import data_models.Phone;
 
 import java.sql.*;
@@ -117,5 +118,24 @@ public class PhoneDao {
             return false;
         }
         return result;
+    }
+
+    public static Customer getCustomerByPhoneNumber(String phoneNumber){
+        String personid = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT PERSONID FROM OPTKOS.PHONE WHERE PHONE=?");
+            preparedStmt.setString(1, phoneNumber);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    personid = rs.getString("PERSONID");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error while getting Customer by Phonenumber");
+            e.printStackTrace();
+            return null;
+        }
+        return CustomerDao.getCustomerByPersonId(personid);
     }
 }

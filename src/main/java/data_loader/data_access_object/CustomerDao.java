@@ -145,26 +145,27 @@ public class CustomerDao {
             preparedStmt.setString(1, customerId);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
-                    // Person
+/*                    // Person
                     customer.setPersonId(rs.getString("PERSONID"));
                     customer.setFirstname(rs.getString("FIRSTNAME"));
                     customer.setLastname(rs.getString("LASTNAME"));
                     customer.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
                     customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                    customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
+                    customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));*/
+                    buildCustomer(rs);
                     // Shit
                     customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
                     customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
 
-                    // Customer
+/*                    // Customer
                     customer.setCostumerId(rs.getString("CUSTOMERID"));
                     customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
                     customer.setAnnotation(rs.getString("ANNOTATION"));
                     customer.setAnnotation(rs.getString("PROBLEM"));
 
                     customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
-                            rs.getString("CUSTOMERCATEGORYID")));
+                            rs.getString("CUSTOMERCATEGORYID")));*/
                 }
             }
             preparedStmt.close();
@@ -250,4 +251,32 @@ public class CustomerDao {
         }
         return customer;
     }
+
+
+    public static Customer getCustomerByPersonId(String personId) {
+
+        Customer customer = new Customer();
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c " +
+                    "WHERE p.PERSONID = c.PERSONID AND c.CUSTOMERID=?");
+            preparedStmt.setString(1, personId);
+            try (ResultSet rs = preparedStmt.executeQuery()) {
+                if (rs.next()) {
+                    buildCustomer(rs);
+                    // Shit
+                    customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
+                    customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
+                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
+                }
+            }
+            preparedStmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
+
+
 }

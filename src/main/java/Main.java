@@ -4,6 +4,9 @@ import client_api.AdministrativeApi;
 import client_api.AppointmentApi;
 import client_api.PhoneApi;
 import data_loader.SqlConnection;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import util.PhoneSimulator;
 
 
 import javax.xml.ws.Endpoint;
@@ -69,8 +72,6 @@ public class Main {
                 }
             }
         }){});
-
-
 
     }
 
