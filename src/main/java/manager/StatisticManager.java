@@ -8,7 +8,7 @@ import java.util.List;
 
 public class StatisticManager {
 
-    public List<ServiceCounter> getAllServiceCounter(LocalDateTime starttime, LocalDateTime endtime) {
-        return ServiceCounterDao.getAllServiceCounter(starttime, endtime);
+    public List<ServiceCounter> getAllServiceCounter(String serviceId, LocalDateTime starttime, LocalDateTime endtime) {
+        return ServiceCounterDao.getAllServiceCounter(serviceId, starttime, endtime);
     }
 }
