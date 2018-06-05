@@ -123,7 +123,7 @@ public class PhoneDao {
     public static Customer getCustomerByPhoneNumber(String phoneNumber){
         String personid = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT PERSONID FROM OPTKOS.PHONE WHERE PHONE=?");
+            preparedStmt = con.prepareStatement("SELECT PERSONID FROM OPTKOS.PHONE WHERE NUMBER=?");
             preparedStmt.setString(1, phoneNumber);
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()){

@@ -3,6 +3,7 @@ package client_api;
 import data_loader.data_access_object.*;
 import data_models.*;
 import manager.AdministrativeManager;
+import manager.PhoneManager;
 
 import javax.jws.WebService;
 import java.util.List;
@@ -12,9 +13,11 @@ import java.util.UUID;
 @WebService(endpointInterface = "client_api.IAdministrativeApi")
 public class AdministrativeApi implements IAdministrativeApi {
     private final AdministrativeManager administrativeManager;
+    private final PhoneManager phoneManager;
 
     public AdministrativeApi() {
         administrativeManager = new AdministrativeManager();
+        phoneManager = new PhoneManager();
     }
 
 
@@ -193,6 +196,6 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public Customer getCustomerByPhoneNumber(String phoneNumber) {
-        return PhoneDao.getCustomerByPhoneNumber(phoneNumber);
+        return phoneManager.getCustomerByPhoneNumber(phoneNumber);
     }
 }
