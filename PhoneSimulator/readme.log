@@ -1,0 +1,13 @@
+How to make startUpScript Executable:
+
+#For Windows:
+add the file extension .bat and pray that it works
+then
+click on it to start application
+
+#For Masterrace GNU plus Linux Users:
+chmod +x startUpScript
+then
+./startUpScript
+or
+click on it
