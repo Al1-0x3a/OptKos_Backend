@@ -1,5 +1,8 @@
 package data_models;
 
+import data_loader.data_access_object.ServiceDurationDao;
+import data_loader.data_access_object.ServiceEmployeeDurationDao;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -29,8 +32,7 @@ public class Service {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.isDeleted = isDeleted;
-		//TODO: alle employees mit leeren zeiten
-		sedList = new ArrayList<>();
+		sedList = ServiceEmployeeDurationDao.getSedListWithOnlyEmployees(this.serviceId);
 	}
 
 

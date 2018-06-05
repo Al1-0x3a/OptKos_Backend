@@ -103,4 +103,26 @@ public class ServiceEmployeeDurationDao {
             service.setSedList(filteredList);
         }
     }
+
+
+    public static List<ServiceEmployeeDuration> getSedListWithOnlyEmployees(String serviceId){
+        List<ServiceEmployeeDuration> sedList = new ArrayList<>();
+        try{
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE") ;
+
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    ServiceEmployeeDuration sed = new ServiceEmployeeDuration(Duration.ofMinutes(0),
+                            Duration.ofMinutes(0),
+                            rs.getString("EMPLOYEEID"), serviceId);
+                    sedList.add(sed);
+                }
+            }
+            preparedStmt.close();
+        }catch(SQLException e){
+            System.err.println("Error while creating sedList with only Employees...");
+            e.printStackTrace();
+        }
+        return sedList;
+    }
 }
