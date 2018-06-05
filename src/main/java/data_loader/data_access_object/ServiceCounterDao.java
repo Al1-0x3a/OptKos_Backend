@@ -13,7 +13,8 @@ public class ServiceCounterDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
 
-    public static List<ServiceCounter> getAllServiceCounter(LocalDateTime startTime, LocalDateTime endTime){
+    public static List<ServiceCounter> getAllServiceCounter(String serviceId, LocalDateTime startTime,
+    LocalDateTime endTime){
 
         List<ServiceCounter> serviceCounterList = new ArrayList<>();
 
@@ -23,9 +24,11 @@ public class ServiceCounterDao {
                     "FROM OPTKOS.APOINTMENT LEFT JOIN OPTKOS.SERVICE ON OPTKOS.SERVICE.SERVICEID = OPTKOS.APOINTMENT.SERVICEID " +
                     "WHERE OPTKOS.APOINTMENT.PLANTIMESTART >= ? " +
                     "AND OPTKOS.APOINTMENT.PLANTIMEEND <= ? " +
+                    "AND OPTKOS.APOINTMENT.SERVICEID = ? " +
                     "GROUP BY OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME;");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(startTime));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(endTime));
+            preparedStmt.setString(3, serviceId);
 
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 while (rs.next()) {
