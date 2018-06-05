@@ -29,6 +29,7 @@ public class Service {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.isDeleted = isDeleted;
+		//TODO: alle employees mit leeren zeiten
 		sedList = new ArrayList<>();
 	}
 

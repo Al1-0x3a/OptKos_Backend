@@ -137,6 +137,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public Service getNewService() {
+        //TODO: alle employees
         return new Service();
     }
 
@@ -188,5 +189,10 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public boolean deleteServiceDuration(String serviceDurationId) {
         return ServiceDurationDao.deleteServiceDuration(serviceDurationId);
+    }
+
+    @Override
+    public Customer getCustomerByPhoneNumber(String phoneNumber) {
+        return PhoneDao.getCustomerByPhoneNumber(phoneNumber);
     }
 }

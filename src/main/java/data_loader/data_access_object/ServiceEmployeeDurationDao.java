@@ -19,6 +19,8 @@ public class ServiceEmployeeDurationDao {
 
     public static ServiceEmployeeDuration getServiceEmployeeDuration(String employeeId, String serviceId){
         ServiceEmployeeDuration sed = null;
+        //TODO name dazu
+        //TODO: left join employee
         try{
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICEEMPLOYEEDURATION WHERE EMPLOYEEID=?" +
                     "AND SERVICEID=?") ;
