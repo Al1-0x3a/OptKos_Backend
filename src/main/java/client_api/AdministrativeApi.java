@@ -140,7 +140,6 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public Service getNewService() {
-        //TODO: alle employees
         return new Service();
     }
 

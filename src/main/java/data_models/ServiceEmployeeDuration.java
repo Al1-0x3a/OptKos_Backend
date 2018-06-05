@@ -15,12 +15,13 @@ public class ServiceEmployeeDuration {
 	}
 
 	public ServiceEmployeeDuration(Duration durationPlanned, Duration durationAverage, String employeeId,
-	String serviceId) {
+								   String serviceId, String lastName, String firstName) {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.employeeId = employeeId;
 		this.serviceId = serviceId;
-		this.firstName = this.lastName = "";
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public Duration getDurationPlanned() {

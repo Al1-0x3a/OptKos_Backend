@@ -92,7 +92,9 @@ public class ServiceDurationDao {
                             rs.getInt("DURATIONPLANNED")),
                             Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
                             rs.getString("EMPLOYEEID"),
-                            rs.getString("SERVICEID")));
+                            rs.getString("SERVICEID"),
+                            rs.getString("LASTNAME"),
+                            rs.getString("FIRSTNAME")));
                     durations.get(durations.size()).setFirstName(rs.getString("FIRSTNAME"));
                     durations.get(durations.size()).setLastName(rs.getString("LASTNAME"));
                 }
