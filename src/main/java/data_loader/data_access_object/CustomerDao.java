@@ -20,11 +20,15 @@ public class CustomerDao {
         long start = System.nanoTime();
         List<Customer> customerList = new ArrayList<>();
         try {
-            preparedStmt=con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c," +
-                    " OPTKOS.ADDRESS a, OPTKOS.CUSTOMERCATEGORY cc, OPTKOS.CUSTOMERCOLOUR color," +
-                    " OPTKOS.COLOURMIXTURE cm WHERE p.PERSONID = c.PERSONID AND a.PERSONID = p.PERSONID AND" +
-                    " c.CUSTOMERCATEGORYID=cc.CUSTOMERCATEGORYID AND c.CUSTOMERID=color.CUSTOMERID AND" +
-                    " c.CUSTOMERID=cm.CUSTOMERID");
+            preparedStmt=con.prepareStatement("SELECT *" +
+                    "FROM OPTKOS.CUSTOMER c" +
+                    "  JOIN OPTKOS.PERSON p ON c.PERSONID = p.PERSONID" +
+                    "  JOIN OPTKOS.ADDRESS A on p.PERSONID = A.PERSONID" +
+                    "  JOIN OPTKOS.CUSTOMERCATEGORY CC on c.CUSTOMERCATEGORYID = CC.CUSTOMERCATEGORYID" +
+                    "  LEFT JOIN OPTKOS.CUSTOMERCOLOUR CColour ON c.CUSTOMERID = CColour.CUSTOMERID" +
+                    "  LEFT JOIN (SELECT *" +
+                    "             FROM OPTKOS.COLOURMIXTURE cm" +
+                    "               JOIN OPTKOs.COLOUR COL ON cm.COLOURID = COL.COLOURID) COLOUR2 ON COLOUR2.CUSTOMERID = c.CUSTOMERID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
