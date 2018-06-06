@@ -4,6 +4,7 @@ import data_loader.data_access_object.AppointmentDao;
 import data_loader.data_access_object.EmployeeDao;
 import data_models.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -72,4 +73,5 @@ public class AppointmentManager {
         }
         return appointmentSuggestions;
     }
+
 }
