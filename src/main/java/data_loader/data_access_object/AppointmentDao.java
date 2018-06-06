@@ -47,7 +47,7 @@ public class AppointmentDao {
                     String customerid = rs.getString("CUSTOMERID");
                     for (Customer customer :
                             customerList) {
-                        if(customer.getCostumerId().equals(customerid)) {
+                        if(customer.getCustomerId().equals(customerid)) {
                             appointment.setCustomer(customer);
                             break;
                         }
@@ -171,7 +171,7 @@ public class AppointmentDao {
                         String customerid = rs.getString("CUSTOMERID");
                         for (Customer customer :
                                 customerList) {
-                            if (customer.getCostumerId().equals(customerid)) {
+                            if (customer.getCustomerId().equals(customerid)) {
                                 appointment.setCustomer(customer);
                                 break;
                             }
@@ -218,7 +218,7 @@ public class AppointmentDao {
             preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
             preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
             preparedStmt.setString(5, appointment.getEmployeeid());
-            preparedStmt.setString(6, appointment.getCustomer().getCostumerId());
+            preparedStmt.setString(6, appointment.getCustomer().getCustomerId());
             preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
             preparedStmt.setString(8, appointment.getService().getServiceId());
             preparedStmt.setString(9, appointment.getAppointmentId());
@@ -239,7 +239,7 @@ public class AppointmentDao {
             preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
             preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
             preparedStmt.setString(5, appointment.getEmployeeid());
-            preparedStmt.setString(6, appointment.getCustomer().getCostumerId());
+            preparedStmt.setString(6, appointment.getCustomer().getCustomerId());
             preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
             preparedStmt.setString(8, appointment.getService().getServiceId());
             preparedStmt.setString(9, appointment.getAppointmentId());
@@ -303,7 +303,7 @@ public class AppointmentDao {
                         String customerid = rs.getString("CUSTOMERID");
                         for (Customer customer :
                                 customers) {
-                            if (customer.getCostumerId().equals(customerid)) {
+                            if (customer.getCustomerId().equals(customerid)) {
                                 appointment.setCustomer(customer);
                                 break;
                             }

@@ -101,7 +101,7 @@ public class CustomerDao {
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.CUSTOMER(CUSTOMERID, PERSONID," +
                     " MULTIPLIKATOR, ANNOTATION, PROBLEM, CUSTOMERCATEGORYID) VALUES(?,?,?,?,?,?)");
 
-            preparedStmt2.setString(1, customer.getCostumerId());
+            preparedStmt2.setString(1, customer.getCustomerId());
             preparedStmt2.setString(2, customer.getPersonId());
             preparedStmt2.setDouble(3, customer.getTimefactor());
             preparedStmt2.setString(4, customer.getAnnotation());
@@ -145,27 +145,11 @@ public class CustomerDao {
             preparedStmt.setString(1, customerId);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
-/*                    // Person
-                    customer.setPersonId(rs.getString("PERSONID"));
-                    customer.setFirstname(rs.getString("FIRSTNAME"));
-                    customer.setLastname(rs.getString("LASTNAME"));
-                    customer.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
-                    customer.setSalutation(Person.SALUTATION.valueOf(rs.getString("SALUTATION")));
-                    customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));*/
                     buildCustomer(rs);
                     // Shit
-                    customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
+/*                    customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
-
-/*                    // Customer
-                    customer.setCostumerId(rs.getString("CUSTOMERID"));
-                    customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
-                    customer.setAnnotation(rs.getString("ANNOTATION"));
-                    customer.setAnnotation(rs.getString("PROBLEM"));
-
-                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(
-                            rs.getString("CUSTOMERCATEGORYID")));*/
+                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));*/
                 }
             }
             preparedStmt.close();
@@ -238,12 +222,16 @@ public class CustomerDao {
             customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
 
             // Customer
-            customer.setCostumerId(rs.getString("CUSTOMERID"));
+            customer.setCustomerId(rs.getString("CUSTOMERID"));
             customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
             customer.setAnnotation(rs.getString("ANNOTATION"));
             if(rs.getString("PROBLEM").charAt(0) == 't')
                 customer.setProblemCustomer(true);
             else customer.setProblemCustomer(false);
+
+            customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
+            customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
+            customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
 
         } catch (SQLException e) {
             System.err.println("Error while building Cutomer");
@@ -258,15 +246,15 @@ public class CustomerDao {
         Customer customer = new Customer();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c " +
-                    "WHERE p.PERSONID = c.PERSONID AND c.CUSTOMERID=?");
+                    "WHERE c.PERSONID=? AND p.PERSONID = c.PERSONID");
             preparedStmt.setString(1, personId);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
-                    buildCustomer(rs);
-                    // Shit
+                    customer = buildCustomer(rs);
+/*                    // remaining stuff
                     customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
+                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));*/
                 }
             }
             preparedStmt.close();

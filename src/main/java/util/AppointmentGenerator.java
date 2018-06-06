@@ -88,7 +88,7 @@ public class AppointmentGenerator {
                         appointmentStatement.setTimestamp(4, Timestamp.valueOf(appointment.getStartTime()));
                         appointmentStatement.setTimestamp(5, Timestamp.valueOf(appointment.getEndTime()));
                         appointmentStatement.setString(6, appointment.getEmployeeid());
-                        appointmentStatement.setString(7, appointment.getCustomer().getCostumerId());
+                        appointmentStatement.setString(7, appointment.getCustomer().getCustomerId());
                         appointmentStatement.setString(8, APPOINTMENT_TYPE);
                         appointmentStatement.setString(9, appointment.getService().getServiceId());
                         appointmentStatement.execute();

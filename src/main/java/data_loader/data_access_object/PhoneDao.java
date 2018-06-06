@@ -39,13 +39,15 @@ public class PhoneDao {
     public static List<Phone> getPhoneListByPersonId(String personId){
         List<Phone> phoneList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMAIL WHERE PERSONID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PHONE WHERE PERSONID=?");
             preparedStmt.setString(1, personId);
             try(ResultSet rs = preparedStmt.executeQuery()){
-                Phone phone = new Phone(rs.getString("PHONEID"),
-                        rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
-                        rs.getString("ANNOTATION"), rs.getString("PERSONID"));
-                phoneList.add(phone);
+                while(rs.next()) {
+                    Phone phone = new Phone(rs.getString("PHONEID"),
+                            rs.getString("NUMBER"), rs.getString("DESCRIPTION"),
+                            rs.getString("ANNOTATION"), rs.getString("PERSONID"));
+                    phoneList.add(phone);
+                }
             }
             preparedStmt.close();
         } catch (SQLException e) {

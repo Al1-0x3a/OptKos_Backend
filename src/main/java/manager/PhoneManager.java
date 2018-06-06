@@ -21,6 +21,7 @@ public class PhoneManager {
 
             return newCustomer;
         }else{
+            System.out.println("Incoming call from: " + customer.getFirstname() + " " + customer.getLastname());
             return customer;
         }
     }
