@@ -21,6 +21,7 @@ public class Service {
 
 	public Service(){
 		this.serviceId = UUID.randomUUID().toString();
+		sedList = ServiceEmployeeDurationDao.getSedListWithOnlyEmployees(this.serviceId);
 	}
 
 	public Service(String serviceId, String name, String description, BigDecimal price,
@@ -32,7 +33,6 @@ public class Service {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.isDeleted = isDeleted;
-		sedList = ServiceEmployeeDurationDao.getSedListWithOnlyEmployees(this.serviceId);
 	}
 
 

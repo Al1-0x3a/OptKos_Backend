@@ -59,7 +59,7 @@ public class ServiceDurationDao {
 
            for (String s :
                    employeeList) {
-               preparedStmt.setInt(counter, ((int)service.getDurationPlanned().toMinutes()));
+               preparedStmt.setInt(counter,(int)( service.getSedList().get(counter/4).getDurationPlanned().toMinutes()));
                preparedStmt.setString(counter+1, service.getServiceId());
                preparedStmt.setString(counter+2, s);
                preparedStmt.setInt(counter+3, 0);
@@ -108,18 +108,22 @@ public class ServiceDurationDao {
     }
 
    public static boolean updateServicesDurations(Service service){
-       try {
-           preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICEEMPLOYEEDURATION SET DURATIONPLANNED=? WHERE " +
-                   "SERVICEID=?");
-           preparedStmt.setInt(1, ((int) service.getDurationPlanned().toMinutes()));
-           preparedStmt.setString(2, service.getServiceId());
-           preparedStmt.executeUpdate();
-           preparedStmt.close();
-       } catch (SQLException e) {
-           System.err.println("Error while updateing ServiceEmployeeDurations");
-           e.printStackTrace();
-           return false;
-       }
+        for(ServiceEmployeeDuration sed: service.getSedList()){
+            try {
+                preparedStmt = con.prepareStatement("UPDATE OPTKOS.SERVICEEMPLOYEEDURATION SET DURATIONPLANNED=? WHERE " +
+                        "SERVICEID=? AND EMPLOYEEID=?");
+                preparedStmt.setInt(1, ((int) sed.getDurationPlanned().toMinutes()));
+                preparedStmt.setString(2, service.getServiceId());
+                preparedStmt.setString(3, sed.getEmployeeId());
+                preparedStmt.executeUpdate();
+                preparedStmt.close();
+            } catch (SQLException e) {
+                System.err.println("Error while updateing ServiceEmployeeDurations");
+                e.printStackTrace();
+                return false;
+            }
+        }
+
        return true;
    }
 
