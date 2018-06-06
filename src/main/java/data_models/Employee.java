@@ -10,6 +10,7 @@ public class Employee extends Person {
 	private String employeeId;
 	private char isDeleted;
 	private Position position;
+	private String colour;
     private List<WorkingDay> workingDays;
     private String displayColor;
 
@@ -32,7 +33,9 @@ public class Employee extends Person {
 		this.displayColor = displayColor;
 		this.initWorkingDays();
 	}
+	public void setColour(String colour){this.colour =colour;}
 
+	public String getColour(){return this.colour;}
 	public List<WorkingDay> getWorkingDays() {
 		return this.workingDays;
 	}

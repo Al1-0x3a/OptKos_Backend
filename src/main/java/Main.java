@@ -1,11 +1,8 @@
-
 import client_api.AdministrativeApi;
-
 import client_api.AppointmentApi;
 import client_api.PhoneApi;
+import client_api.StatisticApi;
 import data_loader.SqlConnection;
-
-
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
 
@@ -28,6 +25,10 @@ public class Main {
         System.out.printf(FORMAT, "Launching Phone endpoint...");
         Endpoint.publish("http://localhost:1340/PhoneApi", new PhoneApi());
         System.out.println(SUCCESS);
+      
+        System.out.printf(FORMAT, "Launching statistics endpoint...");
+        Endpoint.publish("http://localhost:1339/StatisticApi", new StatisticApi());
+        System.out.println(SUCCESS);
 
         try {
             System.out.printf(FORMAT, "Testing DB2 connection...");
@@ -36,7 +37,7 @@ public class Main {
             long end = System.currentTimeMillis();
             if (status) {
                 System.out.println(SUCCESS);
-                System.out.printf("Initial ping took %d ms%n", (end - start));
+                System.out.printf("Initial ping took %d ms%n", (end - start));Make fixes to make phoneSimulator work correctly
             } else {
                 System.err.println(ERROR);
                 System.exit(1);

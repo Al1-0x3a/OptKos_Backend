@@ -127,12 +127,11 @@ public class EmployeeDao {
 
             preparedStmt2 = con.prepareStatement("INSERT INTO OPTKOS.EMPLOYEE(EMPLOYEEID,PERSONID, ISDELETED," +
                     " POSITIONID, COLOUR) VALUES(?,?,?,?,?)");
-
             preparedStmt2.setString(1, employee.getEmployeeId());
             preparedStmt2.setString(2, employee.getPersonId());
             preparedStmt2.setString(3, "0");
             preparedStmt2.setString(4, "8398cd47-ab14-4fa9-810b-69383a6c4285");
-            preparedStmt2.setString(5, employee.getDisplayColor());
+            preparedStmt2.setString(5, employee.getColour());
 
             preparedStmt.execute();
             preparedStmt2.execute();
@@ -184,7 +183,7 @@ public class EmployeeDao {
                     "COLOUR=? WHERE PERSONID=?");
             preparedStmt2.setString(1, employee.getPosition().getPositionId());
             preparedStmt2.setString(2, employee.getEmployeeId());
-            preparedStmt2.setString(3, employee.getDisplayColor());
+            preparedStmt2.setString(3,employee.getColour());
             preparedStmt2.setString(4, employee.getPersonId());
 
             boolean result1 = preparedStmt.executeUpdate() != 0;
