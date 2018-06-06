@@ -232,7 +232,7 @@ public class EmployeeDao {
             // Employee
             employee.setEmployeeId(rs.getString("EMPLOYEEID"));
             employee.setIsDeleted(rs.getString("ISDELETED").charAt(0));
-            employee.setDisplayColor(rs.getString("COLOUR"));
+            employee.setColour(rs.getString("COLOUR"));
             // employee.setPositionId(rs.getString("POSITIONID"));
         } catch (SQLException e) {
             System.err.println("Error while building Employee");
