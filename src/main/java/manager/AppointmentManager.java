@@ -16,8 +16,6 @@ public class AppointmentManager {
     // use this option for requests from the frontend
     public static final int DYNAMIC_FETCH = 1;
 
-    private List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-
     public boolean isFree(Appointment appointment, String week, int strategy) {
         List<AppointmentListItem> appointmentListItems;
         if (strategy == STATIC_FETCH) {
@@ -75,6 +73,7 @@ public class AppointmentManager {
     }
 
     public List<AppointmentSuggestion> findSuggestions(LocalDateTime startTime, LocalDateTime endTime) {
+        List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
         List<AppointmentSuggestion> appointmentSuggestions = new ArrayList<>();
         for (Employee employee: employees) {
             Appointment tmp = new Appointment(UUID.randomUUID().toString(), endTime, startTime, employee.getEmployeeId());

@@ -30,4 +30,20 @@ public class AppointmentSuggestion {
     public Employee getEmployee() {
         return employee;
     }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }
