@@ -78,7 +78,7 @@ public class AppointmentManager {
         for (Employee employee: employees) {
             Appointment tmp = new Appointment(UUID.randomUUID().toString(), endTime, startTime, employee.getEmployeeId());
             String week = startTime.format(DateTimeFormatter.ISO_DATE);
-            if (isFree(tmp, week, DYNAMIC_FETCH)) {
+            if (isFree(tmp, week, STATIC_FETCH)) {
                 appointmentSuggestions.add(new AppointmentSuggestion(startTime, endTime, employee));
             }
         }

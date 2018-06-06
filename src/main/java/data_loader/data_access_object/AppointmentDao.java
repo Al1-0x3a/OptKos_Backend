@@ -21,8 +21,8 @@ public class AppointmentDao {
     private static PreparedStatement preparedStmt;
 
     // these lists should only be used when generating appointments
-    // private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-    // private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
+    private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+    private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
 
     private AppointmentDao() {
     }
@@ -254,8 +254,8 @@ public class AppointmentDao {
     @SuppressWarnings("Duplicates")
     public static List<AppointmentListItem> getAppointmentsByCalendarWeekFast(String ldt){
         // Uncomment static lists and comment the two following lines
-        List<Employee> employees = null;
-        List<Customer> customers = null;
+        // List<Employee> employees = null;
+        // List<Customer> customers = null;
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
