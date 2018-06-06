@@ -1,6 +1,7 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
+import data_models.Colour;
 import data_models.ColourMixture;
 
 import java.sql.*;
@@ -14,16 +15,12 @@ public class ColourMixtureDao {
     public static List<ColourMixture> getAllColourMixturesFromDb(){
         List<ColourMixture> colourMixtureList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE cm, OPTKOS.COLOUR c " +
+                    "WHERE cm.COLOURID = c.COLOURID");
             try(ResultSet rs = preparedStmt.executeQuery()){
 
                 while(rs.next()){
-                    ColourMixture colourMixture = new ColourMixture(
-                            rs.getString("COLOURMIXTUREID"),
-                            rs.getString("COLOURID"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("MIXINGRATIO")
-                    );
+                    ColourMixture colourMixture = buildMixture(rs);
                 }
             }
             preparedStmt.close();
@@ -33,6 +30,28 @@ public class ColourMixtureDao {
         return colourMixtureList;
     }
 
+    public static ColourMixture buildMixture(ResultSet rs){
+        ColourMixture colourMixture = null;
+        try {
+            Colour c = new Colour(rs.getString(
+                    "COLOURID"
+            ), rs.getString("COLOURBRIGHTNESS"), rs.getString("COLOURHUE"),
+                    rs.getString("MANUFACTURER"));
+            colourMixture = new ColourMixture(
+                    rs.getString("COLOURMIXTUREID"),
+                    rs.getString("COLOURID"),
+                    rs.getString("CUSTOMERID"),
+                    rs.getInt("MIXINGRATIO"),
+                    c
+            );
+        } catch (SQLException e) {
+            System.err.println("Error while building ColourMixture");
+            e.printStackTrace();
+            return null;
+        }
+        return colourMixture;
+    }
+
     public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
         ColourMixture colourMixture = null;
         try {
@@ -40,12 +59,7 @@ public class ColourMixtureDao {
             preparedStmt.setString(1, colourMixtureId);
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()){
-                    colourMixture = new ColourMixture(
-                            rs.getString("COLOURMIXTUREID"),
-                            rs.getString("COLOURID"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("MIXINGRATIO"));
-
+                    colourMixture = buildMixture(rs);
                 }
             }
             preparedStmt.close();

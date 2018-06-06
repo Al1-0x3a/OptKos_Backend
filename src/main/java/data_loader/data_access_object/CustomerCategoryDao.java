@@ -22,12 +22,7 @@ public class CustomerCategoryDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
-                    CustomerCategory customerCategory = new CustomerCategory(
-                            rs.getString("CUSTOMERCATEGORYID"),
-                            rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"),
-                            rs.getInt("DURATIONFLAT"),
-                            rs.getDouble("DURATIONPERCENT"));
+                    CustomerCategory customerCategory = buildCustomercategory(rs);
                     customerCategoryList.add(customerCategory);
                 }
             }
@@ -46,12 +41,7 @@ public class CustomerCategoryDao {
             preparedStmt.setString(1, uuid);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
-                    customerCategory = new CustomerCategory(
-                            rs.getString("CUSTOMERCATEGORYID"),
-                            rs.getString("NAME"),
-                            rs.getString("DESCRIPTION"),
-                            rs.getInt("DURATIONFLAT"),
-                            rs.getDouble("DURATIONPERCENT"));
+                    customerCategory = buildCustomercategory(rs);
                 }
             }
             preparedStmt.close();
@@ -114,5 +104,21 @@ public class CustomerCategoryDao {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static CustomerCategory buildCustomercategory(ResultSet rs){
+        CustomerCategory cc = null;
+        try {
+            cc = new CustomerCategory(
+                    rs.getString("CUSTOMERCATEGORYID"),
+                    rs.getString("NAME"),
+                    rs.getString("DESCRIPTION"),
+                    rs.getInt("DURATIONFLAT"),
+                    rs.getDouble("DURATIONPERCENT"));
+        } catch (SQLException e) {
+            System.err.println("Error while building CustomerCategory");
+            e.printStackTrace();
+        }
+        return cc;
     }
 }

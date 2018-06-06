@@ -18,15 +18,7 @@ public class CustomerColourDao {
             try(ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
-                    CustomerColour customerColour = new CustomerColour(
-                            rs.getString("CUSTOMERCOLURID"),
-                            rs.getInt("CONTENTWHITE"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("EXPOSURETIME"),
-                            rs.getString("NATURAL"),
-                            rs.getString("OXIDATION"),
-                            rs.getString("RESULT")
-                    );
+                    CustomerColour customerColour = buildColour(rs);
                     customerColourList.add(customerColour);
                 }
             }
@@ -37,6 +29,26 @@ public class CustomerColourDao {
         return customerColourList;
     }
 
+    public static CustomerColour buildColour(ResultSet rs){
+        CustomerColour cc = null;
+        try {
+            cc = new CustomerColour(
+                    rs.getString("CUSTOMERCOLOURID"),
+                    rs.getInt("CONTENTWHITE"),
+                    rs.getString("CUSTOMERID"),
+                    rs.getInt("EXPOSURETIME"),
+                    rs.getString("NATURALCOLOUR"),
+                    rs.getString("OXIDATION"),
+                    rs.getString("RESULT")
+            );
+        } catch (SQLException e) {
+            System.err.println("Error while building CustomerColour");
+            e.printStackTrace();
+            return null;
+        }
+        return cc;
+    }
+
     public static List<CustomerColour> getCustomerColourByCustomerId(String customerId){
         List<CustomerColour> customerColourList = new ArrayList<>();
         try {
@@ -44,15 +56,7 @@ public class CustomerColourDao {
             preparedStmt.setString(1, customerId);
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while (rs.next()){
-                    CustomerColour customerColour = new CustomerColour(
-                            rs.getString("CUSTOMERCOLURID"),
-                            rs.getInt("CONTENTWHITE"),
-                            rs.getString("CUSTOMERID"),
-                            rs.getInt("EXPOSURETIME"),
-                            rs.getString("NATURAL"),
-                            rs.getString("OXIDATION"),
-                            rs.getString("RESULT")
-                    );
+                    CustomerColour customerColour = buildColour(rs);
                     customerColourList.add(customerColour);
                 }
             }

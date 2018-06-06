@@ -1,11 +1,8 @@
-
 import client_api.AdministrativeApi;
-
 import client_api.AppointmentApi;
+import client_api.PhoneApi;
 import client_api.StatisticApi;
 import data_loader.SqlConnection;
-
-
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
 
@@ -15,12 +12,6 @@ public class Main {
     private static final String FORMAT = "%-50s";
 
     public static void main (String[] args){
-        /*
-        Uncomment and enter credentials ONLY ONCE
-        Remove personal info after first start
-        DbLoginData.setCredentials("your_username", "your_password");
-        */
-
         System.out.println(getHeader());
 
         System.out.printf(FORMAT, "Launching administrative endpoint...");
@@ -31,6 +22,10 @@ public class Main {
         Endpoint.publish("http://localhost:1338/AppointmentApi", new AppointmentApi());
         System.out.println(SUCCESS);
 
+        System.out.printf(FORMAT, "Launching Phone endpoint...");
+        Endpoint.publish("http://localhost:1340/PhoneApi", new PhoneApi());
+        System.out.println(SUCCESS);
+      
         System.out.printf(FORMAT, "Launching statistics endpoint...");
         Endpoint.publish("http://localhost:1339/StatisticApi", new StatisticApi());
         System.out.println(SUCCESS);

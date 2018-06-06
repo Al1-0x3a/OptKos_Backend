@@ -77,7 +77,7 @@ public class CustomerGenerator {
         Random random = new Random();
         List<CustomerCategory> customerCategories = CustomerCategoryDao.getAllCustomerCategoriesFromDb();
 
-        for (int i = 0; i <= 300; i++) {
+        for (int i = 0; i <= 1000; i++) {
             String personId = UUID.randomUUID().toString();
             Customer customer = new Customer(personId);
 

@@ -1,8 +1,9 @@
 package data_models;
 
+import data_loader.data_access_object.ServiceEmployeeDurationDao;
+
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ public class Service {
 
 	public Service(){
 		this.serviceId = UUID.randomUUID().toString();
+		sedList = ServiceEmployeeDurationDao.getSedListWithOnlyEmployees(this.serviceId);
 	}
 
 	public Service(String serviceId, String name, String description, BigDecimal price,
@@ -29,7 +31,6 @@ public class Service {
 		this.durationPlanned = durationPlanned;
 		this.durationAverage = durationAverage;
 		this.isDeleted = isDeleted;
-		sedList = new ArrayList<>();
 	}
 
 

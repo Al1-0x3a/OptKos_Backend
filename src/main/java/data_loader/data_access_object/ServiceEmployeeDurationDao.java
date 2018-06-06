@@ -19,9 +19,12 @@ public class ServiceEmployeeDurationDao {
 
     public static ServiceEmployeeDuration getServiceEmployeeDuration(String employeeId, String serviceId){
         ServiceEmployeeDuration sed = null;
+        //TODO name dazu
         try{
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICEEMPLOYEEDURATION WHERE EMPLOYEEID=?" +
-                    "AND SERVICEID=?") ;
+            preparedStmt = con.prepareStatement("SELECT * FROM ((OPTKOS.SERVICEEMPLOYEEDURATION sed " +
+                    "INNER JOIN OPTKOS.EMPLOYEE e ON sed.EMPLOYEEID = e.EMPLOYEEID) " +
+                    "INNER JOIN OPTKOS.PERSON p ON p.PERSONID = e.PERSONID) WHERE sed.EMPLOYEEID=? " +
+                    "AND sed.SERVICEID=?");
             preparedStmt.setString(1, employeeId);
             preparedStmt.setString(2, serviceId);
 
@@ -29,7 +32,8 @@ public class ServiceEmployeeDurationDao {
                 while(rs.next()){
                     sed = new ServiceEmployeeDuration(Duration.ofMinutes(rs.getInt("DURATIONPLANNED")),
                             Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
-                            rs.getString("EMPLOYEEID"), rs.getString("SERVICEID"));
+                            rs.getString("EMPLOYEEID"), rs.getString("SERVICEID"),
+                            rs.getString("LASTNAME"), rs.getString("FIRSTNAME"));
                 }
             }
             preparedStmt.close();
@@ -76,12 +80,15 @@ public class ServiceEmployeeDurationDao {
     public static List<ServiceEmployeeDuration> getAllServiceEmployeeDurations(){
         List<ServiceEmployeeDuration> sedList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICEEMPLOYEEDURATION");
+            preparedStmt = con.prepareStatement("SELECT * FROM ((OPTKOS.SERVICEEMPLOYEEDURATION sed " +
+                    "INNER JOIN OPTKOS.EMPLOYEE e ON sed.EMPLOYEEID = e.EMPLOYEEID) " +
+                    "INNER JOIN OPTKOS.PERSON p ON p.PERSONID = e.PERSONID)");
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()) {
                     sedList.add(new ServiceEmployeeDuration(Duration.ofMinutes(((long) rs.getInt("DURATIONPLANNED"))),
                             Duration.ofMinutes(((long) rs.getInt("DURATIONAVERAGE"))),
-                            rs.getString("EMPLOYEEID"), rs.getString("SERVICEID")));
+                            rs.getString("EMPLOYEEID"), rs.getString("SERVICEID"),
+                            rs.getString("LASTNAME"), rs.getString("FIRSTNAME")));
                 }
             }
             preparedStmt.close();
@@ -100,5 +107,29 @@ public class ServiceEmployeeDurationDao {
             sedList.removeAll(filteredList);
             service.setSedList(filteredList);
         }
+    }
+
+
+    public static List<ServiceEmployeeDuration> getSedListWithOnlyEmployees(String serviceId){
+        List<ServiceEmployeeDuration> sedList = new ArrayList<>();
+        try{
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e LEFT JOIN OPTKOS.PERSON p " +
+                    "ON e.PERSONID=p.PERSONID") ;
+
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    ServiceEmployeeDuration sed = new ServiceEmployeeDuration(Duration.ofMinutes(0),
+                            Duration.ofMinutes(0),
+                            rs.getString("EMPLOYEEID"), serviceId, rs.getString("LASTNAME"),
+                            rs.getString("FIRSTNAME"));
+                    sedList.add(sed);
+                }
+            }
+            preparedStmt.close();
+        }catch(SQLException e){
+            System.err.println("Error while creating sedList with only Employees...");
+            e.printStackTrace();
+        }
+        return sedList;
     }
 }

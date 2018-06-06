@@ -25,10 +25,11 @@ public class Employee extends Person {
 	}
 
 
-	public Employee(String employeeId, char isDeleted, Position position) {
+	public Employee(String employeeId, char isDeleted, Position position, String displayColor) {
 		this.employeeId = employeeId;
 		this.isDeleted = isDeleted;
 		this.position = position;
+		this.colour = displayColor;
 		this.initWorkingDays();
 	}
 	public void setColour(String colour){this.colour =colour;}
