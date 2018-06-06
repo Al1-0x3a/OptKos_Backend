@@ -25,10 +25,7 @@ public class CustomerDao {
                     "  JOIN OPTKOS.PERSON p ON c.PERSONID = p.PERSONID" +
                     "  JOIN OPTKOS.ADDRESS A on p.PERSONID = A.PERSONID" +
                     "  JOIN OPTKOS.CUSTOMERCATEGORY CC on c.CUSTOMERCATEGORYID = CC.CUSTOMERCATEGORYID" +
-                    "  LEFT JOIN OPTKOS.CUSTOMERCOLOUR CColour ON c.CUSTOMERID = CColour.CUSTOMERID" +
-                    "  LEFT JOIN (SELECT *" +
-                    "             FROM OPTKOS.COLOURMIXTURE cm" +
-                    "               JOIN OPTKOs.COLOUR COL ON cm.COLOURID = COL.COLOURID) COLOUR2 ON COLOUR2.CUSTOMERID = c.CUSTOMERID");
+                    "  LEFT JOIN OPTKOS.CUSTOMERCOLOUR CColour ON c.CUSTOMERID = CColour.CUSTOMERID");
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 customerList = new ArrayList<>();
@@ -82,6 +79,15 @@ public class CustomerDao {
                     .collect(Collectors.toList());
             phoneList.removeAll(filteredList);
             c.getPhoneList().addAll(filteredList);
+        }
+
+        /*Colourmixture*/
+        List<ColourMixture> mixtureList = ColourMixtureDao.getAllColourMixturesFromDb();
+        for(Customer c: customerList){
+            List<ColourMixture> filteredList = mixtureList.stream().filter(m -> m.getCustomerId()
+                    .equals(c.getCustomerId())).collect(Collectors.toList());
+            mixtureList.removeAll(filteredList);
+            c.getColourMixtureList().addAll(filteredList);
         }
 
         System.out.println("Get all Customers from Db: " + (System.nanoTime() - start)/1e6 + " ms");
@@ -233,10 +239,6 @@ public class CustomerDao {
                 customer.setProblemCustomer(true);
             else customer.setProblemCustomer(false);
 
-            customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
-            customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-            customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
-
         } catch (SQLException e) {
             System.err.println("Error while building Cutomer");
             e.printStackTrace();
@@ -255,10 +257,9 @@ public class CustomerDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
                     customer = buildCustomer(rs);
-/*                    // remaining stuff
                     customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));*/
+                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
                 }
             }
             preparedStmt.close();
