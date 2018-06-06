@@ -25,7 +25,7 @@ public class ServiceCounterDao {
                     "WHERE OPTKOS.APOINTMENT.PLANTIMESTART >= ? " +
                     "AND OPTKOS.APOINTMENT.PLANTIMEEND <= ? " +
                     "AND OPTKOS.APOINTMENT.SERVICEID = ? " +
-                    "GROUP BY OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME;");
+                    "GROUP BY OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(startTime));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(endTime));
             preparedStmt.setString(3, serviceId);
