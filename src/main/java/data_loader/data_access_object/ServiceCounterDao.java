@@ -18,7 +18,7 @@ public class ServiceCounterDao {
 
         try {
             preparedStmt=con.prepareStatement("SELECT OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME, " +
-                    "COUNT(OPTKOS.APOINTMENT.APOINTMENTID) AS COUNTER " +
+                    "COUNT(OPTKOS.APOINTMENT.SERVICEID) AS COUNTER " +
                     "FROM OPTKOS.SERVICE LEFT JOIN OPTKOS.APOINTMENT ON OPTKOS.SERVICE.SERVICEID = OPTKOS.APOINTMENT.SERVICEID " +
                     "WHERE OPTKOS.APOINTMENT.PLANTIMESTART >= ? " +
                     "AND OPTKOS.APOINTMENT.PLANTIMEEND <= ? " +
