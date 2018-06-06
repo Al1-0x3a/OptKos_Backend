@@ -1,13 +1,11 @@
 package util;
 
 import data_loader.SqlConnection;
+import data_loader.data_access_object.AppointmentDao;
 import data_loader.data_access_object.CustomerDao;
 import data_loader.data_access_object.EmployeeDao;
 import data_loader.data_access_object.ServiceDao;
-import data_models.Appointment;
-import data_models.Customer;
-import data_models.Employee;
-import data_models.Service;
+import data_models.*;
 import manager.AppointmentManager;
 
 import java.sql.Connection;
@@ -76,8 +74,9 @@ public class AppointmentGenerator {
             appointment.setService(service);
 
             String week = day.format(DateTimeFormatter.ISO_DATE);
+            List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
 
-            if (manager.isFree(appointment, week, AppointmentManager.STATIC_FETCH)) {
+            if (manager.isFree(appointment, week, appointmentListItems)) {
                 try {
                     try (PreparedStatement appointmentStatement = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT " +
                             "(APOINTMENTID, PLANTIMESTART, PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID, " +

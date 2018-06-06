@@ -46,7 +46,7 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public boolean isSlotFree(Appointment appointment, String week) {
-        return appointmentManager.isFree(appointment, week, AppointmentManager.DYNAMIC_FETCH);
+        return appointmentManager.isFree(appointment, week, AppointmentDao.getAppointmentsByCalendarWeek(week));
     }
 
     @Override

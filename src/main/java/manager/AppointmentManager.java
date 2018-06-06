@@ -11,21 +11,8 @@ import java.time.format.TextStyle;
 import java.util.*;
 
 public class AppointmentManager {
-    // use this option for the generator
-    public static final int STATIC_FETCH = 0;
-    // use this option for requests from the frontend
-    public static final int DYNAMIC_FETCH = 1;
 
-    public boolean isFree(Appointment appointment, String week, int strategy) {
-        List<AppointmentListItem> appointmentListItems;
-        if (strategy == STATIC_FETCH) {
-            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeekFast(week);
-        } else if (strategy == DYNAMIC_FETCH) {
-            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
-        } else {
-            System.err.println("Invalid fetch strategy: " + strategy);
-            return false;
-        }
+    public boolean isFree(Appointment appointment, String week, List<AppointmentListItem> appointmentListItems) {
         if (appointmentListItems == null) {
             return true;
         }
@@ -74,11 +61,12 @@ public class AppointmentManager {
 
     public List<AppointmentSuggestion> findSuggestions(LocalDateTime startTime, LocalDateTime endTime) {
         List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+        String week = startTime.format(DateTimeFormatter.ISO_DATE);
+        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
         List<AppointmentSuggestion> appointmentSuggestions = new ArrayList<>();
         for (Employee employee: employees) {
             Appointment tmp = new Appointment(UUID.randomUUID().toString(), endTime, startTime, employee.getEmployeeId());
-            String week = startTime.format(DateTimeFormatter.ISO_DATE);
-            if (isFree(tmp, week, STATIC_FETCH)) {
+            if (isFree(tmp, week, appointmentListItems)) {
                 appointmentSuggestions.add(new AppointmentSuggestion(startTime, endTime, employee));
             }
         }
