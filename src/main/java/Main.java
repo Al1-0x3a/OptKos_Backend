@@ -37,7 +37,7 @@ public class Main {
             long end = System.currentTimeMillis();
             if (status) {
                 System.out.println(SUCCESS);
-                System.out.printf("Initial ping took %d ms%n", (end - start));Make fixes to make phoneSimulator work correctly
+                System.out.printf("Initial ping took %d ms%n", (end - start));
             } else {
                 System.err.println(ERROR);
                 System.exit(1);
