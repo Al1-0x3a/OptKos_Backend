@@ -5,18 +5,16 @@ import data_models.*;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ServiceCounterDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
 
-    public static List<ServiceCounter> getAllServiceCounter(String serviceId, LocalDateTime startTime,
+    public static ServiceCounter getAllServiceCounter(String serviceId, LocalDateTime startTime,
     LocalDateTime endTime){
 
-        List<ServiceCounter> serviceCounterList = new ArrayList<>();
+        ServiceCounter serviceCounter = null;
 
         try {
             preparedStmt=con.prepareStatement("SELECT OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME, " +
@@ -32,17 +30,15 @@ public class ServiceCounterDao {
 
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 while (rs.next()) {
-                    ServiceCounter serviceCounter = new ServiceCounter(rs.getString("SERVICEID"));
+                    serviceCounter = new ServiceCounter(rs.getString("SERVICEID"));
                     serviceCounter.setServiceName(rs.getString("NAME"));
                     serviceCounter.setServiceCounter(rs.getInt("COUNTER"));
-
-                    serviceCounterList.add(serviceCounter);
                 }
             }
             preparedStmt.close();
             } catch (SQLException e) {
             e.printStackTrace();
         }
-        return serviceCounterList;
+        return serviceCounter;
     }
 }
