@@ -4,9 +4,6 @@ import client_api.AdministrativeApi;
 import client_api.AppointmentApi;
 import client_api.PhoneApi;
 import data_loader.SqlConnection;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import util.PhoneSimulator;
 
 
 import javax.xml.ws.Endpoint;
@@ -18,12 +15,6 @@ public class Main {
     private static final String FORMAT = "%-50s";
 
     public static void main (String[] args){
-        /*
-        Uncomment and enter credentials ONLY ONCE
-        Remove personal info after first start
-        DbLoginData.setCredentials("your_username", "your_password");
-        */
-
         System.out.println(getHeader());
 
         System.out.printf(FORMAT, "Launching administrative endpoint...");
@@ -35,7 +26,7 @@ public class Main {
         System.out.println(SUCCESS);
 
         System.out.printf(FORMAT, "Launching Phone endpoint...");
-        Endpoint.publish("http://localhost:1339/PhoneApi", new PhoneApi());
+        Endpoint.publish("http://localhost:1340/PhoneApi", new PhoneApi());
         System.out.println(SUCCESS);
 
         try {
