@@ -21,4 +21,5 @@ public interface IAppointmentApi {
     boolean updateAppointment(Appointment appointment);
     @WebMethod
     boolean isSlotFree(Appointment appointment, String ltd);
+
 }

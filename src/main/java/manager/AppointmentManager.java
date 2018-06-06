@@ -1,23 +1,22 @@
 package manager;
 
 import data_loader.data_access_object.AppointmentDao;
+import data_loader.data_access_object.EmployeeDao;
 import data_models.*;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.LongStream;
+import java.util.*;
 
 public class AppointmentManager {
     // use this option for the generator
     public static final int STATIC_FETCH = 0;
     // use this option for requests from the frontend
     public static final int DYNAMIC_FETCH = 1;
+
+    private List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
 
     public boolean isFree(Appointment appointment, String week, int strategy) {
         List<AppointmentListItem> appointmentListItems;
@@ -75,23 +74,15 @@ public class AppointmentManager {
         return (targetStart.isBefore(existingEnd) && targetEnd.isAfter(existingStart));
     }
 
-    public void calculateServiceDuration(Employee employee, Service service) {
-        long start = System.currentTimeMillis();
-
-        List<Appointment> appointments = AppointmentDao.getAllAppointmentsFromDb();
-        List<Long> durations = new ArrayList<>();
-
-        for (Appointment appointment: appointments) {
-            if (appointment.getEmployeeid().equals(employee.getEmployeeId()) &&
-                    appointment.getService().getServiceId().equals(service.getServiceId()) &&
-                    appointment.getEndTimeActual().isBefore(LocalDateTime.now())) {
-                durations.add(Duration.between(appointment.getStartTimeActual(), appointment.getEndTimeActual()).toMinutes());
+    public List<AppointmentSuggestion> findSuggestions(LocalDateTime startTime, LocalDateTime endTime) {
+        List<AppointmentSuggestion> appointmentSuggestions = new ArrayList<>();
+        for (Employee employee: employees) {
+            Appointment tmp = new Appointment(UUID.randomUUID().toString(), endTime, startTime, employee.getEmployeeId());
+            String week = startTime.format(DateTimeFormatter.ISO_DATE);
+            if (isFree(tmp, week, DYNAMIC_FETCH)) {
+                appointmentSuggestions.add(new AppointmentSuggestion(startTime, endTime, employee));
             }
         }
-        long average = (long) durations.stream().mapToLong(d -> d).average().getAsDouble();
-
-        long end = System.currentTimeMillis();
-        System.out.printf("Mitarbeiter %s braucht für den Dienst %s %d Minuten%n", employee.getLastname(), service.getName(), average);
-        System.out.printf("Calculation took %d ms%n", (end - start));
+        return appointmentSuggestions;
     }
 }
