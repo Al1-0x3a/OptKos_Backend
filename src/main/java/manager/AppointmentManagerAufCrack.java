@@ -7,6 +7,7 @@ import data_models.Employee;
 import data_models.WorkingDay;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -60,13 +61,33 @@ public class AppointmentManagerAufCrack {
         return result;
     }
 
+    public Map<Employee, List<Interval>> invert(Map<Employee, List<Interval>> original) {
+        Map<Employee, List<Interval>> result = new HashMap<>();
+        original.forEach((k,v) -> {
+            List<Interval> intervalsForKey = new ArrayList<>();
+            String gapStart = null, gapEnd;
+            for (int i = 0; i < v.size(); i++) {
+                Interval interval = v.get(i);
+                if (i == 0) {
+                    gapStart = (interval.endTime.plus(Duration.ofMinutes(1))).toString();
+                    continue;
+                }
+                gapEnd = interval.startTime.toString();
+                intervalsForKey.add(new Interval(LocalTime.parse(gapStart), LocalTime.parse(gapEnd)));
+                gapStart = (interval.endTime.plus(Duration.ofMinutes(1))).toString();
+            }
+            result.put(k, intervalsForKey);
+        });
+        return result;
+    }
+
     public class Interval {
         LocalTime startTime;
         LocalTime endTime;
 
         public Interval(LocalTime startTime, LocalTime endTime) {
             this.startTime = startTime;
-            this.endTime = endTime;
+            this.endTime = endTime.minus(Duration.ofMinutes(1));
         }
     }
 
