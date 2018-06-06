@@ -3,6 +3,7 @@ package data_models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Employee extends Person {
@@ -87,4 +88,17 @@ public class Employee extends Person {
 		workingDays.add(new WorkingDay("Samstag"));
 		workingDays.add(new WorkingDay("Sonntag"));
 	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		final Employee employee = (Employee) o;
+		return Objects.equals(employeeId, employee.employeeId);
+	}
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeId);
+    }
 }

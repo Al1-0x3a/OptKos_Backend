@@ -1,6 +1,7 @@
 package manager;
 
 import data_loader.data_access_object.AppointmentDao;
+import data_models.Appointment;
 import data_models.AppointmentListItem;
 import data_models.Employee;
 import data_models.WorkingDay;
@@ -8,17 +9,25 @@ import data_models.WorkingDay;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AppointmentManagerAufCrack {
-    private LocalTime startDay;
-    private LocalTime endDay;
+    private static LocalTime startDay = LocalTime.of(0, 0,0);
+    private static LocalTime endDay = LocalTime.of(23, 59,59);
 
-    public AppointmentManagerAufCrack() {
-        startDay = LocalTime.of(0, 0,0);
-        endDay = LocalTime.of(23, 59,59);
+    public boolean isFree(Appointment appointment, Employee employee) {
+        Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().format(DateTimeFormatter.ISO_DATE));
+        List<Interval> employeeIntervals = takenIntervals.get(employee);
+        Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
+        for (Interval interval: employeeIntervals) {
+            if (target.startTime.isBefore(interval.endTime) && target.endTime.isAfter(interval.startTime)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Map<Employee, List<Interval>> generateIntervals(String date) {
