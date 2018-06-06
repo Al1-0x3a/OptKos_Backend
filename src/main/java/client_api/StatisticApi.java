@@ -17,7 +17,7 @@ public class StatisticApi implements IStatisticApi {
     }
     
     @Override
-    public List<ServiceCounter> getAllServiceCounter(String serviceId, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<ServiceCounter> getAllServiceCounter(String serviceId, String startTime, String endTime) {
         return statisticManager.getAllServiceCounter(serviceId, startTime, endTime);
     }
 }

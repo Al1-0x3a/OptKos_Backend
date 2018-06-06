@@ -10,5 +10,5 @@ import java.util.List;
 @WebService
 public interface IStatisticApi {
     @WebMethod
-    List<ServiceCounter> getAllServiceCounter(String serviceId, LocalDateTime starttime, LocalDateTime endtime);
+    List<ServiceCounter> getAllServiceCounter(String serviceId, String startTime, String endTime);
 }
