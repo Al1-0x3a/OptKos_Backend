@@ -3,16 +3,35 @@ package data_models;
 import java.time.LocalDateTime;
 
 public class AppointmentSuggestion {
+    public enum Strategy {FIRST_SLOT, FIRST_SLOT_WITH_EMPLOYEE, SLOT_IN_RANGE, SLOT_IN_RANGE_WITH_EMPLOYEE}
+
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Service service;
     private Employee employee;
 
-    public AppointmentSuggestion(LocalDateTime startTime, LocalDateTime endTime, Employee employee) {
+    public AppointmentSuggestion(LocalDateTime startTime, Service service) {
+        this.startTime = startTime;
+        this.service = service;
+    }
+
+    public AppointmentSuggestion(LocalDateTime startTime, Employee employee, Service service) {
+        this.startTime = startTime;
+        this.employee = employee;
+        this.service = service;
+    }
+
+    public AppointmentSuggestion(LocalDateTime startTime, LocalDateTime endTime, Service service) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.service = service;
+    }
+
+    public AppointmentSuggestion(LocalDateTime startTime, LocalDateTime endTime, Employee employee, Service service) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.employee = employee;
-        // service will remain null
+        this.service = service;
     }
 
     public LocalDateTime getStartTime() {

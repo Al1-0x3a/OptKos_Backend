@@ -4,10 +4,10 @@ import data_loader.data_access_object.AppointmentDao;
 import data_models.Appointment;
 import data_models.AppointmentListItem;
 import data_models.AppointmentSuggestion;
+import data_models.Employee;
 import manager.AppointmentManager;
 
 import javax.jws.WebService;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("ValidExternallyBoundObject")
@@ -45,12 +45,13 @@ public class AppointmentApi implements IAppointmentApi{
     }
 
     @Override
-    public boolean isSlotFree(Appointment appointment, String week) {
-        return appointmentManager.isFree(appointment, week, AppointmentDao.getAppointmentsByCalendarWeek(week));
+    public boolean isSlotFree(Appointment appointment, Employee employee) {
+        return appointmentManager.isFree(appointment, employee);
     }
 
     @Override
-    public List<AppointmentSuggestion> findSuggestions(String startTime, String endTime) {
-        return appointmentManager.findSuggestions(LocalDateTime.parse(startTime), LocalDateTime.parse(endTime));
+    public List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
+                                                       AppointmentSuggestion suggestion) {
+        return appointmentManager.findSuggestions(strategy, suggestion);
     }
 }

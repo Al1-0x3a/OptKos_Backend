@@ -3,6 +3,7 @@ package client_api;
 import data_models.Appointment;
 import data_models.AppointmentListItem;
 import data_models.AppointmentSuggestion;
+import data_models.Employee;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -21,7 +22,8 @@ public interface IAppointmentApi {
     @WebMethod
     boolean updateAppointment(Appointment appointment);
     @WebMethod
-    boolean isSlotFree(Appointment appointment, String ltd);
+    boolean isSlotFree(Appointment appointment, Employee employee);
     @WebMethod
-    List<AppointmentSuggestion> findSuggestions(String startTime, String endTime);
+    List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
+                                                AppointmentSuggestion suggestion);
 }
