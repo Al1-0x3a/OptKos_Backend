@@ -3,7 +3,7 @@ package data_models;
 import java.time.LocalDateTime;
 
 public class AppointmentSuggestion {
-    public enum Strategy {FIRST_SLOT, FIRST_SLOT_WITH_EMPLOYEE, SLOT_IN_RANGE, SLOT_IN_RANGE_WITH_EMPLOYEE}
+    public enum Strategy {FIRST_SLOT, SLOT_IN_RANGE}
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;

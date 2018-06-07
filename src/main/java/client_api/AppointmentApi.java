@@ -41,7 +41,7 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public boolean updateAppointment(Appointment appointment) {
-        return AppointmentDao.createAppointment(appointment);
+        return AppointmentDao.updateAppointment(appointment);
     }
 
     @Override
