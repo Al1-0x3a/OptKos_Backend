@@ -10,6 +10,8 @@ import java.util.List;
 @WebService
 public interface IAppointmentApi {
     @WebMethod
+    Appointment getNewAppointment();
+    @WebMethod
     List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt);
     @WebMethod
 	Appointment getAppointmentById(String apointmentId);
