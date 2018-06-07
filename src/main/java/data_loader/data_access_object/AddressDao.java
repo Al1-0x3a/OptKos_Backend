@@ -5,7 +5,6 @@ import data_models.Address;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class AddressDao {
 
