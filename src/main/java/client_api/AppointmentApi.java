@@ -28,6 +28,16 @@ public class AppointmentApi implements IAppointmentApi{
     }
 
     @Override
+    public boolean createAppointment(Appointment appointment) {
+        return AppointmentDao.createAppointment(appointment);
+    }
+
+    @Override
+    public boolean updateAppointment(Appointment appointment) {
+        return AppointmentDao.createAppointment(appointment);
+    }
+
+    @Override
     public boolean isSlotFree(Appointment appointment, String week) {
         return appointmentManager.isFree(appointment, week, AppointmentManager.DYNAMIC_FETCH);
     }
