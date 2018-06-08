@@ -78,4 +78,34 @@ public interface IAdministrativeApi {
     boolean deleteServiceDuration(String serviceDurationId);
     @WebMethod
     Customer getCustomerByPhoneNumber(String phoneNumber);
+    @WebMethod
+    Colour getNewColour();
+    @WebMethod
+    List<Colour> getColours();
+    @WebMethod
+    void createColour(Colour colour);
+    @WebMethod
+    void updateColour(Colour colour);
+    @WebMethod
+    void deleteColour(Colour colour);
+    @WebMethod
+    ColourMixture getNewColourMixture();
+    @WebMethod
+    List<ColourMixture> getAllColourMixtures();
+    @WebMethod
+    void createColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    void updateColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    void deleteColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    CustomerColour getNewCustomerColour();
+    @WebMethod
+    List<CustomerColour> getAllCustomerColours();
+    @WebMethod
+    void createCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void updateCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void deleteCustomerColour(CustomerColour customerColour);
 }

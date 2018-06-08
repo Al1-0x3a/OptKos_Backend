@@ -74,9 +74,9 @@ public class ColourMixtureDao {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOURMIXTURE (MIXINGRATIO, COLOURID," +
                     " COLOURMIXTUREID, CUSTOMERID) VALUES(?,?,?,?)");
             preparedStmt.setInt(1, colourMixture.getMixingRatio());
-            preparedStmt.setString(2, colourMixture.getColourId().toString());
-            preparedStmt.setString(3, colourMixture.getColourMixtureId().toString());
-            preparedStmt.setString(4, colourMixture.getCustomerId().toString());
+            preparedStmt.setString(2, colourMixture.getColourId());
+            preparedStmt.setString(3, colourMixture.getColourMixtureId());
+            preparedStmt.setString(4, colourMixture.getCustomerId());
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
@@ -87,7 +87,7 @@ public class ColourMixtureDao {
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
-            preparedStmt.setString(1, colourMixtureId.toString());
+            preparedStmt.setString(1, colourMixtureId);
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
@@ -95,12 +95,12 @@ public class ColourMixtureDao {
         }
     }
 
-    public static void changeCustomerColourByCustomerId(String colourMixtureId, int mixingRatio){
+    public static void changeCustomerColourByCustomerId(ColourMixture colourMixture){
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.COLOURMIXTURE SET MIXINGRATIO = ?" +
                     " WHERE COLOURMIXTUREID = ?");
-            preparedStmt.setInt(1, mixingRatio);
-            preparedStmt.setString(2, colourMixtureId.toString());
+            preparedStmt.setInt(1, colourMixture.getMixingRatio());
+            preparedStmt.setString(2, colourMixture.getColourMixtureId());
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {

@@ -1,6 +1,8 @@
 package data_models;
 
 
+import java.util.UUID;
+
 public class CustomerColour {
 
 	private String customerColourId;
@@ -12,7 +14,7 @@ public class CustomerColour {
 	private String result;
 
 	public CustomerColour(){
-
+		this.customerColourId = UUID.randomUUID().toString();
 	}
 
 	public CustomerColour(String customerColourId, int contentWhite, String customerId, int exposureTime,

@@ -57,11 +57,11 @@ public class ColourDao {
         }
     }
 
-    public static void createCustomerColour(Colour colour){
+    public static void createColour(Colour colour){
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS," +
                     "COLOURHUE, MANUFACTURER) VALUES(?,?,?,?)");
-            preparedStmt.setString(1, colour.getColourId().toString());
+            preparedStmt.setString(1, colour.getColourId());
             preparedStmt.setString(2,colour.getBrightness());
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
@@ -76,7 +76,7 @@ public class ColourDao {
         List<Colour> colourList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOUR WHERE COLOURID=?");
-            preparedStmt.setString(1, colourId.toString());
+            preparedStmt.setString(1, colourId);
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
@@ -84,14 +84,14 @@ public class ColourDao {
         }
     }
 
-    public static void changeColourByColourId(String colourId, String brightness, String hue, String manufacturer){
+    public static void changeColourByColourId(Colour colour){
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.COLOUR SET COLOURBRIGHTNESS = ?, COLOURHUE = ?," +
                     " MANUFACTURER = ? WHERE COLOURID = ?");
-            preparedStmt.setString(1, brightness);
-            preparedStmt.setString(2, hue);
-            preparedStmt.setString(3, manufacturer);
-            preparedStmt.setString(4, colourId);
+            preparedStmt.setString(1, colour.getBrightness());
+            preparedStmt.setString(2, colour.getHue());
+            preparedStmt.setString(3, colour.getManufacturer());
+            preparedStmt.setString(4, colour.getColourId());
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
