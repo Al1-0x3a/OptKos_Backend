@@ -3,6 +3,8 @@ package client_api;
 import data_loader.data_access_object.AppointmentDao;
 import data_models.Appointment;
 import data_models.AppointmentListItem;
+import data_models.AppointmentSuggestion;
+import data_models.Employee;
 import manager.AppointmentManager;
 
 import javax.jws.WebService;
@@ -39,11 +41,17 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public boolean updateAppointment(Appointment appointment) {
-        return AppointmentDao.createAppointment(appointment);
+        return AppointmentDao.updateAppointment(appointment);
     }
 
     @Override
-    public boolean isSlotFree(Appointment appointment, String week) {
-        return appointmentManager.isFree(appointment, week, AppointmentManager.DYNAMIC_FETCH);
+    public boolean isSlotFree(Appointment appointment, Employee employee) {
+        return appointmentManager.isFree(appointment, employee);
+    }
+
+    @Override
+    public List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
+                                                       AppointmentSuggestion suggestion) {
+        return appointmentManager.findSuggestions(strategy, suggestion);
     }
 }

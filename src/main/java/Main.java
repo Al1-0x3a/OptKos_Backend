@@ -13,6 +13,7 @@ public class Main {
 
     public static void main (String[] args){
         System.out.println(getHeader());
+        System.out.println("[-------------------------STARTUP-------------------------]\n");
 
         System.out.printf(FORMAT, "Launching administrative endpoint...");
         Endpoint.publish("http://localhost:1337/AdministrativeApi", new AdministrativeApi());
@@ -21,13 +22,13 @@ public class Main {
         System.out.printf(FORMAT, "Launching appointment endpoint...");
         Endpoint.publish("http://localhost:1338/AppointmentApi", new AppointmentApi());
         System.out.println(SUCCESS);
-
-        System.out.printf(FORMAT, "Launching Phone endpoint...");
-        Endpoint.publish("http://localhost:1340/PhoneApi", new PhoneApi());
-        System.out.println(SUCCESS);
       
         System.out.printf(FORMAT, "Launching statistics endpoint...");
         Endpoint.publish("http://localhost:1339/StatisticApi", new StatisticApi());
+        System.out.println(SUCCESS);
+
+        System.out.printf(FORMAT, "Launching phone endpoint...");
+        Endpoint.publish("http://localhost:1340/PhoneApi", new PhoneApi());
         System.out.println(SUCCESS);
 
         try {
@@ -46,22 +47,20 @@ public class Main {
             e.printStackTrace();
         }
 
+        System.out.println("\n[-------------------------RUNNING-------------------------]\n");
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("\n[-------------------------EXITING-------------------------]\n");
+            System.out.printf(FORMAT, "Closing database connection...");
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.printf(FORMAT, "Closing Databse Connection...");
-
-                if (SqlConnection.getConnection() != null) {
-                    try {
-                        SqlConnection.getConnection().close();
-                    } catch (Exception e) {
-                        System.out.println(ERROR);
-                        e.printStackTrace();
-                    }
-                    System.out.println(SUCCESS);
+            if (SqlConnection.getConnection() != null) {
+                try {
+                    SqlConnection.getConnection().close();
+                } catch (Exception e) {
+                    System.out.println(ERROR);
+                    e.printStackTrace();
                 }
+                System.out.println(SUCCESS);
             }
         }){});
 

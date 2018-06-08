@@ -20,10 +20,6 @@ public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
 
-    // these lists should only be used when generating appointments
-    // private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-    // private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
-
     private AppointmentDao() {
     }
 
@@ -38,7 +34,7 @@ public class AppointmentDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
 
                 while (rs.next()) {
-                    Appointment appointment = new Appointment(rs.getString("APPOINTMENTID"),
+                    Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
                             rs.getString("EMPLOYEEID"));
@@ -119,7 +115,6 @@ public class AppointmentDao {
         return appointment;
     }
 
-    @SuppressWarnings("Duplicates")
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
         List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
@@ -248,95 +243,6 @@ public class AppointmentDao {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    @SuppressWarnings("Duplicates")
-    public static List<AppointmentListItem> getAppointmentsByCalendarWeekFast(String ldt){
-        // Uncomment static lists and comment the two following lines
-        List<Employee> employees = null;
-        List<Customer> customers = null;
-        List<AppointmentListItem> appointmentList = new ArrayList<>();
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
-                    " e.PERSONID = p.PERSONID LEFT JOIN(SELECT * FROM OPTKOS.APOINTMENT a " +
-                    "WHERE a.PLANTIMESTART>=? AND a.PLANTIMEEND<?) a ON " +
-                    "e.EMPLOYEEID = a.EMPLOYEEID LEFT JOIN OPTKOS.SERVICE s ON a.SERVICEID=s.SERVICEID " +
-                    "ORDER BY e.EMPLOYEEID");
-
-
-            LocalDate localDate = LocalDate.parse(ldt);
-            int weekNumber = localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-
-            /*Get the first and last day of Calendarweek*/
-            LocalDate date = LocalDate.of(2018, Month.JANUARY, 10);
-            LocalDate dayInWeek = date.with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber);
-            LocalDate startDay = dayInWeek.with(DayOfWeek.MONDAY);
-            LocalDate endDay = dayInWeek.with(DayOfWeek.SUNDAY);
-            preparedStmt.setTimestamp(1, Timestamp.valueOf(startDay.atStartOfDay()));
-            preparedStmt.setTimestamp(2, Timestamp.valueOf(endDay.atStartOfDay()));
-            AppointmentListItem ali;
-            try (ResultSet rs = preparedStmt.executeQuery()) {
-
-                ali = null;
-                String tmpEmployeeId = "";
-
-                while (rs.next()) {
-                    String tmp = rs.getString("EMPLOYEEID");
-                    if (!tmp.equals(tmpEmployeeId)) {
-                        if (ali != null) {
-                            appointmentList.add(ali);
-                        }
-                        tmpEmployeeId = rs.getString("EMPLOYEEID");
-                        ali = new AppointmentListItem(employees.stream().filter(e -> e.getEmployeeId().equals(tmp))
-                                .findFirst().get());
-                    }
-                    Appointment appointment = null;
-                    if (rs.getString("APOINTMENTID") != null) {
-                        /*Build Appointment*/
-                        appointment = new Appointment(rs.getString("APOINTMENTID"),
-                                rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                                rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                                rs.getString("EMPLOYEEID"));
-
-                        /*Search for matching customer and set it in appointment*/
-                        String customerid = rs.getString("CUSTOMERID");
-                        for (Customer customer :
-                                customers) {
-                            if (customer.getCustomerId().equals(customerid)) {
-                                appointment.setCustomer(customer);
-                                break;
-                            }
-                        }
-                        /*Add Service to appointment*/
-                        Service service = new Service(rs.getString("SERVICEID"),
-                                rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                                rs.getBigDecimal("PRICE"), Duration.ofMinutes(
-                                rs.getInt("DURTATIONPLANNED")),
-                                Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
-                                rs.getString("ISDELETED"));
-
-                        appointment.setService(service);
-                    }
-                    /*Check if indeedtime exists and add it*/
-                    if (rs.getTimestamp("INDEEDTIMEEND") != null) {
-                        appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
-                    }
-                    if (rs.getTimestamp("INDEEDTIMESTART") != null) {
-                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
-                                .toLocalDateTime());
-                    }
-
-                    ali.addAppointment(appointment);
-                }
-                preparedStmt.close();
-            }
-            appointmentList.add(ali);
-            return appointmentList;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
