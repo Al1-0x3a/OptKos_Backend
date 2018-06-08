@@ -18,6 +18,11 @@ public class AppointmentApi implements IAppointmentApi{
     }
 
     @Override
+    public Appointment getNewAppointment() {
+        return new Appointment();
+    }
+
+    @Override
     public List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt) {
         return AppointmentDao.getAppointmentsByCalendarWeek(ldt);
     }
@@ -25,6 +30,16 @@ public class AppointmentApi implements IAppointmentApi{
     @Override
     public Appointment getAppointmentById(String appointmentId) {
         return null;
+    }
+
+    @Override
+    public boolean createAppointment(Appointment appointment) {
+        return AppointmentDao.createAppointment(appointment);
+    }
+
+    @Override
+    public boolean updateAppointment(Appointment appointment) {
+        return AppointmentDao.createAppointment(appointment);
     }
 
     @Override
