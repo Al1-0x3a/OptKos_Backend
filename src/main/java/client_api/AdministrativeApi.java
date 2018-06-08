@@ -3,6 +3,7 @@ package client_api;
 import data_loader.data_access_object.*;
 import data_models.*;
 import manager.AdministrativeManager;
+import manager.PasswordManager;
 import manager.PhoneManager;
 
 import javax.jws.WebService;
@@ -196,5 +197,15 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public Customer getCustomerByPhoneNumber(String phoneNumber) {
         return phoneManager.getCustomerByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public boolean login(String username, String password) {
+        return PasswordManager.login(username, password);
+    }
+
+    @Override
+    public void registerUser(String username, String password) {
+        PasswordManager.signup(username, password);
     }
 }

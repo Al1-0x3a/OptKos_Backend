@@ -78,4 +78,8 @@ public interface IAdministrativeApi {
     boolean deleteServiceDuration(String serviceDurationId);
     @WebMethod
     Customer getCustomerByPhoneNumber(String phoneNumber);
+    @WebMethod
+    boolean login(String username, String password);
+    @WebMethod
+    void registerUser(String username, String password);
 }
