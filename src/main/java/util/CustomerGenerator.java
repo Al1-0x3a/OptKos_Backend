@@ -111,6 +111,7 @@ public class CustomerGenerator {
             address.setPostcode(plz);
             String housnr = String.valueOf(random.nextInt(100));
             address.setHousenr(housnr);
+            address.setAddition("");
             customer.setAddress(address);
 
             Email email = new Email(personId);
