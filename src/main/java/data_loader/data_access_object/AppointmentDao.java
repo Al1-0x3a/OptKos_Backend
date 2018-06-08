@@ -20,10 +20,6 @@ public class AppointmentDao {
     private static final Connection con = SqlConnection.getConnection();
     private static PreparedStatement preparedStmt;
 
-    // these lists should only be used when generating appointments
-    // private static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-    // private static List<Customer> customers = CustomerDao.getAllCustomersFromDb();
-
     private AppointmentDao() {
     }
 
@@ -44,10 +40,10 @@ public class AppointmentDao {
                             rs.getString("EMPLOYEEID"));
 
                     /*Search for matching customer and set it in appointment*/
-                    String customerid = rs.getString("CUSTOMERID");
+                    String customerId = rs.getString("CUSTOMERID");
                     for (Customer customer :
                             customerList) {
-                        if(customer.getCustomerId().equals(customerid)) {
+                        if(customer.getCustomerId().equals(customerId)) {
                             appointment.setCustomer(customer);
                             break;
                         }
