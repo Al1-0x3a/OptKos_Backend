@@ -17,13 +17,12 @@ public class ServiceCounterDao {
         ServiceCounter serviceCounter = null;
 
         try {
-            preparedStmt=con.prepareStatement("SELECT OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME, " +
-                    "COUNT(OPTKOS.APOINTMENT.SERVICEID) AS COUNTER " +
-                    "FROM OPTKOS.SERVICE LEFT JOIN OPTKOS.APOINTMENT ON OPTKOS.SERVICE.SERVICEID = OPTKOS.APOINTMENT.SERVICEID " +
-                    "WHERE OPTKOS.APOINTMENT.PLANTIMESTART >= ? " +
-                    "AND OPTKOS.APOINTMENT.PLANTIMEEND <= ? " +
+            preparedStmt=con.prepareStatement("SELECT s.SERVICEID, s.NAME, COUNT(a.SERVICEID) AS COUNTER FROM OPTKOS.SERVICE s " +
+                    "LEFT JOIN ( select * FROM OPTKOS.APOINTMENT " +
+                    "WHERE OPTKOS.APOINTMENT.INDEEDTIMESTART >= ? " +
+                    "AND OPTKOS.APOINTMENT.INDEEDTIMEEND <= ?) a on s.SERVICEID = a.SERVICEID " +
                     "AND OPTKOS.APOINTMENT.SERVICEID = ? " +
-                    "GROUP BY OPTKOS.SERVICE.SERVICEID, OPTKOS.SERVICE.NAME");
+                    "GROUP BY s.SERVICEID, s.NAME\n");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(startTime));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(endTime));
             preparedStmt.setString(3, serviceId);
