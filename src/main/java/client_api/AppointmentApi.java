@@ -12,7 +12,9 @@ import java.util.List;
 
 @SuppressWarnings("ValidExternallyBoundObject")
 @WebService(endpointInterface = "client_api.IAppointmentApi")
-public class AppointmentApi implements IAppointmentApi{
+public class AppointmentApi implements IAppointmentApi {
+    long start;
+
     private final AppointmentManager appointmentManager;
 
     public AppointmentApi() {
@@ -26,7 +28,11 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt) {
-        return AppointmentDao.getAppointmentsByCalendarWeek(ldt);
+        String text = "Get all Apoointments by Calenderweek from Api";
+        this.time(true, text);
+        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(ldt);
+        this.time(false, text);
+        return appointmentListItems;
     }
 
     @Override
@@ -52,6 +58,18 @@ public class AppointmentApi implements IAppointmentApi{
     @Override
     public List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
                                                        AppointmentSuggestion suggestion) {
-        return appointmentManager.findSuggestions(strategy, suggestion);
+        String text = "Get Appointment Suggestions from Api";
+        this.time(true, text);
+        List<AppointmentSuggestion> appointmentSuggestions = appointmentManager.findSuggestions(strategy, suggestion);
+        this.time(false, text);
+        return appointmentSuggestions;
+    }
+
+    public void time(boolean isStart, String text) {
+        if (isStart) {
+            this.start = System.nanoTime();
+        } else {
+            System.out.println(text +": " + (System.nanoTime() - this.start) / 1e6 + " ms");
+        }
     }
 }

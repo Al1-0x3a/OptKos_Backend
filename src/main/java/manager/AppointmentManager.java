@@ -65,9 +65,7 @@ public class AppointmentManager {
     }
 
     public Map<Employee, List<Interval>> generateIntervals(String date) {
-        long start = System.currentTimeMillis();
         List<AppointmentListItem> tmp = AppointmentDao.getAppointmentsByCalendarWeek(date);
-        long end = System.currentTimeMillis();
 
         HashMap<Employee, List<Interval>> result = new HashMap<>();
         LocalDate localDate = LocalDate.parse(date);
@@ -96,7 +94,6 @@ public class AppointmentManager {
             result.put(item.getEmployee(), intervals);
         }
 
-        System.out.printf("getAppointmentsByCalendarWeek took %d ms%n", (end - start));
         return result;
     }
 
