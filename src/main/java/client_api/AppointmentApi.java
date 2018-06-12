@@ -1,10 +1,8 @@
 package client_api;
 
 import data_loader.data_access_object.AppointmentDao;
-import data_models.Appointment;
-import data_models.AppointmentListItem;
-import data_models.AppointmentSuggestion;
-import data_models.Employee;
+import data_loader.data_access_object.AppointmentTypeDao;
+import data_models.*;
 import manager.AppointmentManager;
 
 import javax.jws.WebService;
@@ -63,6 +61,11 @@ public class AppointmentApi implements IAppointmentApi {
         List<AppointmentSuggestion> appointmentSuggestions = appointmentManager.findSuggestions(strategy, suggestion);
         this.time(false, text);
         return appointmentSuggestions;
+    }
+
+    @Override
+    public List<AppointmentType> getAllAppointmentTypes() {
+        return AppointmentTypeDao.getAllAppointmentTypesFromDb();
     }
 
     public void time(boolean isStart, String text) {
