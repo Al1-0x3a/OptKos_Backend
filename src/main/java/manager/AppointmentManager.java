@@ -17,6 +17,7 @@ public class AppointmentManager {
         Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().
                 format(DateTimeFormatter.ISO_DATE));
         List<Interval> employeeIntervals = takenIntervals.get(employee);
+        if (employeeIntervals == null) return true;
         Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
         for (Interval interval: employeeIntervals) {
             if (target.startTime.isBefore(interval.endTime) && target.endTime.isAfter(interval.startTime)) {
@@ -73,6 +74,7 @@ public class AppointmentManager {
 
         for (AppointmentListItem item: tmp) {
             List<Interval> intervals = item.getAppointmentList().stream().
+                    filter(Objects::nonNull).
                     filter(a -> a.getStartTime().getDayOfWeek().equals(day)).
                     map(yikes -> new Interval(yikes.getStartTime().toLocalTime(), yikes.getEndTime().toLocalTime())).
                     collect(Collectors.toList());
