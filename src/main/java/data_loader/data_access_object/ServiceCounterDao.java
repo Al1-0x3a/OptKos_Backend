@@ -13,7 +13,6 @@ public class ServiceCounterDao {
 
     public static ServiceCounter getAllServiceCounter(String serviceId, LocalDateTime startTime,
                                                       LocalDateTime endTime){
-
         ServiceCounter serviceCounter = null;
 
         try {

@@ -155,11 +155,7 @@ public class CustomerDao {
             preparedStmt.setString(1, customerId);
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
-                    buildCustomer(rs);
-                    // Shit
-/*                    customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
-                    customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
-                    customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));*/
+                    customer = buildCustomer(rs);
                 }
             }
             preparedStmt.close();

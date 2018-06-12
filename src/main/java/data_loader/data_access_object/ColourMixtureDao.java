@@ -20,7 +20,7 @@ public class ColourMixtureDao {
             try(ResultSet rs = preparedStmt.executeQuery()){
 
                 while(rs.next()){
-                    ColourMixture colourMixture = buildMixture(rs);
+                    colourMixtureList.add(buildMixture(rs));
                 }
             }
             preparedStmt.close();
