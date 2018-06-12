@@ -207,6 +207,7 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public void registerUser(String username, String password) {
         PasswordManager.signup(username, password);
+    }
 
     public Colour getNewColour() {
         return new Colour();
