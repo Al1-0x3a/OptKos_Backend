@@ -79,6 +79,9 @@ public interface IAdministrativeApi {
     @WebMethod
     Customer getCustomerByPhoneNumber(String phoneNumber);
     @WebMethod
+    boolean login(String username, String password);
+    @WebMethod
+    void registerUser(String username, String password);
     Colour getNewColour();
     @WebMethod
     List<Colour> getColours();

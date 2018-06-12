@@ -12,7 +12,7 @@ public class ServiceCounterDao {
     private static PreparedStatement preparedStmt;
 
     public static ServiceCounter getAllServiceCounter(String serviceId, LocalDateTime startTime,
-    LocalDateTime endTime){
+                                                      LocalDateTime endTime){
 
         ServiceCounter serviceCounter = null;
 
@@ -36,7 +36,7 @@ public class ServiceCounterDao {
                 }
             }
             preparedStmt.close();
-            } catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return serviceCounter;
