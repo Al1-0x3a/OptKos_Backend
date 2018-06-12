@@ -4,6 +4,7 @@ import data_loader.SqlConnection;
 import data_models.WorkingDay;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +20,7 @@ public class WorkingWeekDao {
             ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
-                workingDayList.add(new WorkingDay(rs.getString("WORKINGDAYID"),
-                        rs.getTime("STARTWORK").toLocalTime(),
-                        rs.getTime("ENDWORK").toLocalTime(),
-                        rs.getTime("STARKBREAK").toLocalTime(),
-                        rs.getTime("ENDBREAK").toLocalTime(),
-                        rs.getString("EMPLOYEEID"),
-                        rs.getString("DAY")
-
-                ));
+                workingDayList.add(buildWorkingDay(rs));
             }
             preparedStmt.close();
 
@@ -35,6 +28,25 @@ public class WorkingWeekDao {
             e.printStackTrace();
         }
         return workingDayList;
+    }
+
+    public static WorkingDay buildWorkingDay(ResultSet rs){
+        WorkingDay wd = null;
+        try {
+            wd = new WorkingDay(rs.getString("WORKINGDAYID"),
+                            rs.getTime("STARTWORK").toLocalTime(),
+                            rs.getTime("ENDWORK").toLocalTime(),
+                            rs.getTime("STARKBREAK").toLocalTime(),
+                            rs.getTime("ENDBREAK").toLocalTime(),
+                            rs.getString("EMPLOYEEID"),
+                            rs.getString("DAY")
+
+                    );
+        } catch (SQLException e) {
+            System.err.println("Error while building workingday");
+            e.printStackTrace();
+        }
+        return wd;
     }
 
     public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
@@ -134,5 +146,23 @@ public class WorkingWeekDao {
             return false;
         }
         return result;
+    }
+
+    public static List<WorkingDay> getAllWorkingDaysInTimespan(LocalDate start, LocalDate end){
+        ArrayList<WorkingDay> workingDays = new ArrayList<>();
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE STARTWORK>? AND ENDWORK<?");
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next())
+                    workingDays.add(buildWorkingDay(rs));
+            }
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return workingDays;
     }
 }
