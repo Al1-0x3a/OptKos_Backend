@@ -224,7 +224,7 @@ public class CustomerDao {
         Customer customer = null;
         try {
             // Person
-            customer = new Customer(rs.getString("PERSONID"));
+            customer = new Customer(rs.getString("PERSONID"), rs.getString("CUSTOMERID"));
             customer.setFirstname(rs.getString("FIRSTNAME"));
             customer.setLastname(rs.getString("LASTNAME"));
             customer.setTitle(Person.TITLE.valueOf(rs.getString("TITLE")));
@@ -232,7 +232,6 @@ public class CustomerDao {
             customer.setGender(Person.GENDER.valueOf(rs.getString("GENDER")));
 
             // Customer
-            customer.setCustomerId(rs.getString("CUSTOMERID"));
             customer.setTimefactor(rs.getDouble("MULTIPLIKATOR"));
             customer.setAnnotation(rs.getString("ANNOTATION"));
             if(rs.getString("PROBLEM").charAt(0) == 't')
@@ -248,7 +247,6 @@ public class CustomerDao {
 
 
     public static Customer getCustomerByPersonId(String personId) {
-
         Customer customer = new Customer();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.PERSON p, OPTKOS.CUSTOMER c " +
@@ -270,6 +268,22 @@ public class CustomerDao {
         return customer;
     }
 
-
-
+    public static Customer getCustomerByPhoneNumber(String phoneNumber){
+        String personid = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT PERSONID FROM OPTKOS.PHONE WHERE NUMBER=?");
+            preparedStmt.setString(1, phoneNumber);
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    personid = rs.getString("PERSONID");
+                }
+            }
+            preparedStmt.close();
+        } catch (SQLException e) {
+            System.err.println("Error while getting Customer by Phonenumber");
+            e.printStackTrace();
+            return null;
+        }
+        return CustomerDao.getCustomerByPersonId(personid);
+    }
 }

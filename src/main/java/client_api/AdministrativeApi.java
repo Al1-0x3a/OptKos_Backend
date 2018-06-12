@@ -207,5 +207,84 @@ public class AdministrativeApi implements IAdministrativeApi {
     @Override
     public void registerUser(String username, String password) {
         PasswordManager.signup(username, password);
+
+    public Colour getNewColour() {
+        return new Colour();
+    }
+
+    @Override
+    public List<Colour> getColours() {
+        return ColourDao.getAllColoursFromDb();
+    }
+
+    @Override
+    public void createColour(Colour colour) {
+        ColourDao.createColour(colour);
+    }
+
+    @Override
+    public void updateColour(Colour colour) {
+        ColourDao.changeColourByColourId(colour);
+    }
+
+    @Override
+    public void deleteColour(Colour colour) {
+        ColourDao.deleteColourByColourId(colour.getColourId());
+    }
+
+    @Override
+    public ColourMixture getNewColourMixture() {
+        return new ColourMixture();
+    }
+
+    @Override
+    public List<ColourMixture> getAllColourMixtures() {
+        return ColourMixtureDao.getAllColourMixturesFromDb();
+    }
+
+    @Override
+    public void createColourMixture(ColourMixture colourMixture) {
+        ColourMixtureDao.createColourMixture(colourMixture);
+    }
+
+    @Override
+    public void updateColourMixture(ColourMixture colourMixture) {
+        ColourMixtureDao.changeCustomerColourByCustomerId(colourMixture);
+    }
+
+    @Override
+    public void deleteColourMixture(ColourMixture colourMixture) {
+        ColourMixtureDao.deleteColourMixtureByColourMixtureId(colourMixture.getColourMixtureId());
+    }
+
+    @Override
+    public CustomerColour getNewCustomerColour() {
+        return new CustomerColour();
+    }
+
+    @Override
+    public List<CustomerColour> getAllCustomerColours() {
+        return CustomerColourDao.getAllCustomerColoursFromDb();
+    }
+
+    @Override
+    public void createCustomerColour(CustomerColour customerColour) {
+        CustomerColourDao.createCustomerColour(customerColour);
+    }
+
+    @Override
+    public void updateCustomerColour(CustomerColour customerColour) {
+        CustomerColourDao.changeCustomerColourByCustomerId(customerColour);
+    }
+
+    @Override
+    public void deleteCustomerColour(CustomerColour customerColour) {
+        CustomerColourDao.deleteCustomerColourByCustomerId(customerColour.getCustomerId());
+    }
+
+    @Override
+    public void addNewMixtures(List<ColourMixture> cmList) {
+        ColourMixtureDao.addNewMixtures(cmList);
+
     }
 }

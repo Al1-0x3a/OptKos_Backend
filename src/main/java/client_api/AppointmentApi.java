@@ -3,6 +3,8 @@ package client_api;
 import data_loader.data_access_object.AppointmentDao;
 import data_models.Appointment;
 import data_models.AppointmentListItem;
+import data_models.AppointmentSuggestion;
+import data_models.Employee;
 import manager.AppointmentManager;
 
 import javax.jws.WebService;
@@ -10,7 +12,9 @@ import java.util.List;
 
 @SuppressWarnings("ValidExternallyBoundObject")
 @WebService(endpointInterface = "client_api.IAppointmentApi")
-public class AppointmentApi implements IAppointmentApi{
+public class AppointmentApi implements IAppointmentApi {
+    long start;
+
     private final AppointmentManager appointmentManager;
 
     public AppointmentApi() {
@@ -24,7 +28,11 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt) {
-        return AppointmentDao.getAppointmentsByCalendarWeek(ldt);
+        String text = "Get all Apoointments by Calenderweek from Api";
+        this.time(true, text);
+        List<AppointmentListItem> appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(ldt);
+        this.time(false, text);
+        return appointmentListItems;
     }
 
     @Override
@@ -39,11 +47,29 @@ public class AppointmentApi implements IAppointmentApi{
 
     @Override
     public boolean updateAppointment(Appointment appointment) {
-        return AppointmentDao.createAppointment(appointment);
+        return AppointmentDao.updateAppointment(appointment);
     }
 
     @Override
-    public boolean isSlotFree(Appointment appointment, String week) {
-        return appointmentManager.isFree(appointment, week, AppointmentManager.DYNAMIC_FETCH);
+    public boolean isSlotFree(Appointment appointment, Employee employee) {
+        return appointmentManager.isFree(appointment, employee);
+    }
+
+    @Override
+    public List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
+                                                       AppointmentSuggestion suggestion) {
+        String text = "Get Appointment Suggestions from Api";
+        this.time(true, text);
+        List<AppointmentSuggestion> appointmentSuggestions = appointmentManager.findSuggestions(strategy, suggestion);
+        this.time(false, text);
+        return appointmentSuggestions;
+    }
+
+    public void time(boolean isStart, String text) {
+        if (isStart) {
+            this.start = System.nanoTime();
+        } else {
+            System.out.println(text +": " + (System.nanoTime() - this.start) / 1e6 + " ms");
+        }
     }
 }

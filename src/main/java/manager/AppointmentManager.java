@@ -1,72 +1,147 @@
 package manager;
 
 import data_loader.data_access_object.AppointmentDao;
-import data_models.Appointment;
-import data_models.AppointmentListItem;
-import data_models.Employee;
-import data_models.WorkingDay;
+import data_models.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AppointmentManager {
-    // use this option for the generator
-    public static final int STATIC_FETCH = 0;
-    // use this option for requests from the frontend
-    public static final int DYNAMIC_FETCH = 1;
+    private static LocalTime startDay = LocalTime.of(0, 0,0);
+    private static LocalTime endDay = LocalTime.of(23, 59,59);
 
-    public boolean isFree(Appointment appointment, String week, int strategy) {
-        List<AppointmentListItem> appointmentListItems;
-        if (strategy == STATIC_FETCH) {
-            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeekFast(week);
-        } else if (strategy == DYNAMIC_FETCH) {
-            appointmentListItems = AppointmentDao.getAppointmentsByCalendarWeek(week);
-        } else {
-            System.err.println("Invalid fetch strategy: " + strategy);
-            return false;
-        }
-        if (appointmentListItems == null) {
-            return true;
-        }
-        for (AppointmentListItem appointmentListItem: appointmentListItems) {
-            if (appointment.getEmployeeid().equals(appointmentListItem.getEmployee().getEmployeeId())) {
-                // check if within working day and not within break time
-                Employee currentEmployee = appointmentListItem.getEmployee();
-                LocalDate currentWeek = LocalDate.parse(week);
-                WorkingDay currentWorkingDay = currentEmployee.getWorkingDays().stream().filter(w -> w.getDay().
-                        equals(currentWeek.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.GERMAN))).
-                        findFirst().get();
-                LocalDateTime startWork = LocalDateTime.of(currentWeek, currentWorkingDay.getStartWorkingTime());
-                LocalDateTime endWork = LocalDateTime.of(currentWeek, currentWorkingDay.getEndWorkingTime());
-                LocalDateTime startBreak = LocalDateTime.of(currentWeek, currentWorkingDay.getStartBreakTime());
-                LocalDateTime endBreak = LocalDateTime.of(currentWeek, currentWorkingDay.getEndBreakTime());
-
-                if (appointment.getStartTime().isBefore(startWork) || appointment.getEndTime().isAfter(endWork)) 
-                    return false;
-                
-                if (isCollision(appointment.getStartTime(), appointment.getEndTime(), startBreak, endBreak)) 
-                    return false;
-
-                List<Appointment> employeeAppointments = appointmentListItem.getAppointmentList();
-                for (Appointment employeeAppointment: employeeAppointments) {
-                    // check if slot not already taken
-                    if (employeeAppointment == null) {
-                        return true;
-                    }
-                    if (isCollision(appointment.getStartTime(), appointment.getEndTime(), 
-                            employeeAppointment.getStartTime(), employeeAppointment.getEndTime())) return false;
-                }
+    public boolean isFree(Appointment appointment, Employee employee) {
+        Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().
+                format(DateTimeFormatter.ISO_DATE));
+        List<Interval> employeeIntervals = takenIntervals.get(employee);
+        if (employeeIntervals == null) return true;
+        Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
+        for (Interval interval: employeeIntervals) {
+            if (target.startTime.isBefore(interval.endTime) && target.endTime.isAfter(interval.startTime)) {
+                return false;
             }
         }
         return true;
     }
 
-    private boolean isCollision(LocalDateTime targetStart, LocalDateTime targetEnd, LocalDateTime existingStart,
-                                LocalDateTime existingEnd) {
-        if (targetStart.equals(targetEnd)) return false;
-        return (targetStart.isBefore(existingEnd) && targetEnd.isAfter(existingStart));
+    public List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
+                                                       AppointmentSuggestion request) {
+        List<AppointmentSuggestion> result = new ArrayList<>();
+
+        if (strategy == AppointmentSuggestion.Strategy.FIRST_SLOT) {
+            request.setEndTime(LocalDateTime.of(request.getStartTime().toLocalDate(), endDay));
+            result = findSlots(request);
+        } else if (strategy == AppointmentSuggestion.Strategy.SLOT_IN_RANGE) {
+            result = findSlots(request);
+        }
+
+        return result;
+    }
+
+    private List<AppointmentSuggestion> findSlots(AppointmentSuggestion appointmentSuggestion) {
+        Optional<Employee> employee = Optional.ofNullable(appointmentSuggestion.getEmployee());
+        LocalDate day = appointmentSuggestion.getStartTime().toLocalDate();
+        long duration = appointmentSuggestion.getService().getDurationAverage().toMinutes();
+        Map<Employee, List<Interval>> employeeGaps = invert(generateIntervals(day.format(DateTimeFormatter.ISO_DATE)));
+        List<AppointmentSuggestion> result = new ArrayList<>();
+        Interval requestedSlot = new Interval(appointmentSuggestion.getStartTime().toLocalTime(),
+                appointmentSuggestion.getEndTime().toLocalTime());
+
+        employeeGaps.forEach((k,v) -> {
+            if (employee.isPresent() && !employee.get().equals(k)) return;
+            for (Interval interval : v) {
+                if (interval.isWithin(requestedSlot) && interval.getDuration() >= duration) {
+                    result.add(new AppointmentSuggestion(
+                            LocalDateTime.of(day, interval.startTime),
+                            LocalDateTime.of(day, interval.startTime.plus(Duration.ofMinutes(duration))),
+                            k,
+                            appointmentSuggestion.getService()));
+                }
+            }
+        });
+        return result;
+    }
+
+    public Map<Employee, List<Interval>> generateIntervals(String date) {
+        List<AppointmentListItem> tmp = AppointmentDao.getAppointmentsByCalendarWeek(date);
+
+        HashMap<Employee, List<Interval>> result = new HashMap<>();
+        LocalDate localDate = LocalDate.parse(date);
+        DayOfWeek day = localDate.getDayOfWeek();
+
+        for (AppointmentListItem item: tmp) {
+            List<Interval> intervals = item.getAppointmentList().stream().
+                    filter(Objects::nonNull).
+                    filter(a -> a.getStartTime().getDayOfWeek().equals(day)).
+                    map(yikes -> new Interval(yikes.getStartTime().toLocalTime(), yikes.getEndTime().toLocalTime())).
+                    collect(Collectors.toList());
+            WorkingDay currentWorkingDay = item.getEmployee().getWorkingDays().stream().filter(w -> w.getDay().
+                    equals(day.getDisplayName(TextStyle.FULL, Locale.GERMAN))).findFirst().get();
+
+            if (currentWorkingDay.getStartWorkingTime().equals(currentWorkingDay.getEndWorkingTime())) {
+                intervals.add(new Interval(startDay, endDay));
+                continue;
+            }
+
+            intervals.add(new Interval(startDay, currentWorkingDay.getStartWorkingTime()));
+            intervals.add(new Interval(currentWorkingDay.getEndWorkingTime(), endDay));
+            if (!currentWorkingDay.getStartBreakTime().equals(currentWorkingDay.getEndBreakTime())) {
+                intervals.add(new Interval(currentWorkingDay.getStartBreakTime(), currentWorkingDay.getEndBreakTime()));
+            }
+
+            intervals.sort(new IntervalComparator());
+            result.put(item.getEmployee(), intervals);
+        }
+
+        return result;
+    }
+
+    public Map<Employee, List<Interval>> invert(Map<Employee, List<Interval>> original) {
+        Map<Employee, List<Interval>> result = new HashMap<>();
+        original.forEach((k,v) -> {
+            List<Interval> intervalsForKey = new ArrayList<>();
+            String gapStart = null, gapEnd;
+            for (int i = 0; i < v.size(); i++) {
+                Interval interval = v.get(i);
+                if (i == 0) {
+                    gapStart = (interval.endTime.plus(Duration.ofMinutes(1))).toString();
+                    continue;
+                }
+                gapEnd = interval.startTime.toString();
+                intervalsForKey.add(new Interval(LocalTime.parse(gapStart), LocalTime.parse(gapEnd)));
+                gapStart = (interval.endTime.plus(Duration.ofMinutes(1))).toString();
+            }
+            result.put(k, intervalsForKey);
+        });
+        return result;
+    }
+
+    public class Interval {
+        LocalTime startTime;
+        LocalTime endTime;
+
+        public Interval(LocalTime startTime, LocalTime endTime) {
+            this.startTime = startTime;
+            this.endTime = endTime.minus(Duration.ofMinutes(1));
+        }
+
+        public boolean isWithin(Interval interval) {
+            return this.startTime.isAfter(interval.startTime.minus(Duration.ofMinutes(1))) &&
+                    this.endTime.isBefore(interval.endTime.plus(Duration.ofMinutes(1)));
+        }
+
+        public long getDuration() {
+            return Duration.between(startTime, endTime).toMinutes();
+        }
+    }
+
+    class IntervalComparator implements Comparator<Interval> {
+        @Override
+        public int compare(Interval o1, Interval o2) {
+            return o1.startTime.compareTo(o2.startTime);
+        }
     }
 }

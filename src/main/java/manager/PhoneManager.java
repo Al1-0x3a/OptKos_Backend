@@ -1,6 +1,6 @@
 package manager;
 
-import data_loader.data_access_object.PhoneDao;
+import data_loader.data_access_object.CustomerDao;
 import data_models.Customer;
 import data_models.Phone;
 
@@ -8,7 +8,7 @@ public class PhoneManager {
 
     public Customer getCustomerByPhoneNumber(String phoneNumber){
         Customer customer = null;
-        customer = PhoneDao.getCustomerByPhoneNumber(phoneNumber);
+        customer = CustomerDao.getCustomerByPhoneNumber(phoneNumber);
         if(customer.getPersonId() == null){
             System.out.println("Unknown Caller " + phoneNumber);
             Customer newCustomer = new Customer();

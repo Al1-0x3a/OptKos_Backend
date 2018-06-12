@@ -57,11 +57,11 @@ public class ColourDao {
         }
     }
 
-    public static void createCustomerColour(Colour colour){
+    public static void createColour(Colour colour){
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS," +
                     "COLOURHUE, MANUFACTURER) VALUES(?,?,?,?)");
-            preparedStmt.setString(1, colour.getColourId().toString());
+            preparedStmt.setString(1, colour.getColourId());
             preparedStmt.setString(2,colour.getBrightness());
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
@@ -72,11 +72,36 @@ public class ColourDao {
         }
     }
 
+    public static void bulkcreate(List<Colour> colourList){
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS, COLOURHUE, MANUFACTURER) VALUES");
+        for (int i = 0; i<colourList.size(); i++){
+            query.append("(?,?,?,?),");
+        }
+        query.deleteCharAt(query.length()-1);
+        try {
+            preparedStmt = con.prepareStatement(query.toString());
+            int index = 1;
+            for (Colour c :
+                    colourList) {
+                preparedStmt.setString(index++, c.getColourId());
+                preparedStmt.setString(index++,c.getBrightness());
+                preparedStmt.setString(index++, c.getHue());
+                preparedStmt.setString(index++, c.getManufacturer());
+            }
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR while bulkcreating colours");
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteColourByColourId(String colourId){
         List<Colour> colourList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOUR WHERE COLOURID=?");
-            preparedStmt.setString(1, colourId.toString());
+            preparedStmt.setString(1, colourId);
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
@@ -84,14 +109,40 @@ public class ColourDao {
         }
     }
 
-    public static void changeColourByColourId(String colourId, String brightness, String hue, String manufacturer){
+    public static void changeColourByColourId(Colour colour){
         try {
             preparedStmt = con.prepareStatement("UPDATE OPTKOS.COLOUR SET COLOURBRIGHTNESS = ?, COLOURHUE = ?," +
                     " MANUFACTURER = ? WHERE COLOURID = ?");
-            preparedStmt.setString(1, brightness);
-            preparedStmt.setString(2, hue);
-            preparedStmt.setString(3, manufacturer);
-            preparedStmt.setString(4, colourId);
+            preparedStmt.setString(1, colour.getBrightness());
+            preparedStmt.setString(2, colour.getHue());
+            preparedStmt.setString(3, colour.getManufacturer());
+            preparedStmt.setString(4, colour.getColourId());
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("Duplicates")
+    public static void bulkDeleteById(List<String> colourIdList){
+        StringBuilder sbQuery = new StringBuilder();
+        sbQuery.append("DELETE FROM OPTKOS.COLOUR WHERE COLOURID IN (");
+        for (String s :
+                colourIdList) {
+            sbQuery.append("?,");
+        }
+        sbQuery.deleteCharAt(sbQuery.length()-1);
+        sbQuery.append(")");
+
+        try {
+            preparedStmt = con.prepareStatement(sbQuery.toString());
+            int index = 1;
+            for (String s :
+                    colourIdList) {
+                preparedStmt.setString(index++, s);
+            }
+
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {

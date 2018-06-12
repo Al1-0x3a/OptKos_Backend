@@ -82,4 +82,35 @@ public interface IAdministrativeApi {
     boolean login(String username, String password);
     @WebMethod
     void registerUser(String username, String password);
+    Colour getNewColour();
+    @WebMethod
+    List<Colour> getColours();
+    @WebMethod
+    void createColour(Colour colour);
+    @WebMethod
+    void updateColour(Colour colour);
+    @WebMethod
+    void deleteColour(Colour colour);
+    @WebMethod
+    ColourMixture getNewColourMixture();
+    @WebMethod
+    List<ColourMixture> getAllColourMixtures();
+    @WebMethod
+    void createColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    void updateColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    void deleteColourMixture(ColourMixture colourMixture);
+    @WebMethod
+    CustomerColour getNewCustomerColour();
+    @WebMethod
+    List<CustomerColour> getAllCustomerColours();
+    @WebMethod
+    void createCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void updateCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void deleteCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void addNewMixtures(List<ColourMixture> cmList);
 }
