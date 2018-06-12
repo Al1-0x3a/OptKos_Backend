@@ -72,6 +72,31 @@ public class ColourDao {
         }
     }
 
+    public static void bulkcreate(List<Colour> colourList){
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO OPTKOS.COLOUR (COLOURID, COLOURBRIGHTNESS, COLOURHUE, MANUFACTURER) VALUES");
+        for (int i = 0; i<colourList.size(); i++){
+            query.append("(?,?,?,?),");
+        }
+        query.deleteCharAt(query.length()-1);
+        try {
+            preparedStmt = con.prepareStatement(query.toString());
+            int index = 1;
+            for (Colour c :
+                    colourList) {
+                preparedStmt.setString(index++, c.getColourId());
+                preparedStmt.setString(index++,c.getBrightness());
+                preparedStmt.setString(index++, c.getHue());
+                preparedStmt.setString(index++, c.getManufacturer());
+            }
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR while bulkcreating colours");
+            e.printStackTrace();
+        }
+    }
+
     public static void deleteColourByColourId(String colourId){
         List<Colour> colourList = new ArrayList<>();
         try {
@@ -92,6 +117,32 @@ public class ColourDao {
             preparedStmt.setString(2, colour.getHue());
             preparedStmt.setString(3, colour.getManufacturer());
             preparedStmt.setString(4, colour.getColourId());
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("Duplicates")
+    public static void bulkDeleteById(List<String> colourIdList){
+        StringBuilder sbQuery = new StringBuilder();
+        sbQuery.append("DELETE FROM OPTKOS.COLOUR WHERE COLOURID IN (");
+        for (String s :
+                colourIdList) {
+            sbQuery.append("?,");
+        }
+        sbQuery.deleteCharAt(sbQuery.length()-1);
+        sbQuery.append(")");
+
+        try {
+            preparedStmt = con.prepareStatement(sbQuery.toString());
+            int index = 1;
+            for (String s :
+                    colourIdList) {
+                preparedStmt.setString(index++, s);
+            }
+
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {

@@ -47,4 +47,12 @@ public class ColourMixture {
 	public void setMixingRatio(int mixingRatio) {
 		this.mixingRatio = mixingRatio;
 	}
+	public Colour getColour() {
+		return colour;
+	}
+
+	public void setColour(Colour colour) {
+		this.colour = colour;
+	}
+
 }

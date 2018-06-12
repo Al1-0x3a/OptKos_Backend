@@ -84,6 +84,32 @@ public class ColourMixtureDao {
         }
     }
 
+    public static void bulkCreate(List<ColourMixture> cmList){
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO OPTKOS.COLOURMIXTURE (MIXINGRATIO, COLOURID, COLOURMIXTUREID, CUSTOMERID) VALUES");
+        for (int i = 0; i<cmList.size(); i++){
+            query.append("(?,?,?,?),");
+        }
+        query.deleteCharAt(query.length()-1);
+        try {
+            preparedStmt = con.prepareStatement(query.toString());
+            int index = 1;
+            for (ColourMixture cm :
+                    cmList) {
+                preparedStmt.setInt(index++, cm.getMixingRatio());
+                preparedStmt.setString(index++, cm.getColourId());
+                preparedStmt.setString(index++, cm.getColourMixtureId());
+                preparedStmt.setString(index++, cm.getCustomerId());
+            }
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR while bulkcreating colourMixtures");
+            e.printStackTrace();
+        }
+
+    }
+
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
@@ -106,5 +132,54 @@ public class ColourMixtureDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("Duplicates")
+    public static void bulkDeleteById(List<String> cmIdList){
+        StringBuilder sbQuery = new StringBuilder();
+        sbQuery.append("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID IN (");
+        for (String s :
+                cmIdList) {
+            sbQuery.append("?,");
+        }
+        sbQuery.deleteCharAt(sbQuery.length()-1);
+        sbQuery.append(")");
+
+        try {
+            preparedStmt = con.prepareStatement(sbQuery.toString());
+            int index = 1;
+            for (String s :
+                    cmIdList) {
+                preparedStmt.setString(index++, s);
+            }
+
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addNewMixtures(List<ColourMixture> colourMixturesList){
+        ArrayList<String> colorIds = new ArrayList<>();
+        ArrayList<String> cmIds = new ArrayList<>();
+        ArrayList<Colour> colors = new ArrayList<>();
+
+        /*Get IDs*/
+        for(ColourMixture c: colourMixturesList) {
+            colorIds.add(c.getColour().getColourId());
+            colors.add(c.getColour());
+            cmIds.add(c.getColourMixtureId());
+        }
+
+        /*Delete all*/
+        ColourDao.bulkDeleteById(colorIds);
+        bulkDeleteById(cmIds);
+
+        /*Create colours*/
+        ColourDao.bulkcreate(colors);
+
+        /*Create coloursMixtures*/
+        bulkCreate(colourMixturesList);
     }
 }

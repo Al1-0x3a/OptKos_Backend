@@ -272,4 +272,9 @@ public class AdministrativeApi implements IAdministrativeApi {
     public void deleteCustomerColour(CustomerColour customerColour) {
         CustomerColourDao.deleteCustomerColourByCustomerId(customerColour.getCustomerId());
     }
+
+    @Override
+    public void addNewMixtures(List<ColourMixture> cmList) {
+        ColourMixtureDao.addNewMixtures(cmList);
+    }
 }

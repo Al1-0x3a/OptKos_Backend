@@ -108,4 +108,6 @@ public interface IAdministrativeApi {
     void updateCustomerColour(CustomerColour customerColour);
     @WebMethod
     void deleteCustomerColour(CustomerColour customerColour);
+    @WebMethod
+    void addNewMixtures(List<ColourMixture> cmList);
 }
