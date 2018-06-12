@@ -7,6 +7,9 @@ import data_loader.data_access_object.ServiceDao;
 import data_models.*;
 import manager.AppointmentManager;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -16,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,7 +34,7 @@ public class AppointmentGenerator {
     private static final int WORKING_DAY_END = 20;
     private static final int OFFSET = 2;
 
-    private static final int AMOUNT = Integer.MAX_VALUE;
+    private static final int AMOUNT = 100;
 
     public static void main(String[] args) {
         AppointmentManager manager = new AppointmentManager();
@@ -66,12 +70,18 @@ public class AppointmentGenerator {
 
             Appointment appointment = new Appointment(appointmentId, LocalDateTime.of(day, endTime),
                     LocalDateTime.of(day, startTime), employee.getEmployeeId());
-            if (appointment.getEndTime().isBefore(LocalDateTime.now())) {
-                appointment.setStartTimeActual(appointment.getStartTime());
-                appointment.setEndTimeActual(appointment.getEndTime());
-            }
             appointment.setCustomer(customer);
             appointment.setService(service);
+
+            if (appointment.getEndTime().isBefore(LocalDateTime.now())) {
+                int median = (int) appointment.getService().getDurationPlanned().toMinutes();
+                int standardDeviation = median / 4;
+                double val = random().nextGaussian() * standardDeviation + median;
+                long actualEnd = Math.round(val);
+                if (actualEnd < 5) actualEnd = 5;
+                appointment.setStartTimeActual(appointment.getStartTime());
+                appointment.setEndTimeActual(appointment.getStartTime().plus(Duration.ofMinutes(actualEnd)));
+            }
 
             if (manager.isFree(appointment, employee)) {
                 try {
@@ -89,9 +99,15 @@ public class AppointmentGenerator {
                         appointmentStatement.setString(9, appointment.getService().getServiceId());
                         appointmentStatement.execute();
                     }
+
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("appointment_generator.txt", true));
+                    writer.write(buildQueryString(appointment) + "\n");
+                    writer.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     break;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 System.out.println("Generated appointment " + counter);
                 counter++;
@@ -106,5 +122,27 @@ public class AppointmentGenerator {
 
     private static ThreadLocalRandom random() {
         return ThreadLocalRandom.current();
+    }
+
+    private static String buildQueryString(Appointment appointment) {
+        String[] values = {
+                appointment.getAppointmentId(),
+                Timestamp.valueOf(appointment.getStartTime()).toString(),
+                Timestamp.valueOf(appointment.getEndTime()).toString(),
+                appointment.getStartTimeActual() == null ? null : Timestamp.valueOf(appointment.getStartTimeActual()).toString(),
+                appointment.getEndTimeActual() == null ? null : Timestamp.valueOf(appointment.getEndTimeActual()).toString(),
+                appointment.getEmployeeid(),
+                appointment.getCustomer().getCustomerId(),
+                APPOINTMENT_TYPE,
+                appointment.getService().getServiceId()
+        };
+        String query ="INSERT INTO OPTKOS.APOINTMENT" +
+                " (APOINTMENTID, PLANTIMESTART, PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID," +
+                " CUSTOMERID, APOINTMENTTYPEID, SERVICEID) VALUES ('?', '?', '?', '?', '?', '?', '?', '?', '?')";
+        for (String value : values) {
+            query = query.replaceFirst("\\?", Optional.ofNullable(value).orElse("wow"));
+        }
+        query = query.replace("'wow'", "NULL");
+        return query;
     }
 }
