@@ -40,10 +40,10 @@ public class AppointmentDao {
                             rs.getString("EMPLOYEEID"));
 
                     /*Search for matching customer and set it in appointment*/
-                    String customerid = rs.getString("CUSTOMERID");
+                    String customerId = rs.getString("CUSTOMERID");
                     for (Customer customer :
                             customerList) {
-                        if(customer.getCustomerId().equals(customerid)) {
+                        if(customer.getCustomerId().equals(customerId)) {
                             appointment.setCustomer(customer);
                             break;
                         }
@@ -115,8 +115,12 @@ public class AppointmentDao {
         return appointment;
     }
 
+    // only use for generator
+    static List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+    static List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
+
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
-        List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
+        //List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
@@ -139,7 +143,7 @@ public class AppointmentDao {
             AppointmentListItem ali;
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 /*Get All Customers*/
-                List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
+                //List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
 
                 ali = null;
                 String tmpEmployeeId = "";

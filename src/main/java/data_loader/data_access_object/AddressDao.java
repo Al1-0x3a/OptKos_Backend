@@ -65,6 +65,7 @@ public class AddressDao {
             preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
+            System.err.println("Error while creating a address");
             e.printStackTrace();
         }
     }
@@ -77,6 +78,7 @@ public class AddressDao {
             preparedStmt.executeUpdate();
             preparedStmt.close();
         } catch (SQLException e) {
+            System.err.println("Error while deleting address by peronsId");
             e.printStackTrace();
         }
 
@@ -96,6 +98,7 @@ public class AddressDao {
             result = preparedStmt.executeUpdate() != 0;
             preparedStmt.close();
         } catch (SQLException e) {
+            System.err.println("Error while updating address");
             e.printStackTrace();
             return false;
         }
@@ -111,6 +114,7 @@ public class AddressDao {
                     rs.getString("PERSONID"),
                     rs.getString("ADDITION"));
         } catch (SQLException e) {
+            System.err.println("Error while building address");
             e.printStackTrace();
         }
 

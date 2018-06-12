@@ -17,7 +17,7 @@ public class AppointmentManager {
         Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().
                 format(DateTimeFormatter.ISO_DATE));
         List<Interval> employeeIntervals = takenIntervals.get(employee);
-        if (employeeIntervals == null) return true;
+        if (employeeIntervals == null) return false;
         Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
         for (Interval interval: employeeIntervals) {
             if (target.startTime.isBefore(interval.endTime) && target.endTime.isAfter(interval.startTime)) {
@@ -129,8 +129,7 @@ public class AppointmentManager {
         }
 
         public boolean isWithin(Interval interval) {
-            return this.startTime.isAfter(interval.startTime.minus(Duration.ofMinutes(1))) &&
-                    this.endTime.isBefore(interval.endTime.plus(Duration.ofMinutes(1)));
+            return this.startTime.isAfter(interval.startTime) && this.endTime.isBefore(interval.endTime);
         }
 
         public long getDuration() {

@@ -30,7 +30,7 @@ public class AppointmentGenerator {
     private static final int WORKING_DAY_END = 20;
     private static final int OFFSET = 2;
 
-    private static final int AMOUNT = 1000;
+    private static final int AMOUNT = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
         AppointmentManager manager = new AppointmentManager();
@@ -66,8 +66,10 @@ public class AppointmentGenerator {
 
             Appointment appointment = new Appointment(appointmentId, LocalDateTime.of(day, endTime),
                     LocalDateTime.of(day, startTime), employee.getEmployeeId());
-            appointment.setStartTimeActual(appointment.getStartTime());
-            appointment.setEndTimeActual(appointment.getEndTime());
+            if (appointment.getEndTime().isBefore(LocalDateTime.now())) {
+                appointment.setStartTimeActual(appointment.getStartTime());
+                appointment.setEndTimeActual(appointment.getEndTime());
+            }
             appointment.setCustomer(customer);
             appointment.setService(service);
 
@@ -79,8 +81,8 @@ public class AppointmentGenerator {
                         appointmentStatement.setString(1, appointment.getAppointmentId());
                         appointmentStatement.setTimestamp(2, Timestamp.valueOf(appointment.getStartTime()));
                         appointmentStatement.setTimestamp(3, Timestamp.valueOf(appointment.getEndTime()));
-                        appointmentStatement.setTimestamp(4, Timestamp.valueOf(appointment.getStartTime()));
-                        appointmentStatement.setTimestamp(5, Timestamp.valueOf(appointment.getEndTime()));
+                        appointmentStatement.setTimestamp(4, appointment.getStartTimeActual() == null ? null : Timestamp.valueOf(appointment.getStartTimeActual()));
+                        appointmentStatement.setTimestamp(5, appointment.getEndTimeActual() == null ? null : Timestamp.valueOf(appointment.getEndTimeActual()));
                         appointmentStatement.setString(6, appointment.getEmployeeid());
                         appointmentStatement.setString(7, appointment.getCustomer().getCustomerId());
                         appointmentStatement.setString(8, APPOINTMENT_TYPE);

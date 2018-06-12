@@ -10,7 +10,7 @@ public class Colour {
 	private String manufacturer;
 
 	public Colour(){
-	this.colourId = UUID.randomUUID().toString();
+		this.colourId = UUID.randomUUID().toString();
 	}
 
 	public Colour(String colourId, String brightness, String hue, String manufacturer) {
