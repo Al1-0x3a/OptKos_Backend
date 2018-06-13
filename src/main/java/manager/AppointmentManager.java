@@ -20,6 +20,7 @@ public class AppointmentManager {
         if (employeeIntervals == null) return false;
         Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
         for (Interval interval: employeeIntervals) {
+            //System.out.println("Comparing target" + target +" with " + interval + " from employee " + employee.getLastname());
             if (target.startTime.isBefore(interval.endTime) && target.endTime.isAfter(interval.startTime)) {
                 return false;
             }
@@ -57,6 +58,14 @@ public class AppointmentManager {
                     result.add(new AppointmentSuggestion(
                             LocalDateTime.of(day, interval.startTime),
                             LocalDateTime.of(day, interval.startTime.plus(Duration.ofMinutes(duration))),
+                            k,
+                            appointmentSuggestion.getService()));
+                }
+                Interval subSlot;
+                if (interval.isWithinSubSlot(requestedSlot) && (subSlot = interval.trimSlotLeft(requestedSlot)).getDuration() >= duration) {
+                    result.add(new AppointmentSuggestion(
+                            LocalDateTime.of(day, subSlot.startTime),
+                            LocalDateTime.of(day, subSlot.startTime.plus(Duration.ofMinutes(duration))),
                             k,
                             appointmentSuggestion.getService()));
                 }
@@ -134,6 +143,22 @@ public class AppointmentManager {
 
         public long getDuration() {
             return Duration.between(startTime, endTime).toMinutes();
+        }
+
+        public boolean isWithinSubSlot(Interval target) {
+            return this.startTime.isBefore(target.startTime) && this.endTime.isAfter(target.startTime);
+        }
+
+        public Interval trimSlotLeft(Interval target) {
+            return new Interval(target.startTime, this.endTime);
+        }
+
+        @Override
+        public String toString() {
+            return "Interval{" +
+                    "startTime=" + startTime +
+                    ", endTime=" + endTime +
+                    '}';
         }
     }
 
