@@ -74,7 +74,8 @@ public class ServiceDao {
             preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.SERVICE WHERE SERVICEID=?");
             preparedStmt.setString(1, serviceId);
             try(ResultSet rs = preparedStmt.executeQuery()){
-                if(rs.getString("ISDELETED") == "") {
+                if(rs.getString("ISDELETED").equals("x")) {}
+                else {
                     service = new Service(rs.getString("SERVICEID"),
                             rs.getString("NAME"), rs.getString("DESCRIPTION"),
                             rs.getBigDecimal("PRICE"), Duration.ofMinutes(
