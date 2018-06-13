@@ -22,7 +22,7 @@ public class AppointmentTypeDao {
 
                 while (rs.next()) {
                     AppointmentType appointmentType = new AppointmentType(
-                            rs.getString("APPOINTMENTTYPEID"),
+                            rs.getString("APOINTMENTTYPEID"),
                             rs.getString("NAME"),
                             rs.getString("DESCRIPTION"));
                     appointmentTypeList.add(appointmentType);
