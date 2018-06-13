@@ -78,7 +78,7 @@ public class CustomerColourDao {
             preparedStmt.setString(5, customerColour.getResult());
             preparedStmt.setString(6, customerColour.getCustomerColourId());
             preparedStmt.setString(7, customerColour.getCustomerId());
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();

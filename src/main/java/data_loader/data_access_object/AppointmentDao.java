@@ -120,8 +120,8 @@ public class AppointmentDao {
     static List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
 
     public static List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt){
-        // List<Employee> employees = EmployeeDao.getAllEmployeesFromDb();
-        // List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
+        employees = EmployeeDao.getAllEmployeesFromDb();
+        List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
 
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {

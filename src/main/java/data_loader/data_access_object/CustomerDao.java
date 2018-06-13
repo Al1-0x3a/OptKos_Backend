@@ -138,7 +138,14 @@ public class CustomerDao {
                     EmailDao.createEmail(customer.getEmailList().get(i));
                 }
             }
-
+            for(ColourMixture c:customer.getColourMixtureList()){
+                c.setCustomerId(customer.getCustomerId());
+            }
+            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
+            if(customer.getCustomerColour()!=null){
+                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
+                CustomerColourDao.createCustomerColour(customer.getCustomerColour());
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -205,10 +212,15 @@ public class CustomerDao {
                     customer.getPhoneList()) {
                 PhoneDao.createPhone(p);
             }
-
             AddressDao.updateAddress(customer.getAddress());
-
-
+            for(ColourMixture c:customer.getColourMixtureList()){
+                c.setCustomerId(customer.getCustomerId());
+            }
+            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
+            if(customer.getCustomerColour()!=null){
+                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
+                CustomerColourDao.changeCustomerColourByCustomerId(customer.getCustomerColour());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

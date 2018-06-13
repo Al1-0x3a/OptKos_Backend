@@ -65,7 +65,7 @@ public class ColourDao {
             preparedStmt.setString(2,colour.getBrightness());
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class ColourDao {
                 preparedStmt.setString(index++, c.getHue());
                 preparedStmt.setString(index++, c.getManufacturer());
             }
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             System.err.println("ERROR while bulkcreating colours");

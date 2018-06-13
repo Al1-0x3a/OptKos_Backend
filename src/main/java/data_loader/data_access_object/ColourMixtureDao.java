@@ -51,7 +51,6 @@ public class ColourMixtureDao {
         }
         return colourMixture;
     }
-
     public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
         ColourMixture colourMixture = null;
         try {
@@ -74,10 +73,10 @@ public class ColourMixtureDao {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.COLOURMIXTURE (MIXINGRATIO, COLOURID," +
                     " COLOURMIXTUREID, CUSTOMERID) VALUES(?,?,?,?)");
             preparedStmt.setInt(1, colourMixture.getMixingRatio());
-            preparedStmt.setString(2, colourMixture.getColourId());
+            preparedStmt.setString(2, colourMixture.getColour().getColourId());
             preparedStmt.setString(3, colourMixture.getColourMixtureId());
             preparedStmt.setString(4, colourMixture.getCustomerId());
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,11 +96,11 @@ public class ColourMixtureDao {
             for (ColourMixture cm :
                     cmList) {
                 preparedStmt.setInt(index++, cm.getMixingRatio());
-                preparedStmt.setString(index++, cm.getColourId());
+                preparedStmt.setString(index++, cm.getColour().getColourId());
                 preparedStmt.setString(index++, cm.getColourMixtureId());
                 preparedStmt.setString(index++, cm.getCustomerId());
             }
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             System.err.println("ERROR while bulkcreating colourMixtures");
@@ -133,7 +132,17 @@ public class ColourMixtureDao {
             e.printStackTrace();
         }
     }
+    public static void deleteAllColourMixturesbyCustomerId(String customerID){
 
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE cm JOIN OPTKOS.COLOUR c ON c.COLOURID = cm.COLourid WHERE CUSTOMERID=?");
+            preparedStmt.setString(1, customerID);
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @SuppressWarnings("Duplicates")
     public static void bulkDeleteById(List<String> cmIdList){
         StringBuilder sbQuery = new StringBuilder();
