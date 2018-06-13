@@ -31,10 +31,10 @@ public class AppointmentGenerator {
     private static final long MAX_DATE = LocalDate.of(2018, 12, 31).toEpochDay();
 
     private static final int WORKING_DAY_START = 8;
-    private static final int WORKING_DAY_END = 20;
+    private static final int WORKING_DAY_END = 19;
     private static final int OFFSET = 2;
 
-    private static final int AMOUNT = 100;
+    private static final int AMOUNT = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
         AppointmentManager manager = new AppointmentManager();
@@ -100,14 +100,14 @@ public class AppointmentGenerator {
                         appointmentStatement.execute();
                     }
 
-                    BufferedWriter writer = new BufferedWriter(new FileWriter("appointment_generator.txt", true));
-                    writer.write(buildQueryString(appointment) + "\n");
-                    writer.close();
+//                    BufferedWriter writer = new BufferedWriter(new FileWriter("appointment_generator.txt", true));
+//                    writer.write(buildQueryString(appointment) + "\n");
+//                    writer.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     break;
-                } catch (IOException e) {
-                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
                 }
                 System.out.println("Generated appointment " + counter);
                 counter++;

@@ -10,6 +10,8 @@ public class AppointmentSuggestion {
     private Service service;
     private Employee employee;
 
+    public AppointmentSuggestion(){}
+
     public AppointmentSuggestion(LocalDateTime startTime, Service service) {
         this.startTime = startTime;
         this.service = service;
