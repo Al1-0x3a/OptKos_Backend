@@ -154,7 +154,7 @@ public class WorkingWeekDao {
         workingDays = (ArrayList<WorkingDay>) getAllWorkingDaysFromDb();
 
         /*Count employees by getting the count of Mondays(to avoid another db query)*/
-        List<WorkingDay> wd = workingDays.stream().filter(w -> w.getDay().equals("MONTAG")).collect(Collectors.toList());
+        List<WorkingDay> wd = workingDays.stream().filter(w -> w.getDay().equals("Montag")).collect(Collectors.toList());
         int countEmployees = wd.size();
 
         /*Calculate average Workingtime*/
