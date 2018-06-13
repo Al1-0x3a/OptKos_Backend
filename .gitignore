@@ -94,3 +94,7 @@ local.properties
 
 # Java Classes
 DbLoginData.java
+
+# Other
+
+appointment_generator.txt

@@ -25,4 +25,8 @@ public interface IAppointmentApi {
                                                 AppointmentSuggestion suggestion);
     @WebMethod
     List<AppointmentType> getAllAppointmentTypes();
+    @WebMethod
+    void appointmentStart(Appointment appointment);
+    @WebMethod
+    void appointmentEnd(Appointment appointment);
 }

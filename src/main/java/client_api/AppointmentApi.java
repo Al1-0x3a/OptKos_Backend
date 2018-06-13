@@ -6,6 +6,7 @@ import data_models.*;
 import manager.AppointmentManager;
 
 import javax.jws.WebService;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("ValidExternallyBoundObject")
@@ -66,6 +67,18 @@ public class AppointmentApi implements IAppointmentApi {
     @Override
     public List<AppointmentType> getAllAppointmentTypes() {
         return AppointmentTypeDao.getAllAppointmentTypesFromDb();
+    }
+
+    @Override
+    public void appointmentStart(Appointment appointment) {
+        appointment.setStartTimeActual(LocalDateTime.now());
+        AppointmentDao.updateAppointment(appointment);
+    }
+
+    @Override
+    public void appointmentEnd(Appointment appointment) {
+        appointment.setEndTimeActual(LocalDateTime.now());
+        AppointmentDao.updateAppointment(appointment);
     }
 
     public void time(boolean isStart, String text) {
