@@ -215,8 +215,10 @@ public class AppointmentDao {
                     "WHERE APOINTMENTID=?");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(appointment.getStartTime()));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getEndTime()));
-            preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
-            preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
+            preparedStmt.setTimestamp(3, appointment.getStartTimeActual() == null ?
+                    null : Timestamp.valueOf(appointment.getStartTimeActual()));
+            preparedStmt.setTimestamp(4, appointment.getEndTimeActual() == null ?
+                    null : Timestamp.valueOf(appointment.getEndTimeActual()));
             preparedStmt.setString(5, appointment.getEmployeeid());
             preparedStmt.setString(6, appointment.getCustomer().getCustomerId());
             preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
@@ -236,8 +238,10 @@ public class AppointmentDao {
                     " APOINTMENTTYPEID, SERVICEID) VALUES (?,?,?,?,?,?,?,?,?)");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(appointment.getStartTime()));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getEndTime()));
-            preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getStartTimeActual()));
-            preparedStmt.setTimestamp(4, Timestamp.valueOf(appointment.getEndTimeActual()));
+            preparedStmt.setTimestamp(3, appointment.getStartTimeActual() == null ?
+                    null : Timestamp.valueOf(appointment.getStartTimeActual()));
+            preparedStmt.setTimestamp(4, appointment.getEndTimeActual() == null ?
+                    null : Timestamp.valueOf(appointment.getEndTimeActual()));
             preparedStmt.setString(5, appointment.getEmployeeid());
             preparedStmt.setString(6, appointment.getCustomer().getCustomerId());
             preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
