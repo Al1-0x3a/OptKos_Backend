@@ -246,4 +246,27 @@ public class AppointmentDao {
         }
     }
 
+    public static List<Appointment> getAllAppointmentsInTimespan(LocalDate start, LocalDate end){
+        List<Appointment> appointments = new ArrayList<>();
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT WHERE PLANTIMESTART>? " +
+                    "AND PLANTIMEEND<?");
+            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+
+            try(ResultSet rs = preparedStmt.executeQuery()){
+                while(rs.next()){
+                    appointments.add(new Appointment(rs.getString("APOINTMENTID"),
+                            rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
+                            rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
+                            rs.getString("EMPLOYEEID")));
+                }
+            }
+            preparedStmt.close();
+        } catch (SQLException e) {
+            System.err.println("ERROR while getting all appointments in a timespan");
+            e.printStackTrace();
+        }
+        return appointments;
+    }
 }

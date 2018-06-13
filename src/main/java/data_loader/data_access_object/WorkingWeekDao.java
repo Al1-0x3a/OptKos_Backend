@@ -35,14 +35,14 @@ public class WorkingWeekDao {
         WorkingDay wd = null;
         try {
             wd = new WorkingDay(rs.getString("WORKINGDAYID"),
-                            rs.getTime("STARTWORK").toLocalTime(),
-                            rs.getTime("ENDWORK").toLocalTime(),
-                            rs.getTime("STARKBREAK").toLocalTime(),
-                            rs.getTime("ENDBREAK").toLocalTime(),
-                            rs.getString("EMPLOYEEID"),
-                            rs.getString("DAY")
+                    rs.getTime("STARTWORK").toLocalTime(),
+                    rs.getTime("ENDWORK").toLocalTime(),
+                    rs.getTime("STARKBREAK").toLocalTime(),
+                    rs.getTime("ENDBREAK").toLocalTime(),
+                    rs.getString("EMPLOYEEID"),
+                    rs.getString("DAY")
 
-                    );
+            );
         } catch (SQLException e) {
             System.err.println("Error while building workingday");
             e.printStackTrace();
@@ -149,24 +149,4 @@ public class WorkingWeekDao {
         return result;
     }
 
-    public static List<WorkingDay> getAllWorkingTimeSumForEachDay(){
-        ArrayList<WorkingDay> workingDays = new ArrayList<>();
-        workingDays = (ArrayList<WorkingDay>) getAllWorkingDaysFromDb();
-
-        /*Count employees by getting the count of Mondays(to avoid another db query)*/
-        List<WorkingDay> wd = workingDays.stream().filter(w -> w.getDay().equals("Montag")).collect(Collectors.toList());
-        int countEmployees = wd.size();
-
-        /*Calculate average Workingtime*/
-        int[] workingWeek = new int[7];
-        for(int i = 0; i<workingWeek.length; i++){
-            for (WorkingDay day :
-                    workingDays) {
-                if(getDayIndex(day.getDay())==i)
-                    workingWeek[i] += day.getWorkingTimeInMinutes();
-            }
-            workingWeek[i] /=countEmployees;
-        }
-        return new ArrayList(Arrays.asList(workingWeek));
-    }
 }
