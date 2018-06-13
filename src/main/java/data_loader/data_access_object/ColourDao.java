@@ -130,7 +130,7 @@ public class ColourDao {
         sbQuery.append("DELETE FROM OPTKOS.COLOUR WHERE COLOURID IN (");
         for (String s :
                 colourIdList) {
-            sbQuery.append("?,");
+            sbQuery.append("'" + s + "',");
         }
         sbQuery.deleteCharAt(sbQuery.length()-1);
         sbQuery.append(")");
