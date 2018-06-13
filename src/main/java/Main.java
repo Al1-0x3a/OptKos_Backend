@@ -2,6 +2,8 @@ import client_api.AdministrativeApi;
 import client_api.AppointmentApi;
 import client_api.StatisticApi;
 import data_loader.SqlConnection;
+import manager.StatisticManager;
+
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
 
@@ -59,6 +61,8 @@ public class Main {
             }
         }){});
 
+        StatisticManager sm = new StatisticManager();
+        sm.getWorktimeStatistics("2018-02-01", "2018-06-01");
     }
 
     private static String getHeader() {

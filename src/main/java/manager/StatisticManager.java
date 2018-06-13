@@ -19,7 +19,9 @@ public class StatisticManager {
     public void getWorktimeStatistics(String start, String end){
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
-        ArrayList<WorkingDay> workingDays = (ArrayList<WorkingDay>)
-                WorkingWeekDao.getAllWorkingDaysInTimespan(startDate, endDate);
+        ArrayList<WorkingDay> workingDays = (ArrayList<WorkingDay>) WorkingWeekDao.getAllWorkingTimeSumForEachDay();
+
+
     }
+
 }

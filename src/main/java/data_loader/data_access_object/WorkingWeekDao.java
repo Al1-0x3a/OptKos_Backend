@@ -4,9 +4,10 @@ import data_loader.SqlConnection;
 import data_models.WorkingDay;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WorkingWeekDao {
     private static final Connection con = SqlConnection.getConnection();
@@ -148,21 +149,24 @@ public class WorkingWeekDao {
         return result;
     }
 
-    public static List<WorkingDay> getAllWorkingDaysInTimespan(LocalDate start, LocalDate end){
+    public static List<WorkingDay> getAllWorkingTimeSumForEachDay(){
         ArrayList<WorkingDay> workingDays = new ArrayList<>();
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE STARTWORK>? AND ENDWORK<?");
-            preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
-            preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
+        workingDays = (ArrayList<WorkingDay>) getAllWorkingDaysFromDb();
 
-            try(ResultSet rs = preparedStmt.executeQuery()){
-                while(rs.next())
-                    workingDays.add(buildWorkingDay(rs));
+        /*Count employees by getting the count of Mondays(to avoid another db query)*/
+        List<WorkingDay> wd = workingDays.stream().filter(w -> w.getDay().equals("MONTAG")).collect(Collectors.toList());
+        int countEmployees = wd.size();
+
+        /*Calculate average Workingtime*/
+        int[] workingWeek = new int[7];
+        for(int i = 0; i<workingWeek.length; i++){
+            for (WorkingDay day :
+                    workingDays) {
+                if(getDayIndex(day.getDay())==i)
+                    workingWeek[i] += day.getWorkingTimeInMinutes();
             }
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            workingWeek[i] /=countEmployees;
         }
-        return workingDays;
+        return new ArrayList(Arrays.asList(workingWeek));
     }
 }
