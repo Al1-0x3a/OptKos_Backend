@@ -236,19 +236,20 @@ public class AppointmentDao {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT (APOINTMENTID, PLANTIMESTART," +
                     " PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID, CUSTOMERID," +
                     " APOINTMENTTYPEID, SERVICEID) VALUES (?,?,?,?,?,?,?,?,?)");
-            preparedStmt.setTimestamp(1, Timestamp.valueOf(appointment.getStartTime()));
-            preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getEndTime()));
-            preparedStmt.setTimestamp(3, appointment.getStartTimeActual() == null ?
+            preparedStmt.setString(1, appointment.getAppointmentId());
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(appointment.getStartTime()));
+            preparedStmt.setTimestamp(3, Timestamp.valueOf(appointment.getEndTime()));
+            preparedStmt.setTimestamp(4, appointment.getStartTimeActual() == null ?
                     null : Timestamp.valueOf(appointment.getStartTimeActual()));
-            preparedStmt.setTimestamp(4, appointment.getEndTimeActual() == null ?
+            preparedStmt.setTimestamp(5, appointment.getEndTimeActual() == null ?
                     null : Timestamp.valueOf(appointment.getEndTimeActual()));
-            preparedStmt.setString(5, appointment.getEmployeeid());
-            preparedStmt.setString(6, appointment.getCustomer().getCustomerId());
-            preparedStmt.setString(7, appointment.getAppointmentType().getAppointmentTypeId());
-            preparedStmt.setString(8, appointment.getService().getServiceId());
-            preparedStmt.setString(9, appointment.getAppointmentId());
+            preparedStmt.setString(6, appointment.getEmployeeid());
+            preparedStmt.setString(7, appointment.getCustomer().getCustomerId());
+            preparedStmt.setString(8, appointment.getAppointmentType().getAppointmentTypeId());
+            preparedStmt.setString(9, appointment.getService().getServiceId());
 
-            return preparedStmt.executeUpdate() != 0;
+
+            return preparedStmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
