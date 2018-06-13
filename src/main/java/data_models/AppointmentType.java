@@ -23,6 +23,10 @@ this.appointmentTypeId = UUID.randomUUID().toString();
 		return appointmentTypeId;
 	}
 
+	public void setAppointmentTypeId(String appointmentTypeId) {
+		this.appointmentTypeId = appointmentTypeId;
+	}
+
 	public String getDescription() {
 		return description;
 	}
