@@ -1,6 +1,7 @@
 package data_models;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class Appointment {
@@ -98,5 +99,9 @@ public class Appointment {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+
+	public long getAppointmentDuration(){
+	    return this.startTime.until(endTime, ChronoUnit.MINUTES);
 	}
 }

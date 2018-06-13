@@ -249,8 +249,8 @@ public class AppointmentDao {
     public static List<Appointment> getAllAppointmentsInTimespan(LocalDate start, LocalDate end){
         List<Appointment> appointments = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT WHERE PLANTIMESTART>? " +
-                    "AND PLANTIMEEND<?");
+            preparedStmt = con.prepareStatement("SELECT a.* FROM OPTKOS.APOINTMENT a, OPTKOS.EMPLOYEE e WHERE PLANTIMESTART>? " +
+                    "AND PLANTIMEEND<? AND a.EMPLOYEEID=e.EMPLOYEEID");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
 

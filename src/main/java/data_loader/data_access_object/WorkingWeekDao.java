@@ -5,9 +5,7 @@ import data_models.WorkingDay;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class WorkingWeekDao {
     private static final Connection con = SqlConnection.getConnection();
