@@ -7,6 +7,7 @@ import data_models.Appointment;
 import data_models.ServiceCounter;
 import data_models.WorkingDay;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,14 +22,16 @@ private int countEmployees = 0;
                 LocalDateTime.parse(endTime));
     }
 
-    public boolean getWorktimeStatistics(String start, String end){
+    public ArrayList<long[]> getWorktimeStatistics(String start, String end){
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
+        ArrayList<long[]> result = new ArrayList<>();
         long[] workingDays = getAllWorkingTimeSumForEachDay();
+       result.add(workingDays);
         long[] appointments = getAverageActualWorkingTime(startDate, endDate);
-        boolean b = true;
+        result.add(appointments);
 
-        return b;
+        return result;
     }
 
     public long[] getAllWorkingTimeSumForEachDay(){
@@ -71,7 +74,7 @@ private int countEmployees = 0;
            appointments.removeAll(app);
         }
 
-        /*Calculate average Appointment occupied time*/
+/*        *//*Calculate average Appointment occupied time*//*
         long[] actualWorkingTime = new long[7];
         int index = 0;
         for (ArrayList<Appointment> appointmentListDay :
@@ -82,7 +85,41 @@ private int countEmployees = 0;
             }
             actualWorkingTime[index] /= 4;
             index++;
+        }*/
+
+
+        ArrayList<Long> averageList = new ArrayList<>();
+        ArrayList<Long> magic = new ArrayList<>();
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        for (ArrayList<Appointment> app :
+                appointmentsInWeek) {
+
+            while (!app.isEmpty()) {
+                ArrayList<Appointment> sameDate = (ArrayList) app.stream().filter(a ->
+                        a.getStartTime().getDayOfYear() == app.get(0).getStartTime().getDayOfYear())
+                        .collect(Collectors.toList());
+                long tmp = 0;
+                for (Appointment a :
+                        sameDate) {
+                    tmp += a.getAppointmentDuration();
+                }
+                magic.add(tmp);
+                app.removeAll(sameDate);
+            }
+
+            long tmp = 0;
+            for (long l :
+                    magic) {
+                tmp += l;
+            }
+            averageList.add(tmp/magic.size());
         }
-        return actualWorkingTime;
+
+        /*make List to Array*/
+        long[] averageArray = new long[averageList.size()];
+        for(int i = 0; i<averageArray.length; i++){
+            averageArray[i] = averageList.get(i);
+        }
+        return averageArray;
     }
 }
