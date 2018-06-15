@@ -109,12 +109,14 @@ public class ColourMixtureDao {
 
     }
 
-    public static void deleteColourMixtureByColourMixtureId(String colourMixtureId){
+    public static void deleteColourMixtureByColourMixtureId(String colourMixtureId, String colourId){
         try {
             preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId);
             preparedStmt.executeUpdate();
             preparedStmt.close();
+
+            ColourDao.deleteColourByColourId(colourId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -144,23 +146,18 @@ public class ColourMixtureDao {
         }
     }
     @SuppressWarnings("Duplicates")
-    public static void bulkDeleteById(List<String> cmIdList){
+    public static void bulkDeleteById(List<String> colorIds){
         StringBuilder sbQuery = new StringBuilder();
-        sbQuery.append("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID IN (");
+        sbQuery.append("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURID IN (");
         for (String s :
-                cmIdList) {
-            sbQuery.append("?,");
+                colorIds) {
+            sbQuery.append("'" + s + "', ");
         }
-        sbQuery.deleteCharAt(sbQuery.length()-1);
+        sbQuery.deleteCharAt(sbQuery.length()-2);
         sbQuery.append(")");
 
         try {
             preparedStmt = con.prepareStatement(sbQuery.toString());
-            int index = 1;
-            for (String s :
-                    cmIdList) {
-                preparedStmt.setString(index++, s);
-            }
 
             preparedStmt.executeUpdate();
             preparedStmt.close();
@@ -171,19 +168,18 @@ public class ColourMixtureDao {
 
     public static void addNewMixtures(List<ColourMixture> colourMixturesList){
         ArrayList<String> colorIds = new ArrayList<>();
-        ArrayList<String> cmIds = new ArrayList<>();
         ArrayList<Colour> colors = new ArrayList<>();
 
         /*Get IDs*/
         for(ColourMixture c: colourMixturesList) {
             colorIds.add(c.getColour().getColourId());
             colors.add(c.getColour());
-            cmIds.add(c.getColourMixtureId());
         }
 
         /*Delete all*/
+        bulkDeleteById(colorIds);
         ColourDao.bulkDeleteById(colorIds);
-        bulkDeleteById(cmIds);
+
 
         /*Create colours*/
         ColourDao.bulkcreate(colors);
