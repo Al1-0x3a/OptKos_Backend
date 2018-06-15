@@ -259,7 +259,9 @@ public class AppointmentDao {
                     appointments.add(new Appointment(rs.getString("APOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                            rs.getString("EMPLOYEEID")));
+                            rs.getString("EMPLOYEEID"),
+                            rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
+                            rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime()));
                 }
             }
             preparedStmt.close();
