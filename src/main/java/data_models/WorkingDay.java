@@ -105,6 +105,8 @@ public class WorkingDay {
     }
 
     public long getWorkingTimeInMinutes(){
-        return startWorkingTime.until(endWorkingTime, MINUTES);
+        long workingtime = startWorkingTime.until(endWorkingTime, MINUTES);
+        long breaktime = startBreakTime.until(endBreakTime, MINUTES);
+        return workingtime - breaktime;
     }
 }

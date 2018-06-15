@@ -7,7 +7,6 @@ import data_models.Appointment;
 import data_models.ServiceCounter;
 import data_models.WorkingDay;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StatisticManager {
-private int countEmployees = 0;
+    private int countEmployees = 0;
 
     public ServiceCounter getAllServiceCounter(String serviceId, String startTime, String endTime) {
         return ServiceCounterDao.getAllServiceCounter(serviceId, LocalDateTime.parse(startTime),
@@ -27,7 +26,7 @@ private int countEmployees = 0;
         LocalDate endDate = LocalDate.parse(end);
         ArrayList<long[]> result = new ArrayList<>();
         long[] workingDays = getAllWorkingTimeSumForEachDay();
-       result.add(workingDays);
+        result.add(workingDays);
         long[] appointments = getAverageActualWorkingTime(startDate, endDate);
         result.add(appointments);
 
@@ -66,31 +65,16 @@ private int countEmployees = 0;
             ArrayList<Appointment> app = ((ArrayList) appointments.stream()
                     .filter(a -> a.getStartTime().getDayOfWeek().getValue() == index).collect(Collectors.toList()));
 
-           ArrayList<Integer> sumOfWorkingtimeForEachDay = new ArrayList<>();
+            ArrayList<Integer> sumOfWorkingtimeForEachDay = new ArrayList<>();
 
 
 
             appointmentsInWeek.add(app);
-           appointments.removeAll(app);
+            appointments.removeAll(app);
         }
-
-/*        *//*Calculate average Appointment occupied time*//*
-        long[] actualWorkingTime = new long[7];
-        int index = 0;
-        for (ArrayList<Appointment> appointmentListDay :
-                appointmentsInWeek) {
-            for (Appointment appointment :
-                    appointmentListDay) {
-                actualWorkingTime[index] += appointment.getAppointmentDuration();
-            }
-            actualWorkingTime[index] /= 4;
-            index++;
-        }*/
-
 
         ArrayList<Long> averageList = new ArrayList<>();
         ArrayList<Long> magic = new ArrayList<>();
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         for (ArrayList<Appointment> app :
                 appointmentsInWeek) {
 
@@ -103,7 +87,7 @@ private int countEmployees = 0;
                         sameDate) {
                     tmp += a.getAppointmentDuration();
                 }
-                magic.add(tmp);
+                magic.add(tmp/sameDate.size());
                 app.removeAll(sameDate);
             }
 
