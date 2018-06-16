@@ -21,7 +21,7 @@ public class Customer extends Person {
 	public Customer(String personId) {
 	    super(personId);
 	    customerId = UUID.randomUUID().toString();
-    }
+	}
 
     public Customer(String personId, String customerId) {
         super(personId);

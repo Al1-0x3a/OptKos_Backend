@@ -38,7 +38,7 @@ public class CustomerColourDao {
                     rs.getString("CUSTOMERID"),
                     rs.getInt("EXPOSURETIME"),
                     rs.getString("NATURALCOLOUR"),
-                    rs.getString("OXIDATION"),
+                    rs.getDouble("OXIDATION"),
                     rs.getString("RESULT")
             );
         } catch (SQLException e) {
@@ -72,8 +72,8 @@ public class CustomerColourDao {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCOLOUR (NATURALCOLOUR, OXIDATION," +
                     " CONTENTWHITE, EXPOSURETIME, RESULT, CUSTOMERCOLOURID, CUSTOMERID) VALUES(?,?,?,?,?,?,?)");
             preparedStmt.setString(1, customerColour.getNatural());
-            preparedStmt.setString(2,customerColour.getOxidation());
-            preparedStmt.setInt(3, customerColour.getContentWhite());
+            preparedStmt.setDouble(2,customerColour.getOxidation());
+            preparedStmt.setDouble(3, customerColour.getContentWhite());
             preparedStmt.setInt(4, customerColour.getExposureTime());
             preparedStmt.setString(5, customerColour.getResult());
             preparedStmt.setString(6, customerColour.getCustomerColourId());
@@ -105,11 +105,11 @@ public class CustomerColourDao {
 
     public static void changeCustomerColourByCustomerId(CustomerColour customerColour){
         try {
-            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCOLOUR SET NATURALCOLOUR = ?, " +
-                    "OXIDATION = ?, CONTENTWHITE = ?, EXPOSURETIME = ?," +
-                    " Result = ? WHERE CUSTOMERID=?");
+            preparedStmt = con.prepareStatement("UPDATE OPTKOS.CUSTOMERCOLOUR SET NATURALCOLOUR =?, " +
+                    "OXIDATION =?, CONTENTWHITE =?, EXPOSURETIME = ?," +
+                    " Result =? WHERE CUSTOMERID=?");
             preparedStmt.setString(1, customerColour.getNatural());
-            preparedStmt.setString(2, customerColour.getOxidation());
+            preparedStmt.setDouble(2, customerColour.getOxidation());
             preparedStmt.setInt(3, customerColour.getContentWhite());
             preparedStmt.setInt(4, customerColour.getExposureTime());
             preparedStmt.setString(5, customerColour.getResult());

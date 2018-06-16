@@ -10,7 +10,7 @@ public class CustomerColour {
 	private String customerId;
 	private int exposureTime;
 	private String natural;
-	private String oxidation;
+	private double oxidation;
 	private String result;
 
 	public CustomerColour(){
@@ -18,7 +18,7 @@ public class CustomerColour {
 	}
 
 	public CustomerColour(String customerColourId, int contentWhite, String customerId, int exposureTime,
-	String natural, String oxidation, String result) {
+	String natural, Double oxidation, String result) {
 		this.customerColourId = customerColourId;
 		this.contentWhite = contentWhite;
 		this.customerId = customerId;
@@ -67,11 +67,11 @@ public class CustomerColour {
 		this.natural = natural;
 	}
 
-	public String getOxidation() {
+	public Double getOxidation() {
 		return oxidation;
 	}
 
-	public void setOxidation(String oxidation) {
+	public void setOxidation(Double oxidation) {
 		this.oxidation = oxidation;
 	}
 

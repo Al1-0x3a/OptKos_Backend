@@ -84,35 +84,36 @@ public class ColourMixtureDao {
     }
 
     public static void bulkCreate(List<ColourMixture> cmList){
-        StringBuilder query = new StringBuilder();
-        query.append("INSERT INTO OPTKOS.COLOURMIXTURE (MIXINGRATIO, COLOURID, COLOURMIXTUREID, CUSTOMERID) VALUES");
-        for (int i = 0; i<cmList.size(); i++){
-            query.append("(?,?,?,?),");
-        }
-        query.deleteCharAt(query.length()-1);
-        try {
-            preparedStmt = con.prepareStatement(query.toString());
-            int index = 1;
-            for (ColourMixture cm :
-                    cmList) {
-                preparedStmt.setInt(index++, cm.getMixingRatio());
-                preparedStmt.setString(index++, cm.getColour().getColourId());
-                preparedStmt.setString(index++, cm.getColourMixtureId());
-                preparedStmt.setString(index++, cm.getCustomerId());
+        if(cmList.size()>0) {
+            StringBuilder query = new StringBuilder();
+            query.append("INSERT INTO OPTKOS.COLOURMIXTURE (MIXINGRATIO, COLOURID, COLOURMIXTUREID, CUSTOMERID) VALUES");
+            for (int i = 0; i < cmList.size(); i++) {
+                query.append("(?,?,?,?),");
             }
-            preparedStmt.execute();
-            preparedStmt.close();
-        } catch (SQLException e) {
-            System.err.println("ERROR while bulkcreating colourMixtures");
-            e.printStackTrace();
+            query.deleteCharAt(query.length() - 1);
+            try {
+                preparedStmt = con.prepareStatement(query.toString());
+                int index = 1;
+                for (ColourMixture cm :
+                        cmList) {
+                    preparedStmt.setInt(index++, cm.getMixingRatio());
+                    preparedStmt.setString(index++, cm.getColour().getColourId());
+                    preparedStmt.setString(index++, cm.getColourMixtureId());
+                    preparedStmt.setString(index++, cm.getCustomerId());
+                }
+                preparedStmt.execute();
+                preparedStmt.close();
+            } catch (SQLException e) {
+                System.err.println("ERROR while bulkcreating colourMixtures");
+                e.printStackTrace();
+            }
         }
-
     }
 
     public static void deleteColourMixtureByColourMixtureId(String colourMixtureId, String colourId){
         try {
-            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
-            preparedStmt.setString(1, colourMixtureId);
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURID=?");
+            preparedStmt.setString(1, colourId);
             preparedStmt.executeUpdate();
             preparedStmt.close();
 

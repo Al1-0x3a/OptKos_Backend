@@ -141,10 +141,12 @@ public class CustomerDao {
             for(ColourMixture c:customer.getColourMixtureList()){
                 c.setCustomerId(customer.getCustomerId());
             }
-            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
             if(customer.getCustomerColour()!=null){
                 customer.getCustomerColour().setCustomerId(customer.getCustomerId());
                 CustomerColourDao.createCustomerColour(customer.getCustomerColour());
+            }
+            if(customer.getColourMixtureList().size()>0){
+            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
             }
             return true;
         } catch (SQLException e) {
@@ -200,7 +202,10 @@ public class CustomerDao {
             preparedStmt.close();
             preparedStmt2.close();
             result = result1 && result2;
-
+            if(customer.getCustomerColour()!=null){
+                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
+                CustomerColourDao.changeCustomerColourByCustomerId(customer.getCustomerColour());
+            }
             // other
             EmailDao.deleteEmailByPersonId(customer.getPersonId());
             for (Email e :
@@ -216,11 +221,9 @@ public class CustomerDao {
             for(ColourMixture c:customer.getColourMixtureList()){
                 c.setCustomerId(customer.getCustomerId());
             }
+            if(customer.getColourMixtureList().size()>0){
             ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
-            if(customer.getCustomerColour()!=null){
-                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
-                CustomerColourDao.changeCustomerColourByCustomerId(customer.getCustomerColour());
-            }
+           }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
