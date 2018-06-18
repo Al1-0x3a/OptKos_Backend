@@ -33,10 +33,6 @@ public class CustomerDao {
                 Customer customer = null;
                 while (rs.next()) {
 
-                    if (cusId != null && cusId.equals(rs.getString("CUSTOMERID"))) {
-                        customer.getColourMixtureList().add(ColourMixtureDao.buildMixture(rs));
-                    }
-                    else{
                         cusId = rs.getString("CUSTOMERID");
                         if(customer!= null)
                             customerList.add(customer);
@@ -52,7 +48,7 @@ public class CustomerDao {
                         customer.setAddress(address);
                         customer.setCustomerColour(CustomerColourDao.buildColour(rs));
 
-                    }
+
                 }
                 customerList.add(customer);
             }

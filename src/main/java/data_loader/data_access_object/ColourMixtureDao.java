@@ -54,7 +54,8 @@ public class ColourMixtureDao {
     public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
         ColourMixture colourMixture = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE WHERE COLOURMIXTUREID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE cm, OPTKOS.COLOUR c" +
+                    "WHERE cm.COLOURID = c.COLOURID AND COLOURMIXTUREID=?");
             preparedStmt.setString(1, colourMixtureId);
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()){
