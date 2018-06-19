@@ -1,8 +1,11 @@
 package manager;
 
+import data_loader.SqlConnection;
 import data_loader.data_access_object.AppointmentDao;
 import data_models.*;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -171,6 +174,29 @@ public class AppointmentManager {
 
 
     public void calculateAverage() {
+        try {
+            PreparedStatement preparedStatement = SqlConnection.getConnection().prepareStatement(
+                    "UPDATE OPTKOS.SERVICE s " +
+                            "SET s.DURATIONAVERAGE = (" +
+                            "SELECT AVG(TIMESTAMPDIFF(4, CHAR(a.INDEEDTIMEEND - a.INDEEDTIMESTART))) AS avg " +
+                            "FROM OPTKOS.APOINTMENT a " +
+                            "WHERE a.SERVICEID = s.SERVICEID)");
+            preparedStatement.executeUpdate();
 
+            preparedStatement = SqlConnection.getConnection().prepareStatement(
+                    "UPDATE OPTKOS.SERVICEEMPLOYEEDURATION s " +
+                            "SET s.DURATIONAVERAGE = (" +
+                            "SELECT AVG(TIMESTAMPDIFF(4, CHAR(a.INDEEDTIMEEND - a.INDEEDTIMESTART))) AS avg " +
+                            "FROM OPTKOS.APOINTMENT a " +
+                            "WHERE a.SERVICEID = s.SERVICEID " +
+                            "AND a.EMPLOYEEID = s.EMPLOYEEID)");
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            System.err.println("Failed to update average durations");
+            e.printStackTrace();
+        }
+        System.out.println("Successfully updated average durations");
     }
 }

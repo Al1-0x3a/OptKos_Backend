@@ -10,7 +10,7 @@ public class AppointmentType {
 	private String name;
 
 	public AppointmentType(){
-this.appointmentTypeId = UUID.randomUUID().toString();
+		this.appointmentTypeId = UUID.randomUUID().toString();
 	}
 
 	public AppointmentType(String appointmentTypeId, String name, String description) {

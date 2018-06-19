@@ -14,10 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,13 +58,8 @@ public class AppointmentGenerator {
             long minuteOffset = 0;
             minuteOffset += service.getDurationAverage().toMinutes();
 
-            LocalTime endTime;
-            try {
-                endTime = startTime.plus(Duration.ofMinutes(minuteOffset));
-            } catch (Exception e) {
-                System.err.println("EndTime too large");
-                continue;
-            }
+            LocalTime endTime = startTime.plus(Duration.ofMinutes(minuteOffset));
+            if (endTime.isBefore(startTime)) continue;
 
             Appointment appointment = new Appointment(appointmentId, LocalDateTime.of(day, endTime),
                     LocalDateTime.of(day, startTime), employee.getEmployeeId());
