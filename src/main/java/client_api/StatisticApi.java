@@ -4,7 +4,6 @@ import data_models.*;
 import manager.StatisticManager;
 
 import javax.jws.WebService;
-import java.util.List;
 
 @SuppressWarnings("ValidExternallyBoundObject")
 @WebService(endpointInterface = "client_api.IStatisticApi")
@@ -21,7 +20,7 @@ public class StatisticApi implements IStatisticApi {
     }
 
     @Override
-    public long[][] getWorkTimeStatistic(String start, String end) {
+    public WorktimeStatisticModel getWorkTimeStatistic(String start, String end) {
         return statisticManager.getWorktimeStatistics(start, end);
     }
 }

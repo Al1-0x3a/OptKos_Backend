@@ -6,6 +6,7 @@ import data_loader.data_access_object.WorkingWeekDao;
 import data_models.Appointment;
 import data_models.ServiceCounter;
 import data_models.WorkingDay;
+import data_models.WorktimeStatisticModel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,26 +15,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StatisticManager {
-    private int countEmployees = 0;
 
     public ServiceCounter getAllServiceCounter(String serviceId, String startTime, String endTime) {
         return ServiceCounterDao.getAllServiceCounter(serviceId, LocalDateTime.parse(startTime),
                 LocalDateTime.parse(endTime));
     }
 
-    public long[][] getWorktimeStatistics(String start, String end){
+    public WorktimeStatisticModel getWorktimeStatistics(String start, String end){
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
-        ArrayList<long[]> result = new ArrayList<>();
         long[] workingDays = getAllWorkingTimeSumForEachDay();
-        // result.add(workingDays);
-        long[][] appointments = getAverageActualWorkingTime(startDate, endDate, workingDays);
-/*        result.add(appointments);*/
+        WorktimeStatisticModel wsm = getAverageActualWorkingTime(startDate, endDate, workingDays);
 
-        return appointments;
+        return wsm;
     }
 
     public long[] getAllWorkingTimeSumForEachDay(){
+        int countEmployees = 0;
         ArrayList<WorkingDay> workingDays;
         workingDays = (ArrayList<WorkingDay>) WorkingWeekDao.getAllWorkingDaysFromDb();
 
@@ -54,7 +52,7 @@ public class StatisticManager {
         return workingWeek;
     }
 
-    public long[][] getAverageActualWorkingTime(LocalDate start, LocalDate end, long[] workingDays){
+    public WorktimeStatisticModel getAverageActualWorkingTime(LocalDate start, LocalDate end, long[] workingDays){
         List<Appointment> appointments = AppointmentDao.getAllAppointmentsInTimespan(start, end);
         long[][] result = new long[7][2];
 
@@ -70,8 +68,6 @@ public class StatisticManager {
             appointments.removeAll(app);
         }
 
-        ArrayList<Long> averageList = new ArrayList<>();
-        ArrayList<Long> magic = new ArrayList<>();
         short index = 0;
         for (ArrayList<Appointment> app :
                 appointmentsInWeek) {
@@ -91,6 +87,6 @@ public class StatisticManager {
 
         }
 
-        return result;
+        return new WorktimeStatisticModel(result);
     }
 }

@@ -2,7 +2,6 @@ import client_api.AdministrativeApi;
 import client_api.AppointmentApi;
 import client_api.StatisticApi;
 import data_loader.SqlConnection;
-import manager.StatisticManager;
 
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
