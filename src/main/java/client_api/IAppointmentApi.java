@@ -29,4 +29,6 @@ public interface IAppointmentApi {
     void appointmentStart(Appointment appointment);
     @WebMethod
     void appointmentEnd(Appointment appointment);
+    @WebMethod
+    void calculateAverage();
 }

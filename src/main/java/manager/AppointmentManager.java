@@ -168,4 +168,9 @@ public class AppointmentManager {
             return o1.startTime.compareTo(o2.startTime);
         }
     }
+
+
+    public void calculateAverage() {
+
+    }
 }
