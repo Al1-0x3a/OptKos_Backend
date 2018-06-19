@@ -15,7 +15,6 @@ public class Main {
     public static void main (String[] args){
         System.out.println(getHeader());
         System.out.println("[-------------------------STARTUP-------------------------]\n");
-/*
 
         System.out.printf(FORMAT, "Launching administrative endpoint...");
         Endpoint.publish("http://localhost:1337/AdministrativeApi", new AdministrativeApi());
@@ -44,7 +43,6 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-*/
 
         System.out.println("\n[-------------------------RUNNING-------------------------]\n");
 
@@ -63,8 +61,6 @@ public class Main {
             }
         }){});
 
-        StatisticManager sm = new StatisticManager();
-        sm.getWorktimeStatistics("2018-01-01", "2018-06-01");
     }
 
     private static String getHeader() {
