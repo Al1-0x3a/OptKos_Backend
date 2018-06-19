@@ -26,7 +26,7 @@ public class AppointmentDao {
     public static List<Appointment> getAllAppointmentsFromDb() {
         List<Appointment> appointmentList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a JOIN OPTKOS.SERVICE s ON s.SERVICEID = a.SERVICEID");
 
             /*Get All Customers*/
             List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
@@ -66,7 +66,7 @@ public class AppointmentDao {
                     }
 
                     appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                            rs.getString("APPOINTMENTTYPEID")));
+                            rs.getString("APOINTMENTTYPEID")));
                 }
             }
         } catch (SQLException e) {

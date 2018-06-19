@@ -41,12 +41,12 @@ public class AppointmentTypeDao {
     public static AppointmentType getAppointmentTypeById(String appTId){
         AppointmentType appointmentType = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENTTYPE WHERE APPOINTMENTTYPEID=?");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENTTYPE WHERE APOINTMENTTYPEID=?");
             preparedStmt.setString(1, appTId);
             try(ResultSet rs = preparedStmt.executeQuery()) {
-
+                rs.next();
                 appointmentType = new AppointmentType(
-                        rs.getString("APPOINTMENTTYPEID"),
+                        rs.getString("APOINTMENTTYPEID"),
                         rs.getString("NAME"),
                         rs.getString("DESCRIPTION"));
             }
