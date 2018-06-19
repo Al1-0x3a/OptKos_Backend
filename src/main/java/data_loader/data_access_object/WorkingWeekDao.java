@@ -19,15 +19,7 @@ public class WorkingWeekDao {
             ResultSet rs = preparedStmt.executeQuery();
 
             while(rs.next()){
-                workingDayList.add(new WorkingDay(rs.getString("WORKINGDAYID"),
-                        rs.getTime("STARTWORK").toLocalTime(),
-                        rs.getTime("ENDWORK").toLocalTime(),
-                        rs.getTime("STARKBREAK").toLocalTime(),
-                        rs.getTime("ENDBREAK").toLocalTime(),
-                        rs.getString("EMPLOYEEID"),
-                        rs.getString("DAY")
-
-                ));
+                workingDayList.add(buildWorkingDay(rs));
             }
             preparedStmt.close();
 
@@ -35,6 +27,25 @@ public class WorkingWeekDao {
             e.printStackTrace();
         }
         return workingDayList;
+    }
+
+    public static WorkingDay buildWorkingDay(ResultSet rs){
+        WorkingDay wd = null;
+        try {
+            wd = new WorkingDay(rs.getString("WORKINGDAYID"),
+                    rs.getTime("STARTWORK").toLocalTime(),
+                    rs.getTime("ENDWORK").toLocalTime(),
+                    rs.getTime("STARKBREAK").toLocalTime(),
+                    rs.getTime("ENDBREAK").toLocalTime(),
+                    rs.getString("EMPLOYEEID"),
+                    rs.getString("DAY")
+
+            );
+        } catch (SQLException e) {
+            System.err.println("Error while building workingday");
+            e.printStackTrace();
+        }
+        return wd;
     }
 
     public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
@@ -135,4 +146,5 @@ public class WorkingWeekDao {
         }
         return result;
     }
+
 }
