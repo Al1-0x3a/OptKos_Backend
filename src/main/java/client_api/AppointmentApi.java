@@ -8,6 +8,7 @@ import manager.AppointmentManager;
 import javax.jws.WebService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings("ValidExternallyBoundObject")
 @WebService(endpointInterface = "client_api.IAppointmentApi")
@@ -22,7 +23,7 @@ public class AppointmentApi implements IAppointmentApi {
 
     @Override
     public Appointment getNewAppointment() {
-        return new Appointment();
+        return new Appointment(UUID.randomUUID().toString());
     }
 
     @Override
