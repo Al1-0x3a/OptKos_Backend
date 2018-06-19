@@ -90,6 +90,7 @@ public class CustomerDao {
         return customerList;
     }
 
+    //TODO: colourmixture
     public static boolean createNewCustomer(Customer customer) {
         try {
             preparedStmt = con.prepareStatement(

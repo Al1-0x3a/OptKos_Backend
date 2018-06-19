@@ -34,7 +34,8 @@ public class AppointmentGenerator {
     private static final int WORKING_DAY_END = 19;
     private static final int OFFSET = 2;
 
-    private static final int AMOUNT = Integer.MAX_VALUE;
+    private static final LocalDateTime CURRENT_DATE_TIME = LocalDateTime.parse("2018-06-26T07:00:00");
+    private static final int AMOUNT = 5000;
 
     public static void main(String[] args) {
         AppointmentManager manager = new AppointmentManager();
@@ -73,7 +74,7 @@ public class AppointmentGenerator {
             appointment.setCustomer(customer);
             appointment.setService(service);
 
-            if (appointment.getEndTime().isBefore(LocalDateTime.now())) {
+            if (appointment.getEndTime().isBefore(CURRENT_DATE_TIME)) {
                 int median = (int) appointment.getService().getDurationPlanned().toMinutes();
                 int standardDeviation = median / 4;
                 double val = random().nextGaussian() * standardDeviation + median;

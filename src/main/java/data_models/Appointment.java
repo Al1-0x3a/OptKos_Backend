@@ -1,6 +1,7 @@
 package data_models;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class Appointment {
@@ -26,13 +27,23 @@ public class Appointment {
 		this.employeeid = employeeid;
 	}
 
+	public Appointment(String appointmentId, LocalDateTime endTime, LocalDateTime startTime, String employeeid,
+					   LocalDateTime endTimeActual, LocalDateTime startTimeActual) {
+		this.appointmentId = appointmentId;
+		this.endTime = endTime;
+		this.endTimeActual = endTimeActual;
+		this.startTime = startTime;
+		this.startTimeActual = startTimeActual;
+		this.employeeid = employeeid;
+	}
+
 	public String getAppointmentId() {
 		return appointmentId;
 	}
 
 	public void setAppointmentId(String appointmentId) {
-	    if(this.appointmentId == null)
-		this.appointmentId = appointmentId;
+		if(this.appointmentId == null)
+			this.appointmentId = appointmentId;
 	}
 
 	public LocalDateTime getEndTime() {
@@ -98,5 +109,9 @@ public class Appointment {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+
+	public long getAppointmentDuration(){
+		return this.startTimeActual.until(endTimeActual, ChronoUnit.MINUTES);
 	}
 }

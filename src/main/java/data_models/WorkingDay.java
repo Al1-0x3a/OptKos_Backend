@@ -3,6 +3,8 @@ package data_models;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 public class WorkingDay {
 
     private String workingDayId;
@@ -100,5 +102,11 @@ public class WorkingDay {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public long getWorkingTimeInMinutes(){
+        long workingtime = startWorkingTime.until(endWorkingTime, MINUTES);
+        long breaktime = startBreakTime.until(endBreakTime, MINUTES);
+        return workingtime - breaktime;
     }
 }
