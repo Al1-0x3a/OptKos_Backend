@@ -7,16 +7,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class PasswordManager {
-    public static final String SALT = "I<3Jesus";
+    public final String SALT = "I<3Jesus";
 
-    public static void signup(String username, String password) {
+    public boolean signup(String username, String password) {
         String saltedPassword = SALT + password;
         String hashedPassword = generateHash(saltedPassword);
 
-        LoginDao.registerLoginData(UUID.randomUUID().toString(), username, hashedPassword);
+        try {
+            LoginDao.registerLoginData(UUID.randomUUID().toString(), username, hashedPassword);
+        }catch(Exception e){
+            System.err.println("Error while signing up...");
+            return false;
+        }
+        return true;
     }
 
-    public static boolean login(String username, String password) {
+    public boolean login(String username, String password) {
         Boolean isAuthenticated = false;
 
         String saltedPassword = SALT + password;

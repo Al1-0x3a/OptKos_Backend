@@ -15,10 +15,12 @@ import java.util.UUID;
 public class AdministrativeApi implements IAdministrativeApi {
     private final AdministrativeManager administrativeManager;
     private final PhoneManager phoneManager;
+    private final PasswordManager passwordManager;
 
     public AdministrativeApi() {
         administrativeManager = new AdministrativeManager();
         phoneManager = new PhoneManager();
+        passwordManager = new PasswordManager();
     }
 
 
@@ -201,12 +203,12 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public boolean login(String username, String password) {
-        return PasswordManager.login(username, password);
+        return passwordManager.login(username, password);
     }
 
     @Override
     public void registerUser(String username, String password) {
-        PasswordManager.signup(username, password);
+        passwordManager.signup(username, password);
     }
 
     public Colour getNewColour() {

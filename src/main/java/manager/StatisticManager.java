@@ -58,12 +58,16 @@ public class StatisticManager {
 
         /*Creating a list for each weekday*/
         ArrayList<ArrayList<Appointment>>appointmentsInWeek = new ArrayList<>();
-        for(int i = 0; i<7; i++){
+        for(int i = 0; i < 7; i++){
             final int index = i+1;
 
             ArrayList<Appointment> app = ((ArrayList) appointments.stream()
                     .filter(a -> a.getStartTime().getDayOfWeek().getValue() == index).collect(Collectors.toList()));
 
+            if(index == 7){
+for (Appointment a: app)
+                System.out.println(a.getStartTime().getDayOfWeek().getValue());
+            }
             appointmentsInWeek.add(app);
             appointments.removeAll(app);
         }

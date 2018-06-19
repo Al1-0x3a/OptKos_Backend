@@ -26,7 +26,8 @@ public class AppointmentDao {
     public static List<Appointment> getAllAppointmentsFromDb() {
         List<Appointment> appointmentList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a JOIN OPTKOS.SERVICE s ON s.SERVICEID = a.SERVICEID");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a JOIN OPTKOS.SERVICE s " +
+                    "ON s.SERVICEID = a.SERVICEID");
 
             /*Get All Customers*/
             List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
@@ -125,11 +126,7 @@ public class AppointmentDao {
 
         List<AppointmentListItem> appointmentList = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON" +
-                    " e.PERSONID = p.PERSONID LEFT JOIN(SELECT * FROM OPTKOS.APOINTMENT a " +
-                    "WHERE a.PLANTIMESTART>=? AND a.PLANTIMEEND<?) a ON " +
-                    "e.EMPLOYEEID = a.EMPLOYEEID LEFT JOIN OPTKOS.SERVICE s ON a.SERVICEID=s.SERVICEID " +
-                    "ORDER BY e.EMPLOYEEID");
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.EMPLOYEE e JOIN OPTKOS.PERSON p ON e.PERSONID = p.PERSONID LEFT JOIN(SELECT * FROM OPTKOS.APOINTMENT a WHERE a.PLANTIMESTART>=? AND a.PLANTIMEEND<?) a ON e.EMPLOYEEID = a.EMPLOYEEID LEFT JOIN OPTKOS.SERVICE s ON a.SERVICEID=s.SERVICEID ORDER BY e.EMPLOYEEID");
 
 
             LocalDate localDate = LocalDate.parse(ldt);
@@ -141,7 +138,7 @@ public class AppointmentDao {
             LocalDate startDay = dayInWeek.with(DayOfWeek.MONDAY);
             LocalDate endDay = dayInWeek.with(DayOfWeek.SUNDAY);
             preparedStmt.setTimestamp(1, Timestamp.valueOf(startDay.atStartOfDay()));
-            preparedStmt.setTimestamp(2, Timestamp.valueOf(endDay.atStartOfDay()));
+            preparedStmt.setTimestamp(2, Timestamp.valueOf(endDay.plusDays(1).atStartOfDay()));
             AppointmentListItem ali;
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 /*Get All Customers*/
@@ -231,6 +228,7 @@ public class AppointmentDao {
             return false;
         }
     }
+
     public static boolean createAppointment(Appointment appointment){
         try {
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT (APOINTMENTID, PLANTIMESTART," +
@@ -259,19 +257,29 @@ public class AppointmentDao {
     public static List<Appointment> getAllAppointmentsInTimespan(LocalDate start, LocalDate end){
         List<Appointment> appointments = new ArrayList<>();
         try {
-            preparedStmt = con.prepareStatement("SELECT a.* FROM OPTKOS.APOINTMENT a, OPTKOS.EMPLOYEE e WHERE PLANTIMESTART>? " +
-                    "AND PLANTIMEEND<? AND a.EMPLOYEEID=e.EMPLOYEEID");
+            preparedStmt = con.prepareStatement("SELECT a.* FROM OPTKOS.APOINTMENT a, OPTKOS.EMPLOYEE e " +
+                    "WHERE PLANTIMESTART>? AND PLANTIMEEND<? AND a.EMPLOYEEID=e.EMPLOYEEID");
             preparedStmt.setTimestamp(1, Timestamp.valueOf(start.atStartOfDay()));
             preparedStmt.setTimestamp(2, Timestamp.valueOf(end.atStartOfDay()));
 
             try(ResultSet rs = preparedStmt.executeQuery()){
                 while(rs.next()){
-                    appointments.add(new Appointment(rs.getString("APOINTMENTID"),
+                    Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
                             rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
                             rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                            rs.getString("EMPLOYEEID"),
-                            rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime(),
-                            rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime()));
+                            rs.getString("EMPLOYEEID"));
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    for(int i = 0; i<rsmd.getColumnCount(); i++){
+                        if("INDEEDTIMESTART".equals(rsmd.getColumnName(i+1))){
+                            if("INDEEDTIMEEND".equals(rsmd.getColumnName(i+1))){
+                                appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND")
+                                        .toLocalDateTime());
+                                appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
+                                        .toLocalDateTime());
+                            }
+                        }
+                    }
+                    appointments.add(appointment);
                 }
             }
             preparedStmt.close();

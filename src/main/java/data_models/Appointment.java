@@ -112,6 +112,11 @@ public class Appointment {
 	}
 
 	public long getAppointmentDuration(){
-		return this.startTimeActual.until(endTimeActual, ChronoUnit.MINUTES);
+		if(this.startTimeActual != null){
+			return this.startTimeActual.until(endTimeActual, ChronoUnit.MINUTES);
+		}
+		else {
+			return this.startTime.until(endTime, ChronoUnit.MINUTES);
+		}
 	}
 }
