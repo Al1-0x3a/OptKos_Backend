@@ -21,16 +21,16 @@ public class StatisticManager {
                 LocalDateTime.parse(endTime));
     }
 
-    public ArrayList<long[]> getWorktimeStatistics(String start, String end){
+    public long[][] getWorktimeStatistics(String start, String end){
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         ArrayList<long[]> result = new ArrayList<>();
         long[] workingDays = getAllWorkingTimeSumForEachDay();
-        result.add(workingDays);
-        long[] appointments = getAverageActualWorkingTime(startDate, endDate);
-        result.add(appointments);
+        // result.add(workingDays);
+        long[][] appointments = getAverageActualWorkingTime(startDate, endDate, workingDays);
+/*        result.add(appointments);*/
 
-        return result;
+        return appointments;
     }
 
     public long[] getAllWorkingTimeSumForEachDay(){
@@ -50,24 +50,21 @@ public class StatisticManager {
                 if(WorkingWeekDao.getDayIndex(day.getDay())==i)
                     workingWeek[i] += day.getWorkingTimeInMinutes();
             }
-            workingWeek[i] /= countEmployees;
         }
         return workingWeek;
     }
 
-    public long[] getAverageActualWorkingTime(LocalDate start, LocalDate end){
+    public long[][] getAverageActualWorkingTime(LocalDate start, LocalDate end, long[] workingDays){
         List<Appointment> appointments = AppointmentDao.getAllAppointmentsInTimespan(start, end);
+        long[][] result = new long[7][2];
 
         /*Creating a list for each weekday*/
         ArrayList<ArrayList<Appointment>>appointmentsInWeek = new ArrayList<>();
         for(int i = 0; i<7; i++){
             final int index = i+1;
+
             ArrayList<Appointment> app = ((ArrayList) appointments.stream()
                     .filter(a -> a.getStartTime().getDayOfWeek().getValue() == index).collect(Collectors.toList()));
-
-            ArrayList<Integer> sumOfWorkingtimeForEachDay = new ArrayList<>();
-
-
 
             appointmentsInWeek.add(app);
             appointments.removeAll(app);
@@ -75,6 +72,7 @@ public class StatisticManager {
 
         ArrayList<Long> averageList = new ArrayList<>();
         ArrayList<Long> magic = new ArrayList<>();
+        short index = 0;
         for (ArrayList<Appointment> app :
                 appointmentsInWeek) {
 
@@ -82,28 +80,17 @@ public class StatisticManager {
                 ArrayList<Appointment> sameDate = (ArrayList) app.stream().filter(a ->
                         a.getStartTime().getDayOfYear() == app.get(0).getStartTime().getDayOfYear())
                         .collect(Collectors.toList());
-                long tmp = 0;
                 for (Appointment a :
                         sameDate) {
-                    tmp += a.getAppointmentDuration();
+                    result[index][1] += a.getAppointmentDuration();
                 }
-                magic.add(tmp/sameDate.size());
+                result[index][0] += workingDays[index];
                 app.removeAll(sameDate);
             }
+            index++;
 
-            long tmp = 0;
-            for (long l :
-                    magic) {
-                tmp += l;
-            }
-            averageList.add(tmp/magic.size());
         }
 
-        /*make List to Array*/
-        long[] averageArray = new long[averageList.size()];
-        for(int i = 0; i<averageArray.length; i++){
-            averageArray[i] = averageList.get(i);
-        }
-        return averageArray;
+        return result;
     }
 }

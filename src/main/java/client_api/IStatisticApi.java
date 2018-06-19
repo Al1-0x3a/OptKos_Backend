@@ -11,5 +11,5 @@ public interface IStatisticApi {
     @WebMethod
     ServiceCounter getAllServiceCounter(String serviceId, String startTime, String endTime);
    @WebMethod
-    List<long[]> getWorkTimeStatistic(String start, String end);
+    long[][] getWorkTimeStatistic(String start, String end);
 }

@@ -21,7 +21,7 @@ public class StatisticApi implements IStatisticApi {
     }
 
     @Override
-    public List<long[]> getWorkTimeStatistic(String start, String end) {
+    public long[][] getWorkTimeStatistic(String start, String end) {
         return statisticManager.getWorktimeStatistics(start, end);
     }
 }
