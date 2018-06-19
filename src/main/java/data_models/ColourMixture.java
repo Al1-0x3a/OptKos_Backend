@@ -5,7 +5,6 @@ import java.util.UUID;
 public class ColourMixture {
 
 	private String colourMixtureId;
-	private String colourId;
 	private String customerId;
 	private int mixingRatio;
 	private Colour colour;
@@ -16,21 +15,12 @@ public class ColourMixture {
 
 	public ColourMixture(String colourMixtureId ,String colourId, String customerId, int mixingRatio, Colour colour) {
 		this.colourMixtureId = colourMixtureId;
-		this.colourId = colourId;
 		this.customerId = customerId;
 		this.mixingRatio = mixingRatio;
 		this.colour = colour;
 	}
 
 	public String getColourMixtureId() { return colourMixtureId; }
-
-	public String getColourId() {
-		return colourId;
-	}
-
-	public void setColourId(String colourId) {
-		this.colourId = colourId;
-	}
 
 	public String getCustomerId() {
 		return customerId;

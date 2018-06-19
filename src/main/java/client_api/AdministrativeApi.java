@@ -255,7 +255,7 @@ public class AdministrativeApi implements IAdministrativeApi {
 
     @Override
     public void deleteColourMixture(ColourMixture colourMixture) {
-        ColourMixtureDao.deleteColourMixtureByColourMixtureId(colourMixture.getColourMixtureId());
+        ColourMixtureDao.deleteColourMixtureByColourMixtureId(colourMixture.getColourMixtureId(), colourMixture.getColour().getColourId());
     }
 
     @Override

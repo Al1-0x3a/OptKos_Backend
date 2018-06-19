@@ -33,10 +33,6 @@ public class CustomerDao {
                 Customer customer = null;
                 while (rs.next()) {
 
-                    if (cusId != null && cusId.equals(rs.getString("CUSTOMERID"))) {
-                        customer.getColourMixtureList().add(ColourMixtureDao.buildMixture(rs));
-                    }
-                    else{
                         cusId = rs.getString("CUSTOMERID");
                         if(customer!= null)
                             customerList.add(customer);
@@ -52,7 +48,7 @@ public class CustomerDao {
                         customer.setAddress(address);
                         customer.setCustomerColour(CustomerColourDao.buildColour(rs));
 
-                    }
+
                 }
                 customerList.add(customer);
             }
@@ -139,7 +135,16 @@ public class CustomerDao {
                     EmailDao.createEmail(customer.getEmailList().get(i));
                 }
             }
-
+            for(ColourMixture c:customer.getColourMixtureList()){
+                c.setCustomerId(customer.getCustomerId());
+            }
+            if(customer.getCustomerColour()!=null){
+                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
+                CustomerColourDao.createCustomerColour(customer.getCustomerColour());
+            }
+            if(customer.getColourMixtureList().size()>0){
+            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -194,7 +199,10 @@ public class CustomerDao {
             preparedStmt.close();
             preparedStmt2.close();
             result = result1 && result2;
-
+            if(customer.getCustomerColour()!=null){
+                customer.getCustomerColour().setCustomerId(customer.getCustomerId());
+                CustomerColourDao.changeCustomerColourByCustomerId(customer.getCustomerColour());
+            }
             // other
             EmailDao.deleteEmailByPersonId(customer.getPersonId());
             for (Email e :
@@ -206,10 +214,13 @@ public class CustomerDao {
                     customer.getPhoneList()) {
                 PhoneDao.createPhone(p);
             }
-
             AddressDao.updateAddress(customer.getAddress());
-
-
+            for(ColourMixture c:customer.getColourMixtureList()){
+                c.setCustomerId(customer.getCustomerId());
+            }
+            if(customer.getColourMixtureList().size()>0){
+            ColourMixtureDao.addNewMixtures(customer.getColourMixtureList());
+           }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

@@ -98,6 +98,7 @@ public class EmployeeDao {
             EmailDao.deleteEmailByPersonId(employee.getPersonId());
             PhoneDao.deleteAllPhoneByPersonId(employee.getPersonId());
             WorkingWeekDao.deleteWorkingDaysByEmployeeId(employee.getEmployeeId());
+            ServiceEmployeeDurationDao.deleteSedListbyEmployeeID(employee.getEmployeeId());
 
             preparedStmt.executeUpdate();
             preparedStmt2.executeUpdate();

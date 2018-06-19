@@ -108,7 +108,15 @@ public class ServiceEmployeeDurationDao {
             service.setSedList(filteredList);
         }
     }
-
+    public static void deleteSedListbyEmployeeID(String EmployeeID){
+        try {
+            preparedStmt = con.prepareStatement("DELTE FROM OPTKOS.SERVICEEMPLOYEEDURATION WHERE EMPLOYEEID=?");
+            preparedStmt.setString(1, EmployeeID);
+            preparedStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static List<ServiceEmployeeDuration> getSedListWithOnlyEmployees(String serviceId){
         List<ServiceEmployeeDuration> sedList = new ArrayList<>();

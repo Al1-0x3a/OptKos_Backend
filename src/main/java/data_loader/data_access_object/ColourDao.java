@@ -65,7 +65,7 @@ public class ColourDao {
             preparedStmt.setString(2,colour.getBrightness());
             preparedStmt.setString(3, colour.getHue());
             preparedStmt.setString(4, colour.getManufacturer());
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,7 +89,7 @@ public class ColourDao {
                 preparedStmt.setString(index++, c.getHue());
                 preparedStmt.setString(index++, c.getManufacturer());
             }
-            preparedStmt.executeUpdate();
+            preparedStmt.execute();
             preparedStmt.close();
         } catch (SQLException e) {
             System.err.println("ERROR while bulkcreating colours");
@@ -130,18 +130,13 @@ public class ColourDao {
         sbQuery.append("DELETE FROM OPTKOS.COLOUR WHERE COLOURID IN (");
         for (String s :
                 colourIdList) {
-            sbQuery.append("?,");
+            sbQuery.append("'" + s + "', ");
         }
-        sbQuery.deleteCharAt(sbQuery.length()-1);
+        sbQuery.deleteCharAt(sbQuery.length()-2);
         sbQuery.append(")");
 
         try {
             preparedStmt = con.prepareStatement(sbQuery.toString());
-            int index = 1;
-            for (String s :
-                    colourIdList) {
-                preparedStmt.setString(index++, s);
-            }
 
             preparedStmt.executeUpdate();
             preparedStmt.close();
