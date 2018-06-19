@@ -16,9 +16,10 @@ public class Appointment {
 	private Service service;
 
 	public Appointment(){
-	    this.appointmentId = UUID.randomUUID().toString();
 	}
-
+	public Appointment (String UUID){
+		appointmentId = UUID;
+	}
 	public Appointment(String appointmentId, LocalDateTime endTime,
 					   LocalDateTime startTime, String employeeid) {
 		this.appointmentId = appointmentId;
