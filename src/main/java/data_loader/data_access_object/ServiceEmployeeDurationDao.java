@@ -19,7 +19,6 @@ public class ServiceEmployeeDurationDao {
 
     public static ServiceEmployeeDuration getServiceEmployeeDuration(String employeeId, String serviceId){
         ServiceEmployeeDuration sed = null;
-        //TODO name dazu
         try{
             preparedStmt = con.prepareStatement("SELECT * FROM ((OPTKOS.SERVICEEMPLOYEEDURATION sed " +
                     "INNER JOIN OPTKOS.EMPLOYEE e ON sed.EMPLOYEEID = e.EMPLOYEEID) " +
