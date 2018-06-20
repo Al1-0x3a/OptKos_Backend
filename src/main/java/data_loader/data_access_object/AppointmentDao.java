@@ -275,6 +275,8 @@ public class AppointmentDao {
                                 rs.getString("ISDELETED"));
 
                         appointment.setService(service);
+                        //First User DefaultAppointmentType we do not use other
+                        appointment.setAppointmentType(new AppointmentType("26f35e62-ba3d-4210-b5db-633668509e02", "Standard", "Normaler Termin"));
                     }
                     /*Check if indeedtime exists and add it*/
                     if (rs.getTimestamp("INDEEDTIMEEND") != null) {
