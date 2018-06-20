@@ -19,6 +19,8 @@ public interface IAppointmentApi {
     @WebMethod
     boolean updateAppointment(Appointment appointment);
     @WebMethod
+    boolean deleteAppointment(String uuid);
+    @WebMethod
     boolean isSlotFree(Appointment appointment, Employee employee);
     @WebMethod
     List<AppointmentSuggestion> findSuggestions(AppointmentSuggestion.Strategy strategy,
