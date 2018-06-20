@@ -89,4 +89,9 @@ public class AppointmentApi implements IAppointmentApi {
             System.out.println(text +": " + (System.nanoTime() - this.start) / 1e6 + " ms");
         }
     }
+
+    @Override
+    public void calculateAverage() {
+        appointmentManager.calculateAverage();
+    }
 }
