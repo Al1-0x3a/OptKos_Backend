@@ -75,11 +75,13 @@ public class AppointmentDao {
         }
         return appointmentList;
     }
+
+    @SuppressWarnings("Duplicates")
     public static Appointment getPreviousAppointmentByCustomerID(String customerID){
         Appointment appointment = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s,OPTKOS.APOINTMENTTYPE ap"+
-                    " WHERE a.CUSTOMERID =?"+
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s,OPTKOS.APOINTMENTTYPE ap "+
+                    "WHERE a.CUSTOMERID =? "+
                     "AND a.SERVICEID = s.SERVICEID "+
                     "AND ap.APOINTMENTTYPEID = a.APOINTMENTTYPEID "+
                     "AND a.PLANTIMESTART <=? "+
@@ -111,19 +113,22 @@ public class AppointmentDao {
                 if(rs.getTimestamp("INDEEDTIMESTART") != null){
                     appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
                 }
-                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                        rs.getString("APOINTMENTTYPEID")));
+                AppointmentType type = new AppointmentType(rs.getString("APOINTMENTTYPEID"),
+                        rs.getString("NAME"), rs.getString("DESCRIPTION"));
+                appointment.setAppointmentType(type);
             }
         } catch (SQLException e){
             e.printStackTrace();
         }
         return appointment;
     }
+
+    @SuppressWarnings("Duplicates")
     public static Appointment getNextAppointmentByCustomerID(String customerID){
         Appointment appointment = null;
         try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s,OPTKOS.APOINTMENTTYPE ap "+
-                    "WHERE a.CUSTOMERID =?"+
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s, OPTKOS.APOINTMENTTYPE ap "+
+                    "WHERE a.CUSTOMERID =? "+
                     "AND a.SERVICEID = s.SERVICEID "+
                     "AND ap.APOINTMENTTYPEID = a.APOINTMENTTYPEID "+
                     "AND a.PLANTIMESTART >? "+
@@ -155,8 +160,9 @@ public class AppointmentDao {
                 if(rs.getTimestamp("INDEEDTIMESTART") != null){
                     appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
                 }
-                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                        rs.getString("APOINTMENTTYPEID")));
+                AppointmentType type = new AppointmentType(rs.getString("APOINTMENTTYPEID"),
+                        rs.getString("NAME"), rs.getString("DESCRIPTION"));
+                appointment.setAppointmentType(type);
             }
         } catch (SQLException e){
             e.printStackTrace();
