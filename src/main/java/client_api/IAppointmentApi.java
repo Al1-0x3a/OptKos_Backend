@@ -11,6 +11,10 @@ public interface IAppointmentApi {
     @WebMethod
     Appointment getNewAppointment();
     @WebMethod
+    Appointment getPreviousAppointment(String customerID);
+    @WebMethod
+    Appointment getNextAppointment(String customerID);
+    @WebMethod
     List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt);
     @WebMethod
 	Appointment getAppointmentById(String apointmentId);

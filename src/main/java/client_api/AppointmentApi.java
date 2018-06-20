@@ -27,6 +27,16 @@ public class AppointmentApi implements IAppointmentApi {
     }
 
     @Override
+    public Appointment getPreviousAppointment(String customerID) {
+        return AppointmentDao.getPreviousAppointmentByCustomerID(customerID);
+    }
+
+    @Override
+    public Appointment getNextAppointment(String customerID) {
+        return AppointmentDao.getNextAppointmentByCustomerID(customerID);
+    }
+
+    @Override
     public List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt) {
         String text = "Get all Apoointments by Calenderweek from Api";
         this.time(true, text);
