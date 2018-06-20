@@ -254,6 +254,19 @@ public class AppointmentDao {
         }
     }
 
+    public static boolean deleteAppointment(String uuid) {
+        try {
+            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.APOINTMENT WHERE APOINTMENTID = ?");
+            preparedStmt.setString(1, uuid);
+            preparedStmt.executeUpdate();
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public static List<Appointment> getAllAppointmentsInTimespan(LocalDate start, LocalDate end){
         List<Appointment> appointments = new ArrayList<>();
         try {

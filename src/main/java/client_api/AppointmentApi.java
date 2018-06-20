@@ -51,6 +51,11 @@ public class AppointmentApi implements IAppointmentApi {
     }
 
     @Override
+    public boolean deleteAppointment(String uuid) {
+        return AppointmentDao.deleteAppointment(uuid);
+    }
+
+    @Override
     public boolean isSlotFree(Appointment appointment, Employee employee) {
         return appointmentManager.isFree(appointment, employee);
     }
