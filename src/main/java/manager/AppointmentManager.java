@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 
 public class AppointmentManager {
     private static LocalTime startDay = LocalTime.of(0, 0,0);
-    private static LocalTime endDay = LocalTime.of(23, 59,59);
+    private static LocalTime endDay = LocalTime.of(23, 55,0);
+
+    private static final int SCALE = 5;
 
     public boolean isFree(Appointment appointment, Employee employee) {
         Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().
-                format(DateTimeFormatter.ISO_DATE));
+                format(DateTimeFormatter.ISO_DATE), appointment.getAppointmentId());
         List<Interval> employeeIntervals = takenIntervals.get(employee);
         if (employeeIntervals == null) return false;
         Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
@@ -47,9 +49,10 @@ public class AppointmentManager {
 
     private List<AppointmentSuggestion> findSlots(AppointmentSuggestion appointmentSuggestion) {
         Optional<Employee> employee = Optional.ofNullable(appointmentSuggestion.getEmployee());
+        Optional<String> uuid = Optional.ofNullable(appointmentSuggestion.getAppointmentId());
         LocalDate day = appointmentSuggestion.getStartTime().toLocalDate();
         long duration = appointmentSuggestion.getService().getDurationAverage().toMinutes();
-        Map<Employee, List<Interval>> employeeGaps = invert(generateIntervals(day.format(DateTimeFormatter.ISO_DATE)));
+        Map<Employee, List<Interval>> employeeGaps = invert(generateIntervals(day.format(DateTimeFormatter.ISO_DATE), uuid.orElse("")));
         List<AppointmentSuggestion> result = new ArrayList<>();
         Interval requestedSlot = new Interval(appointmentSuggestion.getStartTime().toLocalTime(),
                 appointmentSuggestion.getEndTime().toLocalTime());
@@ -77,7 +80,7 @@ public class AppointmentManager {
         return result;
     }
 
-    public Map<Employee, List<Interval>> generateIntervals(String date) {
+    public Map<Employee, List<Interval>> generateIntervals(String date, String uuid) {
         List<AppointmentListItem> tmp = AppointmentDao.getAppointmentsByCalendarWeek(date);
 
         HashMap<Employee, List<Interval>> result = new HashMap<>();
@@ -85,11 +88,8 @@ public class AppointmentManager {
         DayOfWeek day = localDate.getDayOfWeek();
 
         for (AppointmentListItem item: tmp) {
-            List<Interval> intervals = item.getAppointmentList().stream().
-                    filter(Objects::nonNull).
-                    filter(a -> a.getStartTime().getDayOfWeek().equals(day)).
-                    map(yikes -> new Interval(yikes.getStartTime().toLocalTime(), yikes.getEndTime().toLocalTime())).
-                    collect(Collectors.toList());
+            List<Interval> intervals = new ArrayList<>();
+
             WorkingDay currentWorkingDay = item.getEmployee().getWorkingDays().stream().filter(w -> w.getDay().
                     equals(day.getDisplayName(TextStyle.FULL, Locale.GERMAN))).findFirst().get();
 
@@ -97,6 +97,12 @@ public class AppointmentManager {
                 intervals.add(new Interval(startDay, endDay));
                 continue;
             }
+            intervals = item.getAppointmentList().stream().
+                    filter(Objects::nonNull).
+                    filter(a -> !a.getAppointmentId().equals(uuid)).
+                    filter(a -> a.getStartTime().getDayOfWeek().equals(day)).
+                    map(yikes -> new Interval(yikes.getStartTime().toLocalTime(), yikes.getEndTime().toLocalTime())).
+                    collect(Collectors.toList());
 
             intervals.add(new Interval(startDay, currentWorkingDay.getStartWorkingTime()));
             intervals.add(new Interval(currentWorkingDay.getEndWorkingTime(), endDay));
@@ -136,8 +142,15 @@ public class AppointmentManager {
         LocalTime endTime;
 
         public Interval(LocalTime startTime, LocalTime endTime) {
-            this.startTime = startTime;
-            this.endTime = endTime.minus(Duration.ofMinutes(1));
+            int scaledMinuteStart = startTime.getMinute() / SCALE * SCALE;
+            int scaledMinuteEnd = (endTime.getMinute() + (SCALE - 1)) / SCALE * SCALE;
+            this.startTime = LocalTime.of(startTime.getHour(), scaledMinuteStart, 0, 0);
+            if (scaledMinuteEnd == 60) {
+                this.endTime = LocalTime.of(endTime.getHour() + 1, 0, 0, 0);
+            } else {
+                this.endTime = LocalTime.of(endTime.getHour(), scaledMinuteEnd, 0, 0);
+            }
+
         }
 
         public boolean isWithin(Interval interval) {
@@ -149,7 +162,8 @@ public class AppointmentManager {
         }
 
         public boolean isWithinSubSlot(Interval target) {
-            return this.startTime.isBefore(target.startTime) && this.endTime.isAfter(target.startTime);
+            return this.startTime.isBefore(target.startTime) && this.endTime.isAfter(target.startTime) ||
+                    this.startTime.equals(target.startTime) && this.endTime.isAfter(target.startTime);
         }
 
         public Interval trimSlotLeft(Interval target) {
