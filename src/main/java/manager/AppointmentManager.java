@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class AppointmentManager {
     private static LocalTime startDay = LocalTime.of(0, 0,0);
-    private static LocalTime endDay = LocalTime.of(23, 59,59);
+    private static LocalTime endDay = LocalTime.of(23, 55,0);
 
     private static final int SCALE = 5;
 
@@ -143,9 +143,14 @@ public class AppointmentManager {
 
         public Interval(LocalTime startTime, LocalTime endTime) {
             int scaledMinuteStart = startTime.getMinute() / SCALE * SCALE;
-            int scaledMinuteEnd = endTime.getMinute() / SCALE * SCALE;
+            int scaledMinuteEnd = (endTime.getMinute() + (SCALE - 1)) / SCALE * SCALE;
             this.startTime = LocalTime.of(startTime.getHour(), scaledMinuteStart, 0, 0);
-            this.endTime = LocalTime.of(endTime.getHour(), scaledMinuteEnd, 0, 0);
+            if (scaledMinuteEnd == 60) {
+                this.endTime = LocalTime.of(endTime.getHour() + 1, 0, 0, 0);
+            } else {
+                this.endTime = LocalTime.of(endTime.getHour(), scaledMinuteEnd, 0, 0);
+            }
+
         }
 
         public boolean isWithin(Interval interval) {
@@ -157,7 +162,8 @@ public class AppointmentManager {
         }
 
         public boolean isWithinSubSlot(Interval target) {
-            return this.startTime.isBefore(target.startTime) && this.endTime.isAfter(target.startTime);
+            return this.startTime.isBefore(target.startTime) && this.endTime.isAfter(target.startTime) ||
+                    this.startTime.equals(target.startTime) && this.endTime.isAfter(target.startTime);
         }
 
         public Interval trimSlotLeft(Interval target) {
