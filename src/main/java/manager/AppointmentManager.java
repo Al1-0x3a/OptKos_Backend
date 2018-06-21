@@ -18,7 +18,7 @@ public class AppointmentManager {
 
     public boolean isFree(Appointment appointment, Employee employee) {
         Map<Employee, List<Interval>> takenIntervals = generateIntervals(appointment.getStartTime().
-                format(DateTimeFormatter.ISO_DATE));
+                format(DateTimeFormatter.ISO_DATE), appointment.getAppointmentId());
         List<Interval> employeeIntervals = takenIntervals.get(employee);
         if (employeeIntervals == null) return false;
         Interval target = new Interval(appointment.getStartTime().toLocalTime(), appointment.getEndTime().toLocalTime());
@@ -47,9 +47,10 @@ public class AppointmentManager {
 
     private List<AppointmentSuggestion> findSlots(AppointmentSuggestion appointmentSuggestion) {
         Optional<Employee> employee = Optional.ofNullable(appointmentSuggestion.getEmployee());
+        Optional<String> uuid = Optional.ofNullable(appointmentSuggestion.getAppointmentId());
         LocalDate day = appointmentSuggestion.getStartTime().toLocalDate();
         long duration = appointmentSuggestion.getService().getDurationAverage().toMinutes();
-        Map<Employee, List<Interval>> employeeGaps = invert(generateIntervals(day.format(DateTimeFormatter.ISO_DATE)));
+        Map<Employee, List<Interval>> employeeGaps = invert(generateIntervals(day.format(DateTimeFormatter.ISO_DATE), uuid.orElse("")));
         List<AppointmentSuggestion> result = new ArrayList<>();
         Interval requestedSlot = new Interval(appointmentSuggestion.getStartTime().toLocalTime(),
                 appointmentSuggestion.getEndTime().toLocalTime());
@@ -77,7 +78,7 @@ public class AppointmentManager {
         return result;
     }
 
-    public Map<Employee, List<Interval>> generateIntervals(String date) {
+    public Map<Employee, List<Interval>> generateIntervals(String date, String uuid) {
         List<AppointmentListItem> tmp = AppointmentDao.getAppointmentsByCalendarWeek(date);
 
         HashMap<Employee, List<Interval>> result = new HashMap<>();
@@ -87,6 +88,7 @@ public class AppointmentManager {
         for (AppointmentListItem item: tmp) {
             List<Interval> intervals = item.getAppointmentList().stream().
                     filter(Objects::nonNull).
+                    filter(a -> !a.getAppointmentId().equals(uuid)).
                     filter(a -> a.getStartTime().getDayOfWeek().equals(day)).
                     map(yikes -> new Interval(yikes.getStartTime().toLocalTime(), yikes.getEndTime().toLocalTime())).
                     collect(Collectors.toList());

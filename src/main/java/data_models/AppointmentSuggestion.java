@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class AppointmentSuggestion {
     public enum Strategy {FIRST_SLOT, SLOT_IN_RANGE}
 
+    private String appointmentId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Service service;
@@ -66,5 +67,13 @@ public class AppointmentSuggestion {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(String appointmentId) {
+        this.appointmentId = appointmentId;
     }
 }
