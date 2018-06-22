@@ -46,11 +46,6 @@ public class AppointmentApi implements IAppointmentApi {
     }
 
     @Override
-    public Appointment getAppointmentById(String appointmentId) {
-        return null;
-    }
-
-    @Override
     public boolean createAppointment(Appointment appointment) {
         return AppointmentDao.createAppointment(appointment);
     }

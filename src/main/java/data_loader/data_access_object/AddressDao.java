@@ -3,8 +3,6 @@ import data_loader.SqlConnection;
 import data_models.Address;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddressDao {
 
@@ -12,26 +10,6 @@ public class AddressDao {
     private static PreparedStatement preparedStmt;
 
     private AddressDao(){}
-
-    public static List<Address> getAllAddressFromDb(){
-        List<Address> addressList=null;
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.ADDRESS");
-            try (ResultSet rs = preparedStmt.executeQuery()) {
-
-                addressList = new ArrayList<>();
-                while (rs.next()) {
-                    addressList.add(buildAddress(rs));
-                }
-                preparedStmt.close();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return addressList;
-    }
-
 
     public static Address getAddressByPersonId(String personId){
         Address address = null;

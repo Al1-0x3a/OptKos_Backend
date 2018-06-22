@@ -33,45 +33,4 @@ public class PositionDao {
         return positionList;
     }
 
-    public static Position getPositionByPositionId(String positionId){
-        try {
-            preparedStmt = con.prepareStatement("SELECT  * FROM OPTKOS.POSITION WHERE POSITIONID=?");
-            preparedStmt.setString(1,positionId);
-            ResultSet rs = preparedStmt.executeQuery();
-
-            Position position = new Position();
-            if(rs.next()) {
-                position.setPositionId(rs.getString("POSITIONID"));
-                position.setNote(rs.getString("ANNOTATION"));
-                position.setDescription(rs.getString("DESCRIPTION"));
-                position.setName(rs.getString("NAME"));
-                return position;
-            }
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static boolean createPosition(Position position) {
-        try {
-            preparedStmt = con.prepareStatement(
-                    "INSERT INTO OPTKOS.POSITION(POSITIONID, NAME, DESCRIPTION, ANNOTATION) VALUES (?,?,?,?)");
-            preparedStmt.setString(1, position.getPositionId());
-            preparedStmt.setString(2, position.getName());
-            preparedStmt.setString(3, position.getDescription());
-            preparedStmt.setString(4, position.getNote());
-
-            preparedStmt.executeUpdate();
-            preparedStmt.close();
-            return true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
 }

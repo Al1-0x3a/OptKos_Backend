@@ -51,23 +51,6 @@ public class ColourMixtureDao {
         }
         return colourMixture;
     }
-    public static ColourMixture getColourMixtureByColourMixtureId(String colourMixtureId){
-        ColourMixture colourMixture = null;
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.COLOURMIXTURE cm, OPTKOS.COLOUR c" +
-                    "WHERE cm.COLOURID = c.COLOURID AND COLOURMIXTUREID=?");
-            preparedStmt.setString(1, colourMixtureId);
-            try(ResultSet rs = preparedStmt.executeQuery()){
-                while(rs.next()){
-                    colourMixture = buildMixture(rs);
-                }
-            }
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return colourMixture;
-    }
 
     public static void createColourMixture(ColourMixture colourMixture){
         try {
@@ -136,24 +119,14 @@ public class ColourMixtureDao {
             e.printStackTrace();
         }
     }
-    public static void deleteAllColourMixturesbyCustomerId(String customerID){
 
-        try {
-            preparedStmt = con.prepareStatement("DELETE FROM OPTKOS.COLOURMIXTURE cm JOIN OPTKOS.COLOUR c ON c.COLOURID = cm.COLourid WHERE CUSTOMERID=?");
-            preparedStmt.setString(1, customerID);
-            preparedStmt.executeUpdate();
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
     @SuppressWarnings("Duplicates")
     public static void bulkDeleteById(List<String> colorIds){
         StringBuilder sbQuery = new StringBuilder();
         sbQuery.append("DELETE FROM OPTKOS.COLOURMIXTURE WHERE COLOURID IN (");
         for (String s :
                 colorIds) {
-            sbQuery.append("'" + s + "', ");
+            sbQuery.append("'").append(s).append("', ");
         }
         sbQuery.deleteCharAt(sbQuery.length()-2);
         sbQuery.append(")");

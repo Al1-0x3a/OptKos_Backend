@@ -17,8 +17,6 @@ public interface IAppointmentApi {
     @WebMethod
     List<AppointmentListItem> getAppointmentsByCalendarWeek(String ldt);
     @WebMethod
-	Appointment getAppointmentById(String apointmentId);
-    @WebMethod
     boolean createAppointment(Appointment appointment);
     @WebMethod
     boolean updateAppointment(Appointment appointment);

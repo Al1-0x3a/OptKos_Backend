@@ -49,24 +49,6 @@ public class CustomerColourDao {
         return cc;
     }
 
-    public static List<CustomerColour> getCustomerColourByCustomerId(String customerId){
-        List<CustomerColour> customerColourList = new ArrayList<>();
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.CUSTOMERCOLOUR WHERE CUSTOMERID=?");
-            preparedStmt.setString(1, customerId);
-            try(ResultSet rs = preparedStmt.executeQuery()){
-                while (rs.next()){
-                    CustomerColour customerColour = buildColour(rs);
-                    customerColourList.add(customerColour);
-                }
-            }
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return customerColourList;
-    }
-
     public static void createCustomerColour(CustomerColour customerColour){
         try {
             preparedStmt= con.prepareStatement("INSERT INTO OPTKOS.CUSTOMERCOLOUR (NATURALCOLOUR, OXIDATION," +

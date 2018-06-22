@@ -32,7 +32,7 @@ public class CustomerColour {
 		return customerColourId;
 	}
 
-	public void setCustomerColourId(String CustomerColourId) {
+	public void setCustomerColourId(String customerColourId) {
 		this.customerColourId = customerColourId; }
 
 	public int getContentWhite() {

@@ -17,62 +17,6 @@ public class AppointmentDao {
     private AppointmentDao() {
     }
 
-    public static List<Appointment> getAllAppointmentsFromDb() {
-        List<Appointment> appointmentList = new ArrayList<>();
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a " +
-                    "JOIN OPTKOS.SERVICE s ON s.SERVICEID = a.SERVICEID " +
-                    "JOIN OPTKOS.APOINTMENTTYPE t ON a.APOINTMENTTYPEID = t.APOINTMENTTYPEID");
-
-            /*Get All Customers*/
-            List<Customer> customerList = CustomerDao.getAllCustomersFromDb();
-
-            HashMap<String, Customer> mappedCustomer = new HashMap<>();
-            for (Customer customer : customerList) {
-                mappedCustomer.put(customer.getCustomerId(), customer);
-            }
-
-            try (ResultSet rs = preparedStmt.executeQuery()) {
-                while (rs.next()) {
-                    Appointment appointment = new Appointment(rs.getString("APOINTMENTID"),
-                            rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                            rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                            rs.getString("EMPLOYEEID"));
-
-                    /*Search for matching customer and set it in appointment*/
-                    String customerId = rs.getString("CUSTOMERID");
-
-                    appointment.setCustomer(mappedCustomer.get(customerId));
-
-                    /*Add Service to appointment*/
-                    Service service = new Service(rs.getString("SERVICEID"),
-                            rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                            rs.getBigDecimal("PRICE"), Duration.ofMinutes(
-                            rs.getInt("DURTATIONPLANNED")),
-                            Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
-                            rs.getString("ISDELETED"));
-
-                    appointment.setService(service);
-                    if(rs.getTimestamp("INDEEDTIMEEND") != null){
-                        appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
-                    }
-                    if(rs.getTimestamp("INDEEDTIMESTART") != null){
-                        appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART")
-                                .toLocalDateTime());
-                    }
-
-                    AppointmentType type = new AppointmentType(rs.getString("APOINTMENTTYPEID"),
-                            rs.getString("NAME"), rs.getString("DESCRIPTION"));
-                    appointment.setAppointmentType(type);
-                    appointmentList.add(appointment);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return appointmentList;
-    }
-
     @SuppressWarnings("Duplicates")
     public static Appointment getPreviousAppointmentByCustomerID(String customerID){
         Appointment appointment = null;
@@ -164,45 +108,6 @@ public class AppointmentDao {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        return appointment;
-    }
-    public static Appointment getAppointmentById(String appointmentId){
-        Appointment appointment = null;
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENT a, OPTKOS.SERVICE s" +
-                    " WHERE a.APOINTMENTID=? AND s.SERVICEID=a.SERVICEID");
-            preparedStmt.setString(1, appointmentId);
-            try(ResultSet rs = preparedStmt.executeQuery()) {
-
-                appointment = new Appointment(rs.getString("APPOINTMENTID"),
-                        rs.getTimestamp("PLANTIMEEND").toLocalDateTime(),
-                        rs.getTimestamp("PLANTIMESTART").toLocalDateTime(),
-                        rs.getString("EMPLOYEEID"));
-
-                appointment.setCustomer(CustomerDao.getCustomerById(rs.getString("CUSTOMERID")));
-
-                /*Add Service to appointment*/
-                Service service = new Service(rs.getString("SERVICEID"),
-                        rs.getString("NAME"), rs.getString("DESCRIPTION"),
-                        rs.getBigDecimal("PRICE"), Duration.ofMinutes(
-                        rs.getInt("DURTATIONPLANNED")),
-                        Duration.ofMinutes(rs.getInt("DURATIONAVERAGE")),
-                        rs.getString("ISDELETED"));
-
-                appointment.setService(service);
-                if(rs.getTimestamp("INDEEDTIMEEND") != null){
-                    appointment.setEndTimeActual(rs.getTimestamp("INDEEDTIMEEND").toLocalDateTime());
-                }
-                if(rs.getTimestamp("INDEEDTIMESTART") != null){
-                    appointment.setStartTimeActual(rs.getTimestamp("INDEEDTIMESTART").toLocalDateTime());
-                }
-                appointment.setAppointmentType(AppointmentTypeDao.getAppointmentTypeById(
-                        rs.getString("APPOINTMENTTYPEID")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         return appointment;
     }
 

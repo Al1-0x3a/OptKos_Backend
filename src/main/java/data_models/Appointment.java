@@ -2,7 +2,6 @@ package data_models;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 
 public class Appointment {
 	private String appointmentId;
