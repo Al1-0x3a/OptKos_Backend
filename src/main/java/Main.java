@@ -1,17 +1,28 @@
 import client_api.AdministrativeApi;
 import client_api.AppointmentApi;
 import client_api.StatisticApi;
+import data_loader.DbLoginData;
 import data_loader.SqlConnection;
 
 import javax.xml.ws.Endpoint;
 import java.sql.SQLException;
+import java.util.prefs.Preferences;
 
 public class Main {
     private static final String SUCCESS = "[Success]";
     private static final String ERROR = "[Error]";
     private static final String FORMAT = "%-50s";
 
-    public static void main (String[] args){
+    public static void main (String[] args) {
+        if (Preferences.userNodeForPackage(DbLoginData.class).get("db_username", null) == null ||
+                Preferences.userNodeForPackage(DbLoginData.class).get("db_password", null) == null) {
+            if (args.length != 2) {
+                System.out.println("usage: optkos_backend [db2_username] [db2_password]");
+                System.exit(1);
+            }
+            DbLoginData.setCredentials(args[0], args[1]);
+        }
+
         System.out.println(getHeader());
         System.out.println("[-------------------------STARTUP-------------------------]\n");
 
