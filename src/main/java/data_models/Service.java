@@ -20,6 +20,7 @@ public class Service {
 	public Service(){
 		this.serviceId = UUID.randomUUID().toString();
 		sedList = ServiceEmployeeDurationDao.getSedListWithOnlyEmployees(this.serviceId);
+		isDeleted="";
 	}
 
 	public Service(String serviceId, String name, String description, BigDecimal price,
