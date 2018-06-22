@@ -4,10 +4,7 @@ import data_loader.SqlConnection;
 import data_models.*;
 
 import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Month;
+import java.time.*;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -326,6 +323,22 @@ public class AppointmentDao {
 
     public static boolean createAppointment(Appointment appointment){
         try {
+            if(!appointment.getCustomer().getCustomerCategory().getName().equals("Keine Kategorie")) {
+                Duration duration = appointment.getService().getDurationAverage();
+                int timeBonus = appointment.getCustomer().getCustomerCategory().getTimeBonus();
+                double timeFactor = appointment.getCustomer().getCustomerCategory().getTimeFactor()*100;
+                long newDuration=duration.toMinutes();
+
+                if(timeBonus > 0) {
+                    newDuration = duration.plusMinutes(timeBonus).toMinutes();
+                }
+                else if(timeFactor > 0){
+                    newDuration = (long) (newDuration + newDuration * timeFactor);
+                }
+
+                appointment.setEndTime(appointment.getStartTime().plus(Duration.ofMinutes(newDuration)));
+            }
+
             preparedStmt = con.prepareStatement("INSERT INTO OPTKOS.APOINTMENT (APOINTMENTID, PLANTIMESTART," +
                     " PLANTIMEEND, INDEEDTIMESTART, INDEEDTIMEEND, EMPLOYEEID, CUSTOMERID," +
                     " APOINTMENTTYPEID, SERVICEID) VALUES (?,?,?,?,?,?,?,?,?)");
