@@ -13,6 +13,7 @@ out/
 .idea/
 *.iml
 **/target/
+src/main/resources/config.json
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -90,3 +91,10 @@ local.properties
 \.project
 
 \.classpath
+
+# Java Classes
+DbLoginData.java
+
+# Other
+
+appointment_generator.txt
