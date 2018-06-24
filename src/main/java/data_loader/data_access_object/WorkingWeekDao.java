@@ -48,39 +48,6 @@ public class WorkingWeekDao {
         return wd;
     }
 
-    public static List<WorkingDay> getWorkingDays(String employeeId, List<WorkingDay> employeeWorkingDays) {
-        List<WorkingDay> tmp = employeeWorkingDays;
-
-        try {
-            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.WORKINGDAY WHERE EMPLOYEEID =?");
-            preparedStmt.setString(1, employeeId);
-
-            try (ResultSet rs = preparedStmt.executeQuery()) {
-
-                int i = 0;
-
-                while (rs.next()) {
-                    i = getDayIndex(rs.getString("DAY"));
-                    tmp.get(i).setWorkingDayId(rs.getString("WORKINGDAYID"));
-                    tmp.get(i).setStartWorkingTime(rs.getTimestamp("STARTWORK")
-                            .toLocalDateTime().toLocalTime());
-                    tmp.get(i).setEndWorkingTime(rs.getTimestamp("ENDWORK")
-                            .toLocalDateTime().toLocalTime());
-                    tmp.get(i).setStartBreakTime(rs.getTimestamp("STARKBREAK")
-                            .toLocalDateTime().toLocalTime());
-                    tmp.get(i).setEndBreakTime(rs.getTimestamp("ENDBREAK")
-                            .toLocalDateTime().toLocalTime());
-                    i++;
-                }
-            }
-            preparedStmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return tmp;
-
-    }
-
     public static int getDayIndex(String day){
         switch (day){
             case "Montag": return 0;

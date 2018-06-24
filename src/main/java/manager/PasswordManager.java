@@ -29,11 +29,7 @@ public class PasswordManager {
         String hashedPassword = generateHash(saltedPassword);
 
         String storedPasswordHash = LoginDao.getPasswordByUsername(username);
-        if(hashedPassword.equals(storedPasswordHash)){
-            isAuthenticated = true;
-        }else{
-            isAuthenticated = false;
-        }
+        isAuthenticated = hashedPassword.equals(storedPasswordHash);
         return isAuthenticated;
     }
 

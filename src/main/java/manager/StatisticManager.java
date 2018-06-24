@@ -25,9 +25,7 @@ public class StatisticManager {
         LocalDate startDate = LocalDate.parse(start);
         LocalDate endDate = LocalDate.parse(end);
         long[] workingDays = getAllWorkingTimeSumForEachDay();
-        WorktimeStatisticModel wsm = getAverageActualWorkingTime(startDate, endDate, workingDays);
-
-        return wsm;
+        return getAverageActualWorkingTime(startDate, endDate, workingDays);
     }
 
     public long[] getAllWorkingTimeSumForEachDay(){

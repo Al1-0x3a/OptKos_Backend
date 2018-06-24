@@ -1,13 +1,11 @@
 package data_loader.data_access_object;
 
 import data_loader.SqlConnection;
-import data_models.Customer;
 import data_models.Phone;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PhoneDao {
     private static final Connection con = SqlConnection.getConnection();
