@@ -14,6 +14,26 @@ public class AppointmentTypeDao {
 
     private AppointmentTypeDao() {}
 
+    public static AppointmentType getAppointmentTypeById(String appTId){
+        AppointmentType appointmentType = null;
+        try {
+            preparedStmt = con.prepareStatement("SELECT * FROM OPTKOS.APOINTMENTTYPE WHERE APOINTMENTTYPEID=?");
+            preparedStmt.setString(1, appTId);
+            try(ResultSet rs = preparedStmt.executeQuery()) {
+                rs.next();
+                appointmentType = new AppointmentType(
+                        rs.getString("APOINTMENTTYPEID"),
+                        rs.getString("NAME"),
+                        rs.getString("DESCRIPTION"));
+            }
+            preparedStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return appointmentType;
+    }
+
     public static List<AppointmentType> getAllAppointmentTypesFromDb(){
         List<AppointmentType> appointmentTypeList = new ArrayList<>();
         try {
