@@ -273,7 +273,7 @@ public class AppointmentDao {
             if(!appointment.getCustomer().getCustomerCategory().getName().equals("Keine Kategorie")) {
                 Duration duration = appointment.getService().getDurationAverage();
                 int timeBonus = appointment.getCustomer().getCustomerCategory().getTimeBonus();
-                double timeFactor = appointment.getCustomer().getCustomerCategory().getTimeFactor()*100;
+                double timeFactor = appointment.getCustomer().getCustomerCategory().getTimeFactor();
                 long newDuration=duration.toMinutes();
 
                 if(timeBonus > 0) {
