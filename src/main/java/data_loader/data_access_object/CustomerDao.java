@@ -262,6 +262,7 @@ public class CustomerDao {
             try (ResultSet rs = preparedStmt.executeQuery()) {
                 if (rs.next()) {
                     customer = buildCustomer(rs);
+                    customer.setCustomerCategory(CustomerCategoryDao.getCustomerCategoryByIdFromDb(rs.getString("CUSTOMERCATEGORYID")));
                     customer.setPhoneList(PhoneDao.getPhoneListByPersonId(customer.getPersonId()));
                     customer.setEmailList(EmailDao.getEmailListByPersonId(customer.getPersonId()));
                     customer.setAddress(AddressDao.getAddressByPersonId(customer.getPersonId()));
