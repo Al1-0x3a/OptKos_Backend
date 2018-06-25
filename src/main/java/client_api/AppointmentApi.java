@@ -27,6 +27,11 @@ public class AppointmentApi implements IAppointmentApi {
     }
 
     @Override
+    public Appointment getAppointmentById(String uuid) {
+        return AppointmentDao.getAppointmentById(uuid);
+    }
+
+    @Override
     public Appointment getPreviousAppointment(String customerID) {
         return AppointmentDao.getPreviousAppointmentByCustomerID(customerID);
     }
